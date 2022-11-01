@@ -5,6 +5,10 @@
 			"path": "frontend"
 		},
 		{
+			"name": "functions",
+			"path": "functions"
+		},
+		{
 			"name": "talent-platform",
 			"path": "."
 		}

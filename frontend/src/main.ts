@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import { app as firebaseApp } from "@/firebase";
 import { Quasar } from "quasar";
 import quasarLang from "quasar/lang/en-GB";
 import quasarIconSet from "quasar/icon-set/mdi-v6";
@@ -20,3 +21,5 @@ app.use(Quasar, {
 });
 
 app.mount("#app");
+
+console.log(firebaseApp, import.meta.env);
