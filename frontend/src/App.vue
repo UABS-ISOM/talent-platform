@@ -1,13 +1,13 @@
-<script setup lang="ts">
-import { RouterView } from "vue-router";
-</script>
-
 <template>
-  <RouterView />
+  <router-view v-if="mainStore.userLoaded" />
+
+  <MainLoader v-else />
 </template>
 
-<style>
-.firebase-emulator-warning {
-  display: none;
-}
-</style>
+<script setup lang="ts">
+import { useMainStore } from "@/mainStore";
+import { RouterView } from "vue-router";
+import MainLoader from "@/components/MainLoader.vue";
+
+const mainStore = useMainStore();
+</script>

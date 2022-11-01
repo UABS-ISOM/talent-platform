@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { User } from "firebase/auth";
+
+interface UserInfo {
+  uid: string;
+}
 
 export const useMainStore = defineStore("main", () => {
-  const user = ref<User | null>(null);
+  const user = ref<UserInfo | null>(null);
   const userLoaded = ref(false);
 
   return { user, userLoaded };
