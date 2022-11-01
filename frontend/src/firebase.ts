@@ -23,7 +23,14 @@ export const auth = getAuth();
 onAuthStateChanged(auth, async (user) => {
   // Update main store with user information
   const mainStore = useMainStore();
-  mainStore.user = user === null ? null : { uid: user.uid };
+  mainStore.user =
+    user === null
+      ? null
+      : {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email ?? "",
+        };
   mainStore.userLoaded = true;
 
   // Determine if route needs to be changed

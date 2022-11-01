@@ -3,6 +3,8 @@ import { ref } from "vue";
 
 interface UserInfo {
   uid: string;
+  displayName: string | null;
+  email: string;
 }
 
 export const useMainStore = defineStore("main", () => {
