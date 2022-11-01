@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import {
+  getAuth,
+  connectAuthEmulator,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useMainStore } from "@/mainStore";
+import router, { findCorrectedRoute } from "./router";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,6 +18,18 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
+
+// Update the auth state when the user changes
+onAuthStateChanged(auth, async (user) => {
+  // Update main store with user information
+  const mainStore = useMainStore();
+  mainStore.user = user;
+  mainStore.userLoaded = true;
+
+  // Determine if route needs to be changed
+  const redirect = findCorrectedRoute();
+  if (redirect) await router.replace(redirect);
+});
 
 // Connect to the emulators if we're in development
 if (import.meta.env.DEV) {
