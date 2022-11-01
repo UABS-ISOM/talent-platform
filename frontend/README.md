@@ -2,6 +2,8 @@
 
 Frontend written in Vue 3, using Quasar for UI.
 
+`src/assets/background.jpg` is taken from the University of Auckland website.
+
 ## Project Setup
 
 ```sh

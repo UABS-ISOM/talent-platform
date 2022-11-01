@@ -8,6 +8,18 @@ const router = createRouter({
       name: "App",
       component: () => import("@/components/AppView.vue"),
     },
+    {
+      path: "/auth",
+      component: () => import("@/components/Auth/AuthLayout.vue"),
+      children: [
+        {
+          path: "",
+          name: "Auth",
+          component: () =>
+            import("@/components/Auth/Select/AuthSelectView.vue"),
+        },
+      ],
+    },
   ],
 });
 

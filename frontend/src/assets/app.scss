@@ -1,0 +1,23 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+.firebase-emulator-warning {
+    display: none;
+}
+
+.bg-google {
+    background: $google !important;
+}
+.google-text {
+    color: $google !important;
+}
+
+.bg-white {
+    background: $white !important;
+}
+.white-text {
+    color: $white !important;
+}
+  

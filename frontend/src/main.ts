@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { app as firebaseApp } from "@/firebase";
+import "@/firebase";
 import { Quasar } from "quasar";
 import quasarLang from "quasar/lang/en-GB";
 import quasarIconSet from "quasar/icon-set/mdi-v6";
@@ -9,6 +9,8 @@ import "quasar/src/css/index.sass"; // Import Quasar css
 
 import App from "@/App.vue";
 import router from "@/router";
+import "@/assets/app.scss";
+import "animate.css";
 
 const app = createApp(App);
 
@@ -21,5 +23,3 @@ app.use(Quasar, {
 });
 
 app.mount("#app");
-
-console.log(firebaseApp, import.meta.env);
