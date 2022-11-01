@@ -54,7 +54,7 @@
 
     <div class="flex justify-between">
       <router-link
-        :to="{ name: 'App' }"
+        :to="{ name: 'AuthSignUp' }"
         class="text-center text-dark q-py-sm"
         style="display: block"
       >
@@ -62,7 +62,7 @@
       </router-link>
 
       <router-link
-        :to="{ name: 'App' }"
+        :to="{ name: 'AuthForgottenPassword' }"
         class="text-center text-dark q-py-sm"
         style="display: block"
       >

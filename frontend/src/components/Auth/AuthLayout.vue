@@ -24,7 +24,9 @@ import { ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
 import background from "@/assets/background.jpg";
 
-const animation = ref<"fadeInLeft" | "fadeInRight">("fadeInRight");
+const animation = ref<"animate__fadeInLeft" | "animate__fadeInRight">(
+  "animate__fadeInRight"
+);
 
 onBeforeRouteUpdate((to) => {
   if (to.name === "Auth") {

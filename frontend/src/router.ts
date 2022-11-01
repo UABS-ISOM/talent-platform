@@ -8,6 +8,8 @@ const router = createRouter({
       name: "App",
       component: () => import("@/components/AppView.vue"),
     },
+
+    // Authentication pages
     {
       path: "/auth",
       component: () => import("@/components/Auth/AuthLayout.vue"),
@@ -17,6 +19,20 @@ const router = createRouter({
           name: "Auth",
           component: () =>
             import("@/components/Auth/Select/AuthSelectView.vue"),
+        },
+        {
+          path: "signup",
+          name: "AuthSignUp",
+          component: () =>
+            import("@/components/Auth/SignUp/AuthSignUpView.vue"),
+        },
+        {
+          path: "forgottenpassword",
+          name: "AuthForgottenPassword",
+          component: () =>
+            import(
+              "@/components/Auth/ForgottenPassword/AuthForgottenPasswordView.vue"
+            ),
         },
       ],
     },

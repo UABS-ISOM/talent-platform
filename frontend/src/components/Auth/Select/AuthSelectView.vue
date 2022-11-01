@@ -2,7 +2,7 @@
   <AuthCard>
     <div class="text-h4 q-py-md">Welcome to {{ APP_NAME }}</div>
 
-    <AuthGoogle />
+    <AuthSelectGoogle />
 
     <div class="q-my-md" style="padding: 0.5em 0; position: relative">
       <q-separator />
@@ -15,13 +15,13 @@
       </div>
     </div>
 
-    <AuthSignIn />
+    <AuthSelectSignIn />
   </AuthCard>
 </template>
 
 <script setup lang="ts">
 import { APP_NAME } from "@/helpers";
-import AuthSignIn from "./AuthSignIn.vue";
-import AuthGoogle from "./AuthGoogle.vue";
 import AuthCard from "../AuthCard.vue";
+import AuthSelectGoogle from "./AuthSelectGoogle.vue";
+import AuthSelectSignIn from "./AuthSelectSignIn.vue";
 </script>
