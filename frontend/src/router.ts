@@ -53,6 +53,10 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: "/:catchAll(.*)*",
+      component: () => import("@/components/404Error.vue"),
+    },
   ],
 });
 
