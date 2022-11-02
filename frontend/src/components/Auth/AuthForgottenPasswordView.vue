@@ -49,8 +49,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { RULES, GENERIC_ERROR } from "@/helpers";
-import AuthCard from "../AuthCard.vue";
-import AuthHeader from "../AuthHeader.vue";
+import AuthCard from "./AuthCard.vue";
+import AuthHeader from "./AuthHeader.vue";
 import GenericAlert from "@/components/GenericAlert.vue";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 

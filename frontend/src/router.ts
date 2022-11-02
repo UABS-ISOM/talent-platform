@@ -31,16 +31,58 @@ const router = createRouter({
       component: () => import("@/components/Auth/AuthLayout.vue"),
       children: [
         {
-          path: "verifyemail",
-          name: "ActionsVerifyEmail",
+          path: "confirminfo",
+          name: "ActionsConfirmInfo",
           meta: {
             requiresAuth: true,
             unverifiedOnly: true,
           },
           component: () =>
-            import(
-              "@/components/Actions/VerifyEmail/ActionsVerifyEmailView.vue"
-            ),
+            import("@/components/Actions/ActionsConfirmInfoView.vue"),
+        },
+
+        // Handle auth email actions
+        {
+          path: "emailhandler",
+          name: "ActionsEmailHandler",
+          beforeEnter: (to) => {
+            switch (to.query.mode) {
+              case "resetPassword":
+                // Display reset password UI
+                return { name: "ActionsResetPassword", query: to.query };
+              case "recoverEmail":
+                // Display email recovery UI
+                return { name: "ActionsRecoverEmail", query: to.query };
+              case "verifyEmail":
+                // Display email verification UI
+                return { name: "ActionsVerifyEmail", query: to.query };
+              default:
+                return "/";
+            }
+          },
+          component: () =>
+            import("@/components/Actions/ActionsEmailHandlerView.vue"),
+        },
+
+        {
+          path: "resetpassword",
+          name: "ActionsResetPassword",
+          component: () =>
+            import("@/components/Actions/ActionsResetPasswordView.vue"),
+        },
+
+        {
+          path: "recoveremail",
+          name: "ActionsRecoverEmail",
+          component: () =>
+            import("@/components/Actions/ActionsRecoverEmailView.vue"),
+        },
+
+        {
+          path: "verifyemail",
+          name: "ActionsVerifyEmail",
+          component: () =>
+            import("@/components/Actions/ActionsVerifyEmailView.vue"),
         },
       ],
     },
@@ -59,22 +101,22 @@ const router = createRouter({
           component: () =>
             import("@/components/Auth/Select/AuthSelectView.vue"),
         },
+
         {
           path: "signup",
           name: "AuthSignUp",
-          component: () =>
-            import("@/components/Auth/SignUp/AuthSignUpView.vue"),
+          component: () => import("@/components/Auth/AuthSignUpView.vue"),
         },
+
         {
           path: "forgottenpassword",
           name: "AuthForgottenPassword",
           component: () =>
-            import(
-              "@/components/Auth/ForgottenPassword/AuthForgottenPasswordView.vue"
-            ),
+            import("@/components/Auth/AuthForgottenPasswordView.vue"),
         },
       ],
     },
+
     {
       path: "/:catchAll(.*)*",
       component: () => import("@/components/404Error.vue"),
@@ -116,7 +158,7 @@ export const findCorrectedRoute = (
   );
 
   if (requiresVerification && user !== null && !user?.emailVerified)
-    return { name: "ActionsVerifyEmail" };
+    return { name: "ActionsConfirmInfo" };
   if (unverifiedOnly && user !== null && user?.emailVerified)
     return { name: "Chat" };
 };
