@@ -66,7 +66,7 @@
             color="primary"
             class="full-width"
             icon="mdi-account-plus"
-            label="Sign Up"
+            label="Sign up"
           />
         </div>
       </q-form>

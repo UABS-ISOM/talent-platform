@@ -47,7 +47,7 @@
           color="primary"
           class="full-width"
           icon="mdi-login"
-          label="Sign In"
+          label="Sign in"
         />
       </div>
     </q-form>
@@ -58,7 +58,7 @@
         class="text-center text-dark q-py-sm"
         style="display: block"
       >
-        Sign Up
+        Sign up
       </router-link>
 
       <router-link

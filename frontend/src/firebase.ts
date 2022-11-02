@@ -20,17 +20,9 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
 // Update the auth state when the user changes
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async () => {
   // Update main store with user information
   const mainStore = useMainStore();
-  mainStore.user =
-    user === null
-      ? null
-      : {
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email ?? "",
-        };
   mainStore.userLoaded = true;
 
   // Determine if route needs to be changed

@@ -1,28 +1,30 @@
 <template>
   <AuthCard>
     <div class="q-py-sm">
-      <AuthHeader>Forgotten your password?</AuthHeader>
+      <div class="text-h4 q-py-md">Confirm your information</div>
+
+      <p class="q-py-sm q-mb-none">
+        Hi {{ auth.currentUser?.displayName ?? auth.currentUser?.email ?? "" }},
+        we need to confirm your name and verify your email address before you
+        can continue.
+      </p>
 
       <q-form autofocus @submit="onSubmit">
         <div class="q-py-sm">
           <q-input
-            v-model="email"
-            autocomplete="email"
+            v-model="name"
+            autocomplete="name"
             no-error-icon
             hide-bottom-space
             :rules="[RULES.required]"
-            type="email"
-            placeholder="john.smith@auckland.ac.nz"
-            label="Email address"
-          >
-            <template #prepend>
-              <q-icon name="mdi-email" />
-            </template>
-          </q-input>
+            type="text"
+            placeholder="John Smith"
+            label="Full name"
+          />
         </div>
 
         <GenericAlert v-model="success" type="success" class="q-py-sm">
-          Password reset email successfully sent.
+          Verification email successfully sent to {{ successEmailAddress }}.
         </GenericAlert>
 
         <GenericAlert v-model="error" type="error" class="q-py-sm">
@@ -38,10 +40,12 @@
             color="primary"
             class="full-width"
             icon="mdi-email-fast"
-            label="Send reset email"
+            label="Send verification email"
           />
         </div>
       </q-form>
+
+      <ActionsSignOutButton />
     </div>
   </AuthCard>
 </template>
@@ -49,44 +53,47 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { RULES, GENERIC_ERROR } from "@/helpers";
-import AuthCard from "../AuthCard.vue";
-import AuthHeader from "../AuthHeader.vue";
+import AuthCard from "@/components/Auth/AuthCard.vue";
 import GenericAlert from "@/components/GenericAlert.vue";
-import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import ActionsSignOutButton from "./ActionsSignOutButton.vue";
+import { getAuth, updateProfile, sendEmailVerification } from "firebase/auth";
+
+const auth = getAuth();
 
 // Form values
-const email = ref("");
+const name = ref(auth.currentUser?.displayName ?? "");
 
 // Form status
 const success = ref(false);
+const successEmailAddress = ref("");
 const error = ref(false);
 const errorMessage = ref("");
 const loading = ref(false);
 
 /**
- * Sends a password reset email via Firebase authentication.
+ * Updates the user's name then send verification email.
  */
 const onSubmit = () => {
+  if (auth.currentUser === null) return; // Impossible, but makes TS happy
+
   success.value = false;
   error.value = false;
   loading.value = true;
 
-  const auth = getAuth();
-  sendPasswordResetEmail(auth, email.value)
+  Promise.all([
+    updateProfile(auth.currentUser, {
+      displayName: name.value,
+    }),
+    sendEmailVerification(auth.currentUser),
+  ])
     .then(() => {
       // Password reset email sent
+      successEmailAddress.value = auth.currentUser?.email ?? "";
       success.value = true;
     })
-    .catch((reason) => {
+    .catch(() => {
       // Error occurred
-      switch (reason.code) {
-        case "auth/user-not-found":
-          errorMessage.value = "Account doesn't exist.";
-          break;
-        default:
-          errorMessage.value = GENERIC_ERROR;
-      }
-
+      errorMessage.value = GENERIC_ERROR;
       error.value = true;
     })
     .finally(() => {

@@ -10,7 +10,7 @@
               <q-item>
                 <q-item-section style="word-break: break-word">
                   Hi there,
-                  {{ mainStore.user?.displayName ?? mainStore.user?.email }}
+                  {{ auth.currentUser?.displayName ?? auth.currentUser?.email }}
                 </q-item-section>
               </q-item>
 
@@ -36,10 +36,9 @@
 <script setup lang="ts">
 import { getAuth, signOut } from "firebase/auth";
 import { GENERIC_ERROR, APP_NAME } from "@/helpers";
-import { useMainStore } from "@/mainStore";
 import { useQuasar } from "quasar";
 
-const mainStore = useMainStore();
+const auth = getAuth();
 
 const $q = useQuasar();
 
@@ -47,8 +46,6 @@ const $q = useQuasar();
  * Signs the user out.
  */
 const handleSignOut = () => {
-  const auth = getAuth();
-
   signOut(auth).catch(() => {
     // An error occurred
     $q.notify({

@@ -4,6 +4,7 @@ import {
   type RouteLocationNormalized,
 } from "vue-router";
 import { useMainStore } from "@/mainStore";
+import { getAuth } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +13,7 @@ const router = createRouter({
       path: "/",
       meta: {
         requiresAuth: true,
+        requiresVerification: true,
       },
       component: () => import("@/components/Chat/ChatLayout.vue"),
       children: [
@@ -19,6 +21,26 @@ const router = createRouter({
           path: "",
           name: "Chat",
           component: () => import("@/components/Chat/ChatView.vue"),
+        },
+      ],
+    },
+
+    // Individual account actions
+    {
+      path: "/actions",
+      component: () => import("@/components/Auth/AuthLayout.vue"),
+      children: [
+        {
+          path: "verifyemail",
+          name: "ActionsVerifyEmail",
+          meta: {
+            requiresAuth: true,
+            unverifiedOnly: true,
+          },
+          component: () =>
+            import(
+              "@/components/Actions/VerifyEmail/ActionsVerifyEmailView.vue"
+            ),
         },
       ],
     },
@@ -76,13 +98,27 @@ export const findCorrectedRoute = (
   // Get user info
   const mainStore = useMainStore();
   if (!mainStore.userLoaded) return; // Function will be called again when the user is loaded
-  const user = mainStore.user;
+  const user = getAuth().currentUser;
 
-  // Find correct route
+  // User status checks
   const requiresAuth = route.matched.some((route) => route.meta.requiresAuth);
   const unauthOnly = route.matched.some((route) => route.meta.unauthOnly);
+
   if (requiresAuth && user === null) return { name: "Auth" };
   if (unauthOnly && user !== null) return { name: "Chat" };
+
+  // Email verification checks
+  const requiresVerification = route.matched.some(
+    (route) => route.meta.requiresVerification
+  );
+  const unverifiedOnly = route.matched.some(
+    (route) => route.meta.unverifiedOnly
+  );
+
+  if (requiresVerification && user !== null && !user?.emailVerified)
+    return { name: "ActionsVerifyEmail" };
+  if (unverifiedOnly && user !== null && user?.emailVerified)
+    return { name: "Chat" };
 };
 
 export default router;
