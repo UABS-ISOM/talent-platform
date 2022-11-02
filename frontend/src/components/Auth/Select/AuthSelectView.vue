@@ -2,7 +2,9 @@
   <AuthCard>
     <div class="text-h4 q-py-md">Welcome to {{ APP_NAME }}</div>
 
-    <AuthSelectGoogle />
+    <div class="q-py-sm">
+      <AuthSelectGoogle />
+    </div>
 
     <div class="q-my-md" style="padding: 0.5em 0; position: relative">
       <q-separator />

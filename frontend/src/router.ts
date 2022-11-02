@@ -4,6 +4,7 @@ import {
   type RouteLocationNormalized,
 } from "vue-router";
 import { useMainStore } from "@/mainStore";
+import { setTitle } from "@/helpers";
 import { getAuth } from "firebase/auth";
 
 const router = createRouter({
@@ -20,6 +21,9 @@ const router = createRouter({
         {
           path: "",
           name: "Chat",
+          meta: {
+            title: "Chat",
+          },
           component: () => import("@/components/Chat/ChatView.vue"),
         },
       ],
@@ -29,6 +33,7 @@ const router = createRouter({
     {
       path: "/actions",
       component: () => import("@/components/Auth/AuthLayout.vue"),
+      redirect: "/",
       children: [
         {
           path: "confirminfo",
@@ -36,6 +41,7 @@ const router = createRouter({
           meta: {
             requiresAuth: true,
             unverifiedOnly: true,
+            title: "Confirm Information",
           },
           component: () =>
             import("@/components/Actions/ActionsConfirmInfoView.vue"),
@@ -60,20 +66,24 @@ const router = createRouter({
                 return "/";
             }
           },
-          component: () =>
-            import("@/components/Actions/ActionsEmailHandlerView.vue"),
+          component: () => {},
         },
 
         {
           path: "resetpassword",
           name: "ActionsResetPassword",
-          component: () =>
-            import("@/components/Actions/ActionsResetPasswordView.vue"),
+          meta: {
+            title: "Reset Password",
+          },
+          component: () => {},
         },
 
         {
           path: "recoveremail",
           name: "ActionsRecoverEmail",
+          meta: {
+            title: "Recover Email",
+          },
           component: () =>
             import("@/components/Actions/ActionsRecoverEmailView.vue"),
         },
@@ -81,6 +91,9 @@ const router = createRouter({
         {
           path: "verifyemail",
           name: "ActionsVerifyEmail",
+          meta: {
+            title: "Verify Email",
+          },
           component: () =>
             import("@/components/Actions/ActionsVerifyEmailView.vue"),
         },
@@ -98,6 +111,9 @@ const router = createRouter({
         {
           path: "",
           name: "Auth",
+          meta: {
+            title: "Welcome",
+          },
           component: () =>
             import("@/components/Auth/Select/AuthSelectView.vue"),
         },
@@ -105,12 +121,18 @@ const router = createRouter({
         {
           path: "signup",
           name: "AuthSignUp",
+          meta: {
+            title: "Sign Up",
+          },
           component: () => import("@/components/Auth/AuthSignUpView.vue"),
         },
 
         {
           path: "forgottenpassword",
           name: "AuthForgottenPassword",
+          meta: {
+            title: "Forgotten your password?",
+          },
           component: () =>
             import("@/components/Auth/AuthForgottenPasswordView.vue"),
         },
@@ -126,6 +148,11 @@ const router = createRouter({
 
 // Route guard to ensure the user is authenticated
 router.beforeEach((to) => {
+  const title: string = to.matched.find(
+    (route) => typeof route.meta.title === "string"
+  )?.meta.title as string;
+  if (title) setTitle(title);
+
   return findCorrectedRoute(to);
 });
 

@@ -1,7 +1,7 @@
 <template>
   <AuthCard>
     <div class="q-py-sm">
-      <div class="text-h4 q-py-md">Confirm your information</div>
+      <div class="text-h4 q-py-md">Confirm Information</div>
 
       <p class="q-py-sm q-mb-none">
         Hi {{ auth.currentUser?.displayName ?? auth.currentUser?.email ?? "" }},

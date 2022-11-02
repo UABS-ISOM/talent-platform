@@ -1,22 +1,20 @@
 <template>
   <div class="q-py-sm">
-    <div class="q-py-sm">
-      <q-btn
-        no-caps
-        unelevated
-        :loading="loading"
-        color="google"
-        class="full-width"
-        icon="mdi-google"
-        label="Continue with Google"
-        @click="openGooglePopup"
-      />
-    </div>
-
-    <GenericAlert v-model="error" type="error" class="q-py-sm">
-      {{ errorMessage }}
-    </GenericAlert>
+    <q-btn
+      no-caps
+      unelevated
+      :loading="loading"
+      color="google"
+      class="full-width"
+      icon="mdi-google"
+      label="Continue with Google"
+      @click="openGooglePopup"
+    />
   </div>
+
+  <GenericAlert v-model="error" type="error" class="q-py-sm">
+    {{ errorMessage }}
+  </GenericAlert>
 </template>
 
 <script setup lang="ts">
