@@ -8,7 +8,7 @@
       </GenericAlert>
 
       <GenericAlert v-model="error" type="error" class="q-py-sm" static>
-        {{ errorMessage }} Otherwise, your link could be invalid.
+        {{ GENERIC_ERROR }} Otherwise, your link could be invalid.
       </GenericAlert>
     </div>
   </AuthCard>
@@ -26,7 +26,6 @@ import { useRoute } from "vue-router";
 // Status
 const success = ref(false);
 const error = ref(false);
-const errorMessage = ref("");
 const loading = ref(false);
 
 // Execute the action on mount
@@ -44,7 +43,6 @@ onMounted(() => {
     })
     .catch(() => {
       // Error occurred
-      errorMessage.value = GENERIC_ERROR;
       error.value = true;
     })
     .finally(() => {
