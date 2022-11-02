@@ -4,6 +4,10 @@
       <q-toolbar>
         <q-toolbar-title>{{ APP_NAME }}</q-toolbar-title>
 
+        <q-btn no-caps stretch flat label="Chat" />
+        <q-btn no-caps stretch flat label="Groups" />
+        <q-btn no-caps stretch flat label="Courses" />
+
         <q-btn flat round dense icon="mdi-dots-vertical">
           <q-menu>
             <q-list style="min-width: 100px; max-width: 200px">
@@ -39,7 +43,6 @@ import { GENERIC_ERROR, APP_NAME } from "@/helpers";
 import { useQuasar } from "quasar";
 
 const auth = getAuth();
-
 const $q = useQuasar();
 
 /**
