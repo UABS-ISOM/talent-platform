@@ -24,6 +24,7 @@
         </span>
 
         <q-btn
+          v-if="!props.static"
           round
           color="white"
           flat
@@ -44,6 +45,7 @@ const props = defineProps<{
   class?: unknown;
   style?: StyleValue;
   modelValue?: boolean;
+  static?: boolean; // Whether alert should be dismissible
   type: "error" | "success";
 }>();
 

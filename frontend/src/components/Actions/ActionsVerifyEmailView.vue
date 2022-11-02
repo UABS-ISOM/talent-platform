@@ -3,15 +3,13 @@
     <div class="q-py-sm">
       <AuthHeader>Verify your email address</AuthHeader>
 
-      <div>
-        <GenericAlert v-model="success" type="success" class="q-py-sm">
-          Email address successfully verified.
-        </GenericAlert>
+      <GenericAlert v-model="success" type="success" class="q-py-sm" static>
+        Email address successfully verified.
+      </GenericAlert>
 
-        <GenericAlert v-model="error" type="error" class="q-py-sm">
-          {{ errorMessage }} Otherwise, your link could be invalid.
-        </GenericAlert>
-      </div>
+      <GenericAlert v-model="error" type="error" class="q-py-sm" static>
+        {{ errorMessage }} Otherwise, your link could be invalid.
+      </GenericAlert>
     </div>
   </AuthCard>
 </template>
@@ -31,6 +29,7 @@ const error = ref(false);
 const errorMessage = ref("");
 const loading = ref(false);
 
+// Execute the action on mount
 onMounted(() => {
   // Get the action code from the URL
   const actionCode = useRoute().query.oobCode as string;
