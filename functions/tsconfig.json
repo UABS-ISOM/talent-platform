@@ -10,5 +10,4 @@
     "esModuleInterop": true,
   },
   "compileOnSave": true,
-  "include": ["src"]
 }

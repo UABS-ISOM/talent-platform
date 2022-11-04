@@ -1,20 +1,8 @@
 import * as functions from 'firebase-functions';
-import { ApolloServer, gql } from 'apollo-server-cloud-functions';
+import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+import typeDefs from './typeDefs';
+import resolvers from './resolvers';
 
 const server = new ApolloServer({
   typeDefs,
