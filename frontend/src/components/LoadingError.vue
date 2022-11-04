@@ -10,19 +10,10 @@
     <q-page-container>
       <q-page class="row items-center justify-evenly">
         <div class="text-white text-center">
-          <h1>404</h1>
-
           <GenericAlert :model-value="true" type="error" static>
-            We're sorry, this page doesn't exist.
+            We're sorry, an error occured while loading this page. Please check
+            your connection and try again later.
           </GenericAlert>
-
-          <q-btn
-            no-caps
-            unelevated
-            to="/"
-            color="primary"
-            label="Take me home!"
-          />
         </div>
       </q-page>
     </q-page-container>

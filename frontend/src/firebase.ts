@@ -3,8 +3,10 @@ import {
   getAuth,
   connectAuthEmulator,
   onAuthStateChanged,
+  onIdTokenChanged,
 } from "firebase/auth";
 import { useMainStore } from "@/mainStore";
+import { setToken } from "./gql";
 import router, { findCorrectedRoute } from "./router";
 
 const firebaseConfig = {
@@ -20,7 +22,9 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
 // Update the auth state when the user changes
-onAuthStateChanged(auth, async () => {
+onAuthStateChanged(auth, async (user) => {
+  setToken(user);
+
   // Update main store with user information
   const mainStore = useMainStore();
   mainStore.userLoaded = true;
@@ -29,6 +33,9 @@ onAuthStateChanged(auth, async () => {
   const redirect = findCorrectedRoute();
   if (redirect) await router.replace(redirect);
 });
+
+// Ensure GraphQL requests are sent with authorisation
+onIdTokenChanged(auth, setToken);
 
 // Connect to the emulators if we're in development
 if (import.meta.env.DEV) {

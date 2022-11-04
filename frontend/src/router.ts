@@ -16,15 +16,23 @@ const router = createRouter({
         requiresAuth: true,
         requiresVerification: true,
       },
-      component: () => import("@/components/Chat/ChatLayout.vue"),
+      component: () => import("@/components/App/AppLayout.vue"),
       children: [
         {
           path: "",
-          name: "Chat",
+          name: "AppChat",
           meta: {
             title: "Chat",
           },
-          component: () => import("@/components/Chat/ChatView.vue"),
+          component: () => import("@/components/App/ChatView.vue"),
+        },
+        {
+          path: "profile",
+          name: "AppProfile",
+          meta: {
+            title: "My Profile",
+          },
+          component: () => import("@/components/App/ProfileView.vue"),
         },
       ],
     },
@@ -187,7 +195,7 @@ export const findCorrectedRoute = (
   if (requiresVerification && user !== null && !user?.emailVerified)
     return { name: "ActionsConfirmInfo" };
   if (unverifiedOnly && user !== null && user?.emailVerified)
-    return { name: "Chat" };
+    return { name: "AppChat" };
 };
 
 export default router;

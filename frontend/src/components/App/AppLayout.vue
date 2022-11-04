@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-toolbar-title>{{ APP_NAME }}</q-toolbar-title>
 
-        <q-btn no-caps stretch flat label="Chat" />
+        <q-btn no-caps stretch flat label="Chat" :to="{ name: 'AppChat' }" />
         <q-btn no-caps stretch flat label="Groups" />
         <q-btn no-caps stretch flat label="Courses" />
 
@@ -18,12 +18,20 @@
                 </q-item-section>
               </q-item>
 
+              <q-item v-close-popup clickable :to="{ name: 'AppProfile' }">
+                <q-item-section avatar>
+                  <q-icon name="mdi-account" />
+                </q-item-section>
+
+                <q-item-section>My Profile</q-item-section>
+              </q-item>
+
               <q-item v-close-popup clickable @click="handleSignOut">
                 <q-item-section avatar>
                   <q-icon name="mdi-logout" />
                 </q-item-section>
 
-                <q-item-section>Sign out</q-item-section>
+                <q-item-section>Sign Out</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
