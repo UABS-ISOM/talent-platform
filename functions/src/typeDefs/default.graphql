@@ -1,7 +1,8 @@
-  type Query {
-    _: Boolean
-  }
+type Query {
+  _: Boolean
+  me: User
+}
 
-  type Mutation {
-    _: Boolean
-  }
+type Mutation {
+  _: Boolean
+}

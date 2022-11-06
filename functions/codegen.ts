@@ -5,6 +5,7 @@ const config: CodegenConfig = {
   schema: './src/typeDefs/*.graphql',
   generates: {
     'src/__generated__/graphql.ts': {
+      config: { contextType: 'src/context#Context' },
       plugins: ['typescript', 'typescript-resolvers'],
     },
   },

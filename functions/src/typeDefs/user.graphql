@@ -1,8 +1,5 @@
 type User {
   name: String
   email: String!
-}
-
-extend type Query {
-  me: User
+  courses: [Course]!
 }

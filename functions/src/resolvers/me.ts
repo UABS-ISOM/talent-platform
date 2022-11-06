@@ -4,6 +4,7 @@ const resolver: QueryResolvers = {
   me: () => ({
     name: 'John',
     email: 'john.smith@example.com',
+    courses: [],
   }),
 };
 
