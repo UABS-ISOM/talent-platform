@@ -20,11 +20,12 @@ const router = createRouter({
       children: [
         {
           path: "",
-          name: "AppChat",
+          name: "AppCourses",
           meta: {
-            title: "Chat",
+            title: "Courses",
           },
-          component: () => import("@/components/App/ChatView.vue"),
+          component: () =>
+            import("@/components/App/Courses/AppCoursesView.vue"),
         },
         {
           path: "profile",
@@ -182,7 +183,7 @@ export const findCorrectedRoute = (
   const unauthOnly = route.matched.some((route) => route.meta.unauthOnly);
 
   if (requiresAuth && user === null) return { name: "Auth" };
-  if (unauthOnly && user !== null) return { name: "Chat" };
+  if (unauthOnly && user !== null) return { name: "AppCourses" };
 
   // Email verification checks
   const requiresVerification = route.matched.some(
@@ -195,7 +196,7 @@ export const findCorrectedRoute = (
   if (requiresVerification && user !== null && !user?.emailVerified)
     return { name: "ActionsConfirmInfo" };
   if (unverifiedOnly && user !== null && user?.emailVerified)
-    return { name: "AppChat" };
+    return { name: "AppCourses" };
 };
 
 export default router;

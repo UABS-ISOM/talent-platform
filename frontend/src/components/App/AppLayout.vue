@@ -4,9 +4,13 @@
       <q-toolbar>
         <q-toolbar-title>{{ APP_NAME }}</q-toolbar-title>
 
-        <q-btn no-caps stretch flat label="Chat" :to="{ name: 'AppChat' }" />
-        <q-btn no-caps stretch flat label="Groups" />
-        <q-btn no-caps stretch flat label="Courses" />
+        <q-btn
+          no-caps
+          stretch
+          flat
+          label="Courses"
+          :to="{ name: 'AppCourses' }"
+        />
 
         <q-btn flat round dense icon="mdi-dots-vertical">
           <q-menu>

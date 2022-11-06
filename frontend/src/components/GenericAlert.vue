@@ -14,7 +14,6 @@
       >
         <q-icon
           :name="props.type === 'error' ? 'mdi-alert' : 'mdi-party-popper'"
-          aria-label="Close alert"
           left
           size="sm"
         />
