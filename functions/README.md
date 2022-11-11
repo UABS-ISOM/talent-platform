@@ -4,7 +4,7 @@ Backend written in TS, running an Apollo GraphQL server implementation for Googl
 
 ## Project Setup
 
-First, ensure Firebase Tools are installed on your system.
+First, install [Firebase CLI](https://firebase.google.com/docs/cli).
 
 ```sh
 npm install

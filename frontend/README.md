@@ -10,6 +10,19 @@ Frontend written in Vue 3, using Quasar for UI.
 npm install
 ```
 
+Download (mkcert)[https://github.com/FiloSottile/mkcert]. Add the CA to your system trust store:
+
+```sh
+mkcert -install
+```
+
+Then generate a SSL certificate for localhost in any folder.
+
+```sh
+cd ~
+mkcert localhost
+```
+
 ### Setup .env file from template.env
 
 Copy the template.env file to .env and fill in the values. Variables starting with `VITE_FIREBASE` are used by Firebase, and their values are used in initialisation.
