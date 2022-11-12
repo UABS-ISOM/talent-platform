@@ -28,6 +28,14 @@ const router = createRouter({
             import("@/components/App/Courses/AppCoursesView.vue"),
         },
         {
+          path: "course/:id",
+          name: "AppCourse",
+          meta: {
+            title: "Course",
+          },
+          component: () => import("@/components/App/Course/AppCourseView.vue"),
+        },
+        {
           path: "profile",
           name: "AppProfile",
           meta: {

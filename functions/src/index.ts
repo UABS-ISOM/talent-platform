@@ -8,7 +8,7 @@ import { ApolloServer } from 'apollo-server-cloud-functions';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
-import { checkAuth } from './utils/auth';
+import { getUser } from './utils/auth';
 import collections from './collections';
 
 const server = new ApolloServer({
@@ -19,8 +19,9 @@ const server = new ApolloServer({
 
   context: async ({ req }) => {
     const user = req.headers.authorization
-      ? await checkAuth(req.headers.authorization)
+      ? await getUser(req.headers.authorization)
       : undefined;
+
     return { user, collections };
   },
 

@@ -1,3 +1,4 @@
+import { UserRecord } from 'firebase-admin/auth';
 import { DocumentData } from 'firebase-admin/firestore';
 
 /**
@@ -9,6 +10,15 @@ import { DocumentData } from 'firebase-admin/firestore';
  * @extends {DocumentData}
  */
 export interface CourseDoc extends DocumentData {
-  code: string;
+  name: string;
   description: string;
+}
+
+export interface UserMapper {
+  _userModel: UserRecord;
+}
+
+export interface CourseMapper {
+  _id: string;
+  _courseModel: CourseDoc;
 }

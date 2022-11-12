@@ -5,7 +5,13 @@ const config: CodegenConfig = {
   schema: './src/typeDefs/*.graphql',
   generates: {
     'src/__generated__/graphql.ts': {
-      config: { contextType: 'src/context#Context' },
+      config: {
+        contextType: '../context#Context',
+        mappers: {
+          User: '../collections/models#UserMapper',
+          Course: '../collections/models#CourseMapper',
+        },
+      },
       plugins: ['typescript', 'typescript-resolvers'],
     },
   },

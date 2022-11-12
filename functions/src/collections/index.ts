@@ -2,6 +2,8 @@ import type { Collections } from '../context';
 import { CourseDoc } from './models';
 import { typedCollection } from './generics';
 
-export default (): Collections => ({
+const collections: Collections = {
   courses: typedCollection<CourseDoc>('courses'),
-});
+};
+
+export default collections;

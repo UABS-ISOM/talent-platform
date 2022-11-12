@@ -1,3 +1,4 @@
+import { DecodedIdToken } from 'firebase-admin/auth';
 import { CollectionReference } from 'firebase-admin/firestore';
 import { CourseDoc } from './collections/models';
 
@@ -18,6 +19,7 @@ export type Collections = {
  * @interface Context
  * @typedef {Context}
  */
-export default interface Context {
+export interface Context {
+  user: DecodedIdToken | undefined;
   collections: Collections;
 }

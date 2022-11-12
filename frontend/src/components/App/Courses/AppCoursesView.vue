@@ -26,7 +26,9 @@
             @click="showCreateDialog = true"
           />
 
-          <AppCoursesAddDialog v-model="showCreateDialog" />
+          <CustomDialog v-model="showCreateDialog" title="Add a Course">
+            <AppCoursesAddDialog />
+          </CustomDialog>
         </div>
 
         <p class="q-mb-none">
@@ -48,6 +50,7 @@ import { ref } from "vue";
 import AppCourseCard from "./AppCourseCard.vue";
 import AppCoursesNone from "./AppCoursesNone.vue";
 import AppCoursesAddDialog from "./AppCoursesAddDialog.vue";
+import CustomDialog from "@/components/CustomDialog.vue";
 
 const showCreateDialog = ref(false);
 </script>

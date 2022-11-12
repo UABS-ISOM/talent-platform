@@ -6,7 +6,7 @@ import type { DecodedIdToken } from 'firebase-admin/auth';
  * @param token The authorization bearer value.
  * @return The decoded user token, if valid.
  */
-export const checkAuth = async (
+export const getUser = async (
   token: string
 ): Promise<DecodedIdToken | undefined> => {
   token = token.slice(7); // Length of "Bearer " at beginning of header
