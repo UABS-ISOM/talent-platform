@@ -47,8 +47,9 @@
 import { ref } from "vue";
 import { RULES, GENERIC_ERROR } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
-import { useAddCourseMutation } from "@/gql/mutations";
+import { useMutation } from "@vue/apollo-composable";
 import router from "@/router";
+import { graphql } from "@/gql/__generated__";
 
 // Form values
 const name = ref("");
@@ -58,7 +59,15 @@ const description = ref("");
 const error = ref(false);
 const loading = ref(false);
 
-const { mutate: addCourse } = useAddCourseMutation();
+const { mutate: addCourse } = useMutation(
+  graphql(`
+    mutation Mutation($name: String!, $description: String!) {
+      addCourse(name: $name, description: $description) {
+        id
+      }
+    }
+  `)
+);
 
 const onSubmit = async () => {
   error.value = false;
@@ -71,10 +80,11 @@ const onSubmit = async () => {
       description: description.value,
     });
 
-    await router.push({
-      name: "AppCourse",
-      params: { id: data?.data.addCourse.id },
-    });
+    if (data?.data)
+      await router.push({
+        name: "AppCourse",
+        params: { id: data.data.addCourse.id },
+      });
   } catch (e) {
     error.value = true;
     loading.value = false;

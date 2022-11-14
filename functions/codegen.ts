@@ -9,7 +9,11 @@ const config: CodegenConfig = {
         contextType: '../context#Context',
         mappers: {
           User: '../collections/models#UserMapper',
+          UserExperience: '../collections/models#UserExperienceMapper',
           Course: '../collections/models#CourseMapper',
+        },
+        scalars: {
+          Date: 'string',
         },
       },
       plugins: ['typescript', 'typescript-resolvers'],

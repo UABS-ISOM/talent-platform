@@ -1,0 +1,9 @@
+type UserExperience {
+  id: ID!
+  title: String!
+  company: String!
+  location: String!
+  startDate: Date!
+  endDate: Date
+  description: String!
+}

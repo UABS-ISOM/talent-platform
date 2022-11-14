@@ -1,6 +1,6 @@
 import { DecodedIdToken } from 'firebase-admin/auth';
 import { CollectionReference } from 'firebase-admin/firestore';
-import { CourseDoc } from './collections/models';
+import { UserDoc, CourseDoc, UserExperienceDoc } from './collections/models';
 
 /**
  * Type of the available data sources
@@ -9,6 +9,8 @@ import { CourseDoc } from './collections/models';
  * @typedef {Collections}
  */
 export type Collections = {
+  users: CollectionReference<UserDoc>;
+  userExperiences: CollectionReference<UserExperienceDoc>;
   courses: CollectionReference<CourseDoc>;
 };
 

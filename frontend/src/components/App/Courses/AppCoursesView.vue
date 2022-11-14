@@ -1,6 +1,6 @@
 <template>
   <q-page class="row content-start">
-    <div class="col-sm-10 col-xl-8 q-mx-auto q-pa-sm">
+    <div class="col-12 col-sm-10 col-xl-8 q-mx-auto q-pa-sm">
       <div class="q-px-sm q-py-md">
         <h2 class="text-h4 q-mt-none q-mb-sm">My Courses</h2>
 

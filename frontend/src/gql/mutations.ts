@@ -6,8 +6,6 @@ export const useAddCourseMutation = () =>
     mutation Mutation($name: String!, $description: String!) {
       addCourse(name: $name, description: $description) {
         id
-        name
-        description
       }
     }
   `);

@@ -25,5 +25,15 @@
   "rules": {
     "import/no-unresolved": 0,
     "valid-jsdoc": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.graphql"],
+      "extends": "plugin:@graphql-eslint/schema-recommended",
+      "rules": {
+        "@graphql-eslint/known-type-names": "error",
+        "prettier/prettier": "error"
+      }
+    }
+  ]
 }

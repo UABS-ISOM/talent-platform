@@ -1,0 +1,9 @@
+schema: "../functions/src/typeDefs/*.graphql"
+documents: ["src/**/*.vue"]
+ignoreNoDocuments: true # for better experience with the watcher
+generates:
+  "./src/gql/__generated__/":
+    preset: "client"
+    config:
+      useTypeImports: true,
+    plugins: []

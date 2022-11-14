@@ -18,6 +18,12 @@ This generates schema types and runs the Firebase Functions emulator.
 npm run serve
 ```
 
+GraphQL types are generated automatically before `npm run serve` and `npm run build` from the `src/typeDefs` folder. If you update the schema, you need to update the types.
+
+```sh
+npm run codegen
+```
+
 ### Type-Check, Compile and Send to Production
 
 ```sh

@@ -5,5 +5,7 @@ type Query {
 
 type Mutation {
   _: Boolean
-  addCourse(name: String!, description: String!): Course
+  addCourse(name: String!, description: String!): Course!
 }
+
+scalar Date

@@ -33,10 +33,17 @@ Copy the template.env file to .env and fill in the values. Variables starting wi
 npm run dev
 ```
 
+GraphQL types are generated automatically before `npm run dev` and `npm run build` from usage and the schema in the `functions/src/typeDefs` folder. If you update the schema, you need to update the types.
+
+```sh
+npm run codegen
+```
+
 ### Type-Check, Compile and Minify for Production
 
 ```sh
 npm run build
+firebase deploy --only hosting
 ```
 
 ### Lint with [ESLint](https://eslint.org/)

@@ -8,7 +8,7 @@
     "shell": "npm run build && firebase functions:shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen": "graphql-codegen",
     "preserve": "npm run codegen",
     "prebuild": "npm run codegen",
     "prebuild:watch": "npm run codegen"
@@ -21,12 +21,14 @@
     "apollo-server-cloud-functions": "^3.10.4",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0",
-    "graphql": "^16.6.0"
+    "graphql": "^16.6.0",
+    "graphql-scalars": "^1.20.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.11",
     "@graphql-codegen/typescript": "2.8.1",
     "@graphql-codegen/typescript-resolvers": "2.7.6",
+    "@graphql-eslint/eslint-plugin": "^3.13.1",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "eslint": "^8.9.0",
