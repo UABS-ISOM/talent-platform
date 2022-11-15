@@ -44,6 +44,31 @@ const resolvers: Resolvers = {
       // Send the new course to the Course resolver
       return { _id: courseRef.id, _courseDoc: courseData };
     },
+
+    // Edit the current user's details
+    async editMe(_, { input }, { user, collections }) {
+      // Ensure the user is authenticated
+      user = ensureAuth(user);
+      ensureVerified(user);
+
+      // Update the user's Firestore document
+      const userRef = await collections.users.doc(user.uid);
+      await userRef.set(
+        {
+          ...(typeof input.overview === 'string'
+            ? { overview: input.overview }
+            : {}),
+          ...(Array.isArray(input.skills) ? { skills: input.skills } : {}),
+        },
+        { merge: true }
+      );
+
+      // Send the updated user to the User resolver
+      return {
+        _userRecord: await getAuth().getUser(user.uid),
+        _userDoc: (await userRef.get()).data() ?? {},
+      };
+    },
   },
 
   User,

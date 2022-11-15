@@ -1,4 +1,4 @@
-import { UserResolvers } from '../__generated__/graphql';
+import { Role, UserResolvers } from '../__generated__/graphql';
 
 // Resolvers for the User type
 const resolver: UserResolvers = {
@@ -11,6 +11,12 @@ const resolver: UserResolvers = {
     `https://ui-avatars.com/api/?background=random&name=${encodeURIComponent(
       parent._userRecord.displayName ?? 'Unnamed User'
     )}`,
+  roles: parent =>
+    parent._userRecord.emailVerified && parent._userRecord.email !== undefined
+      ? parent._userRecord.email?.endsWith('auckland.ac.nz')
+        ? [Role.Staff]
+        : [Role.Student]
+      : [],
 
   // Resolve information from the user's Firestore document
   pronouns: parent => parent._userDoc.pronouns ?? null,

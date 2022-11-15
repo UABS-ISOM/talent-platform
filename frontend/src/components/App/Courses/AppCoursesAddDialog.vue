@@ -61,7 +61,7 @@ const loading = ref(false);
 
 const { mutate: addCourse } = useMutation(
   graphql(`
-    mutation Mutation($name: String!, $description: String!) {
+    mutation AddCourseMutation($name: String!, $description: String!) {
       addCourse(name: $name, description: $description) {
         id
       }
