@@ -6,6 +6,12 @@ type Query {
 type Mutation {
   _: Boolean
   addCourse(name: String!, description: String!): Course!
+  editMe(input: EditMeInput!): User!
+}
+
+input EditMeInput {
+  overview: String
+  skills: [String!]
 }
 
 scalar Date

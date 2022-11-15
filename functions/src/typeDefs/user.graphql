@@ -3,9 +3,16 @@ type User {
   name: String!
   email: String!
   photoUrl: String!
+  roles: [Role!]!
   pronouns: String
   overview: String!
-  skills: [String]!
-  experience: [UserExperience]!
-  courses: [Course]!
+  skills: [String!]!
+  experience: [UserExperience!]!
+  courses: [Course!]!
+}
+
+enum Role {
+  STUDENT
+  STAFF
+  ADMIN
 }

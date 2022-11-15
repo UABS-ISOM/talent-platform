@@ -39,5 +39,5 @@ onIdTokenChanged(auth, setToken);
 
 // Connect to the emulators if we're in development
 if (import.meta.env.DEV) {
-  connectAuthEmulator(auth, "http://localhost:9099");
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
 }

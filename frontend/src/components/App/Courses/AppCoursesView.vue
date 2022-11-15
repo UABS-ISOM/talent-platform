@@ -11,7 +11,9 @@
         </p>
       </div>
 
-      <AppCoursesNone />
+      <div class="q-pa-sm">
+        <GenericNone>You're not enrolled in any courses.</GenericNone>
+      </div>
 
       <div class="q-px-sm q-py-md">
         <div class="row items-center justify-between q-mb-sm q-gutter-sm">
@@ -48,7 +50,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import AppCourseCard from "./AppCourseCard.vue";
-import AppCoursesNone from "./AppCoursesNone.vue";
+import GenericNone from "@/components/GenericNone.vue";
 import AppCoursesAddDialog from "./AppCoursesAddDialog.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
 
