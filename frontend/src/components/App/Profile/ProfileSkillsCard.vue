@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, type VNodeRef } from "vue";
 import ProfileCard from "./ProfileCard.vue";
 import type { EditMeInput } from "@/gql/__generated__/graphql";
 
