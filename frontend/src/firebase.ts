@@ -6,8 +6,8 @@ import {
   onIdTokenChanged,
 } from "firebase/auth";
 import { useMainStore } from "@/mainStore";
-import { setToken } from "./gql";
 import router, { findCorrectedRoute } from "./router";
+import { apolloClient } from "./gql";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -22,8 +22,8 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
 // Update the auth state when the user changes
-onAuthStateChanged(auth, async (user) => {
-  setToken(user);
+onAuthStateChanged(auth, async () => {
+  if (auth.currentUser === null) apolloClient.cache.reset();
 
   // Update main store with user information
   const mainStore = useMainStore();
@@ -33,9 +33,6 @@ onAuthStateChanged(auth, async (user) => {
   const redirect = findCorrectedRoute();
   if (redirect) await router.replace(redirect);
 });
-
-// Ensure GraphQL requests are sent with authorisation
-onIdTokenChanged(auth, setToken);
 
 // Connect to the emulators if we're in development
 if (import.meta.env.DEV) {

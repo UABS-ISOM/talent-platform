@@ -6,7 +6,16 @@
         v-model="newOverview"
         min-height="5rem"
         class="q-mb-md"
+        :toolbar="[
+          ['bold', 'italic', 'underline'],
+          ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+          ['undo', 'redo'],
+        ]"
       />
+
+      <GenericAlert v-model="error" type="error" class="full-width q-mb-md">
+        {{ GENERIC_ERROR }}
+      </GenericAlert>
 
       <div class="row justify-end q-mb-md">
         <q-btn
@@ -26,9 +35,8 @@
         You can add a short bio here. This will be displayed on your profile.
       </p>
 
-      <p v-else>
-        {{ overview }}
-      </p>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <p v-else v-html="overview" />
     </template>
   </ProfileCard>
 </template>
@@ -38,6 +46,8 @@ import type { QEditor } from "quasar";
 import { nextTick, ref, watch, type VNodeRef } from "vue";
 import ProfileCard from "./ProfileCard.vue";
 import type { EditMeInput } from "@/gql/__generated__/graphql";
+import { GENERIC_ERROR } from "@/helpers";
+import GenericAlert from "@/components/GenericAlert.vue";
 
 const props = defineProps<{
   overview: string;
@@ -51,6 +61,7 @@ const newOverview = ref("");
 
 const editor = ref<VNodeRef | null>(null);
 const loading = ref(false);
+const error = ref(false);
 
 // Set fields to current values when editMode is enabled
 watch(editMode, (value) => {
@@ -67,16 +78,16 @@ watch(editMode, (value) => {
 /**
  * Saves the new overview.
  */
-const save = async () => {
-  loading.value = true;
-
-  const input: EditMeInput = {
-    overview: newOverview.value,
-  };
-
-  await emit("save", input);
-
-  loading.value = false;
-  editMode.value = false;
-};
+const save = () =>
+  emit(
+    "save",
+    {
+      overview: newOverview.value,
+    } as EditMeInput,
+    loading,
+    error,
+    () => {
+      editMode.value = false;
+    }
+  );
 </script>

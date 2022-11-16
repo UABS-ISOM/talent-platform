@@ -6,6 +6,8 @@ import UserExperience from './UserExperience';
 import Course from './Course';
 import { dataFetchError } from '../utils/errors';
 import { DateResolver } from 'graphql-scalars';
+import escapeHTML from 'escape-html';
+import sanitizeHtml from 'sanitize-html';
 
 const resolvers: Resolvers = {
   Query: {
@@ -36,7 +38,10 @@ const resolvers: Resolvers = {
       ensureVerified(user);
       ensureStaff(user);
 
-      const courseRef = await collections.courses.add({ name, description });
+      const courseRef = await collections.courses.add({
+        name: escapeHTML(name),
+        description: escapeHTML(description),
+      });
       const courseData = (await courseRef.get()).data();
 
       if (courseData === undefined) throw dataFetchError();
@@ -56,9 +61,11 @@ const resolvers: Resolvers = {
       await userRef.set(
         {
           ...(typeof input.overview === 'string'
-            ? { overview: input.overview }
+            ? { overview: sanitizeHtml(input.overview) }
             : {}),
-          ...(Array.isArray(input.skills) ? { skills: input.skills } : {}),
+          ...(Array.isArray(input.skills)
+            ? { skills: input.skills.map(skill => escapeHTML(skill)) }
+            : {}),
         },
         { merge: true }
       );
