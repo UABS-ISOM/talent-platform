@@ -1,26 +1,37 @@
 <template>
-  <q-page v-if="me !== undefined" class="row content-start">
-    <div class="row col-12 col-sm-10 col-xl-8 q-pa-sm q-mx-auto">
-      <div class="col-12 col-sm-5 col-md-4 col-lg-3 q-pa-sm">
-        <ProfileSideCard
-          :name="me.name"
-          :photo-url="me.photoUrl"
-          :roles="me.roles"
-          :pronouns="me.pronouns ?? undefined"
-        />
-      </div>
+  <GenericPage v-if="getMeLoading || getMeError" class="row">
+    <ProfileLoader v-if="getMeLoading" />
 
-      <div class="col-12 col-sm-7 col-md-8 col-lg-9 q-pa-sm">
-        <ProfileOverviewCard :overview="me.overview" @save="save" />
+    <GenericAlert
+      :model-value="getMeError !== null"
+      static
+      type="error"
+      class="full-width"
+    >
+      {{ GENERIC_ERROR }}
+    </GenericAlert>
+  </GenericPage>
 
-        <ProfileSkillsCard :skills="me.skills" @save="save" />
-      </div>
+  <GenericPage v-else-if="me !== undefined" class="row">
+    <div class="col-12 col-md-4 col-lg-3 q-pa-sm">
+      <ProfileSideCard
+        :name="me.name"
+        :photo-url="me.photoUrl"
+        :roles="me.roles"
+        :pronouns="me.pronouns ?? undefined"
+      />
     </div>
-  </q-page>
+
+    <div class="col-12 col-md-8 col-lg-9 q-pa-sm">
+      <ProfileOverviewCard :overview="me.overview" @save="save" />
+
+      <ProfileSkillsCard :skills="me.skills" @save="save" />
+    </div>
+  </GenericPage>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import type { Ref } from "vue";
 import { graphql } from "@/gql/__generated__";
 import type { EditMeInput } from "@/gql/__generated__/graphql";
 import { useQuery, useMutation } from "@vue/apollo-composable";
@@ -28,7 +39,12 @@ import { computed } from "vue";
 import ProfileSideCard from "./ProfileSideCard.vue";
 import ProfileOverviewCard from "./ProfileOverviewCard.vue";
 import ProfileSkillsCard from "./ProfileSkillsCard.vue";
+import GenericPage from "@/components/GenericPage.vue";
+import ProfileLoader from "./ProfileLoader.vue";
+import GenericAlert from "@/components/GenericAlert.vue";
+import { GENERIC_ERROR } from "@/helpers";
 
+// Get the user's profile
 const {
   result: getMeResult,
   loading: getMeLoading,
@@ -47,20 +63,25 @@ const {
         skills
       }
     }
-  `)
+  `),
+  null,
+  { fetchPolicy: "cache-and-network" }
 );
-
 const me = computed(() => getMeResult.value?.me ?? undefined);
 
-// Form status
-const error = ref(false);
-const loading = ref(false);
-
+// Mutation to save the user's profile
 const { mutate: editMe } = useMutation(
   graphql(`
     mutation EditMeMutation($input: EditMeInput!) {
       editMe(input: $input) {
         id
+        name
+        email
+        photoUrl
+        roles
+        pronouns
+        overview
+        skills
       }
     }
 
@@ -71,17 +92,29 @@ const { mutate: editMe } = useMutation(
   `)
 );
 
-const save = async (input: EditMeInput) => {
+/**
+ * Saves the input to the editMe mutation
+ * @param input The input to save.
+ * @param loading Vue ref to set loading status.
+ * @param error Vue ref to set error status.
+ */
+const save = async (
+  input: EditMeInput,
+  loading: Ref<boolean>,
+  error: Ref<boolean>,
+  onSuccess: () => void
+) => {
   error.value = false;
   loading.value = true;
 
   try {
     // Add the course and redirect to the course page
-    const data = await editMe({ input });
-    console.log(data);
+    await editMe({ input });
+    onSuccess();
   } catch (e) {
     error.value = true;
-    loading.value = false;
   }
+
+  loading.value = false;
 };
 </script>

@@ -25,7 +25,7 @@
         </q-input>
       </q-form>
 
-      <div style="margin: -4px -4px 16px -4px">
+      <div style="margin: -4px -4px 12px -4px">
         <q-chip
           v-for="(skill, index) in newSkills"
           :key="index"
@@ -36,6 +36,10 @@
           {{ skill }}
         </q-chip>
       </div>
+
+      <GenericAlert v-model="error" type="error" class="full-width q-mb-md">
+        {{ GENERIC_ERROR }}
+      </GenericAlert>
 
       <div class="row justify-end q-mb-md">
         <q-btn
@@ -70,6 +74,8 @@
 import { ref, watch, type VNodeRef } from "vue";
 import ProfileCard from "./ProfileCard.vue";
 import type { EditMeInput } from "@/gql/__generated__/graphql";
+import GenericAlert from "@/components/GenericAlert.vue";
+import { GENERIC_ERROR } from "@/helpers";
 
 const props = defineProps<{
   skills: string[];
@@ -84,6 +90,7 @@ const newSkills = ref<string[]>([]);
 
 const input = ref<VNodeRef | null>(null);
 const loading = ref(false);
+const error = ref(false);
 
 // Set fields to current values when editMode is enabled
 watch(editMode, (value) => {
@@ -112,16 +119,16 @@ const removeSkill = (index: number) => {
 /**
  * Saves the new skills.
  */
-const save = async () => {
-  loading.value = true;
-
-  const input: EditMeInput = {
-    skills: newSkills.value,
-  };
-
-  await emit("save", input);
-
-  loading.value = false;
-  editMode.value = false;
-};
+const save = () =>
+  emit(
+    "save",
+    {
+      skills: newSkills.value,
+    } as EditMeInput,
+    loading,
+    error,
+    () => {
+      editMode.value = false;
+    }
+  );
 </script>

@@ -1,36 +1,30 @@
 import {
   ApolloClient,
-  createHttpLink,
+  from,
   InMemoryCache,
+  createHttpLink,
 } from "@apollo/client/core";
-import type { User } from "firebase/auth";
-
-const httpLink = createHttpLink({
-  uri: import.meta.env.VITE_GRAPHQL_SERVER,
-});
-
-// Cache implementation
-const cache = new InMemoryCache();
+import { setContext } from "@apollo/client/link/context";
+import { getAuth } from "firebase/auth";
 
 // Create the apollo client
 export const apolloClient = new ApolloClient({
-  link: httpLink,
-  cache,
+  link: from([
+    // Add auth token to headers
+    setContext(async ({ headers }: Record<string, any>) => {
+      const token = await getAuth().currentUser?.getIdToken();
+      return {
+        headers: {
+          authorization: token ? `Bearer ${token}` : "",
+          ...headers,
+        },
+      };
+    }),
+
+    // Create the http link
+    createHttpLink({ uri: import.meta.env.VITE_GRAPHQL_SERVER }),
+  ]),
+
+  // Cache implementation
+  cache: new InMemoryCache(),
 });
-
-/**
- * Changes the authorisation header sent with every request.
- * @param user The authenticated user.
- */
-export const setToken = async (user: User | null) => {
-  const token = await user?.getIdToken();
-
-  apolloClient.setLink(
-    createHttpLink({
-      uri: import.meta.env.VITE_GRAPHQL_SERVER,
-      headers: {
-        authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-  );
-};
