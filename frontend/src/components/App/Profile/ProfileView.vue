@@ -1,18 +1,5 @@
 <template>
-  <GenericPage v-if="getMeLoading || getMeError" class="row">
-    <ProfileLoader v-if="getMeLoading" />
-
-    <GenericAlert
-      :model-value="getMeError !== null"
-      static
-      type="error"
-      class="full-width"
-    >
-      {{ GENERIC_ERROR }}
-    </GenericAlert>
-  </GenericPage>
-
-  <GenericPage v-else-if="me !== undefined" class="row">
+  <GenericPage v-if="me !== undefined" class="row">
     <div class="col-12 col-md-4 col-lg-3 q-pa-sm">
       <ProfileSideCard
         :name="me.name"
@@ -28,6 +15,19 @@
 
       <ProfileSkillsCard :skills="me.skills" @save="save" />
     </div>
+  </GenericPage>
+
+  <GenericPage v-else-if="getMeLoading || getMeError" class="row">
+    <ProfileLoader v-if="getMeLoading" />
+
+    <GenericAlert
+      :model-value="getMeError !== null"
+      static
+      type="error"
+      class="full-width"
+    >
+      {{ GENERIC_ERROR }}
+    </GenericAlert>
   </GenericPage>
 </template>
 

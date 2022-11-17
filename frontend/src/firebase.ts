@@ -39,6 +39,7 @@ onAuthStateChanged(auth, async () => {
   // Update main store with user information
   const mainStore = useMainStore();
   mainStore.userLoaded = true;
+  mainStore.userClaims = (await auth.currentUser?.getIdTokenResult())?.claims;
 
   // Determine if route needs to be changed
   const redirect = findCorrectedRoute();

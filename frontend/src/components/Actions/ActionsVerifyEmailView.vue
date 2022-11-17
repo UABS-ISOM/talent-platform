@@ -3,12 +3,20 @@
     <div class="q-py-sm">
       <AuthHeader>Verify your email address</AuthHeader>
 
+      <q-spinner-dots
+        v-if="loading"
+        color="primary"
+        size="xl"
+        aria-label="Loading"
+        class="block q-mx-auto q-my-sm"
+      />
+
       <GenericAlert v-model="success" type="success" class="q-py-sm" static>
         Email address successfully verified.
       </GenericAlert>
 
       <GenericAlert v-model="error" type="error" class="q-py-sm" static>
-        {{ GENERIC_ERROR }} Otherwise, your link could be invalid.
+        {{ errorMessage }}
       </GenericAlert>
     </div>
   </AuthCard>
@@ -27,7 +35,8 @@ import { generateClaims } from "@/firebase";
 // Status
 const success = ref(false);
 const error = ref(false);
-const loading = ref(false);
+const errorMessage = ref("");
+const loading = ref(true);
 
 // Execute the action on mount
 onMounted(() => {
@@ -43,8 +52,20 @@ onMounted(() => {
       await auth.currentUser?.reload();
       generateClaims();
     })
-    .catch(() => {
+    .catch((reason) => {
       // Error occurred
+      switch (reason.code) {
+        case "auth/invalid-action-code":
+          errorMessage.value = `This link is invalid.${
+            auth.currentUser !== undefined && auth.currentUser?.emailVerified
+              ? ` The currently signed-in user, ${auth.currentUser.email}, is already verified.`
+              : ""
+          }`;
+          break;
+        default:
+          errorMessage.value = GENERIC_ERROR;
+      }
+
       error.value = true;
     })
     .finally(() => {

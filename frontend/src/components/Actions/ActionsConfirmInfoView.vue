@@ -86,10 +86,12 @@ const onSubmit = () => {
     }),
     sendEmailVerification(auth.currentUser),
   ])
-    .then(() => {
+    .then((data) => {
       // Password reset email sent
       successEmailAddress.value = auth.currentUser?.email ?? "";
       success.value = true;
+
+      console.log(data);
     })
     .catch(() => {
       // Error occurred

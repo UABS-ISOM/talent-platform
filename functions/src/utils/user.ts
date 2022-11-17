@@ -37,7 +37,7 @@ export const ensureVerified = (user: DecodedIdToken): void => {
  * @param user The user to check.
  */
 export const ensureStaff = (user: DecodedIdToken): void => {
-  if (user?.email?.endsWith('@auckland.ac.nz') === false)
+  if (user?.token.staff === false)
     throw new GraphQLError('You are not a staff member.', {
       extensions: {
         code: 'FORBIDDEN',
