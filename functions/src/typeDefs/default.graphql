@@ -5,6 +5,7 @@ type Query {
 
 type Mutation {
   _: Boolean
+  generateClaims: AuthClaims!
   addCourse(name: String!, description: String!): Course!
   editMe(input: EditMeInput!): User!
 }
@@ -14,6 +15,10 @@ input EditMeInput {
   pronouns: String
   overview: String
   skills: [String!]
+}
+
+type AuthClaims {
+  staff: Boolean!
 }
 
 scalar Date

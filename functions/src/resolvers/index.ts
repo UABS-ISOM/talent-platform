@@ -31,10 +31,23 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
+    // Generate custom Auth claims for the user
+    async generateClaims(_, __, { user }) {
+      // Ensure the user is authenticated
+      user = ensureAuth(user);
+      ensureVerified(user);
+
+      // Set claims
+      const claim = { staff: user.email?.endsWith('@auckland.ac.nz') === true };
+      await getAuth().setCustomUserClaims(user.uid, claim);
+
+      return claim;
+    },
+
     // Add a new course to the database
     async addCourse(_, { name, description }, { user, collections }) {
       // Ensure the user is staff
-      user = ensureAuth(user); // TODO: What if user token providd is incorrect/doesn't exist?
+      user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
       ensureVerified(user);
       ensureStaff(user);
 

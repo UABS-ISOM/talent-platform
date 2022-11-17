@@ -14,10 +14,11 @@
     </div>
 
     <div class="q-px-sm q-py-md">
-      <div class="row items-center justify-between q-mb-sm q-gutter-sm">
-        <h2 class="text-h4 q-my-none">Courses I Run</h2>
+      <div class="row items-center justify-between q-mb-sm" style="gap: 8px">
+        <h2 class="text-h4 q-my-none">Courses I Help Run</h2>
 
         <q-btn
+          v-if="mainStore.userClaims?.staff === true"
           no-caps
           unelevated
           color="primary"
@@ -51,6 +52,9 @@ import GenericNone from "@/components/GenericNone.vue";
 import AppCoursesAddDialog from "./AppCoursesAddDialog.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
 import GenericPage from "@/components/GenericPage.vue";
+import { useMainStore } from "@/mainStore";
 
 const showCreateDialog = ref(false);
+
+const mainStore = useMainStore();
 </script>

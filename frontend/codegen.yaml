@@ -1,5 +1,5 @@
 schema: "../functions/src/typeDefs/*.graphql"
-documents: ["src/**/*.vue"]
+documents: ["src/**/*.vue", "src/**/*.ts"]
 ignoreNoDocuments: true # for better experience with the watcher
 generates:
   "./src/gql/__generated__/":
