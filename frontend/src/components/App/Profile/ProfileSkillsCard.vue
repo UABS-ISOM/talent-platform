@@ -104,6 +104,8 @@ watch(editMode, (value) => {
  * Adds a new skill to the list of new skills.
  */
 const addSkill = () => {
+  if (newSkill.value === "") return;
+
   newSkills.value = [...newSkills.value, newSkill.value];
   newSkill.value = "";
   input.value.focus();
@@ -119,7 +121,7 @@ const removeSkill = (index: number) => {
 /**
  * Saves the new skills.
  */
-const save = () =>
+const save = () => {
   emit(
     "save",
     {
@@ -131,4 +133,5 @@ const save = () =>
       editMode.value = false;
     }
   );
+};
 </script>

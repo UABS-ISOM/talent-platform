@@ -19,6 +19,7 @@
         :photo-url="me.photoUrl"
         :roles="me.roles"
         :pronouns="me.pronouns ?? undefined"
+        @save="save"
       />
     </div>
 
