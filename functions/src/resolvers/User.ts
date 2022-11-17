@@ -7,10 +7,12 @@ const resolver: UserResolvers = {
   name: parent => parent._userRecord.displayName ?? 'Unnamed User',
   email: parent => parent._userRecord.email ?? '',
   photoUrl: parent =>
-    parent._userRecord.photoURL ??
-    `https://ui-avatars.com/api/?background=random&name=${encodeURIComponent(
-      parent._userRecord.displayName ?? 'Unnamed User'
-    )}`,
+    parent._userRecord.photoURL !== undefined &&
+    parent._userRecord.photoURL !== ''
+      ? parent._userRecord.photoURL
+      : `https://ui-avatars.com/api/?background=random&name=${encodeURIComponent(
+          parent._userRecord.displayName ?? 'Unnamed User'
+        )}`,
   roles: parent =>
     parent._userRecord.emailVerified && parent._userRecord.email !== undefined
       ? parent._userRecord.email?.endsWith('auckland.ac.nz')

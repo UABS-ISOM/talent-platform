@@ -31,10 +31,23 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
+    // Generate custom Auth claims for the user
+    async generateClaims(_, __, { user }) {
+      // Ensure the user is authenticated
+      user = ensureAuth(user);
+      ensureVerified(user);
+
+      // Set claims
+      const claim = { staff: user.email?.endsWith('@auckland.ac.nz') === true };
+      await getAuth().setCustomUserClaims(user.uid, claim);
+
+      return claim;
+    },
+
     // Add a new course to the database
     async addCourse(_, { name, description }, { user, collections }) {
       // Ensure the user is staff
-      user = ensureAuth(user); // TODO: What if user token providd is incorrect/doesn't exist?
+      user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
       ensureVerified(user);
       ensureStaff(user);
 
@@ -56,19 +69,34 @@ const resolvers: Resolvers = {
       user = ensureAuth(user);
       ensureVerified(user);
 
+      // Update the user's Auth record
+      await getAuth().updateUser(user.uid, {
+        ...(typeof input.name === 'string' && input.name.length > 0
+          ? { displayName: escapeHTML(input.name) }
+          : {}),
+      });
+
       // Update the user's Firestore document
       const userRef = await collections.users.doc(user.uid);
-      await userRef.set(
-        {
-          ...(typeof input.overview === 'string'
-            ? { overview: sanitizeHtml(input.overview) }
-            : {}),
-          ...(Array.isArray(input.skills)
-            ? { skills: input.skills.map(skill => escapeHTML(skill)) }
-            : {}),
-        },
-        { merge: true }
-      );
+      if (input.overview !== null || input.skills !== null)
+        await userRef.set(
+          {
+            ...(typeof input.pronouns === 'string'
+              ? { pronouns: escapeHTML(input.pronouns) }
+              : {}),
+            ...(typeof input.overview === 'string'
+              ? { overview: sanitizeHtml(input.overview) }
+              : {}),
+            ...(Array.isArray(input.skills)
+              ? {
+                  skills: input.skills
+                    .map(skill => escapeHTML(skill))
+                    .filter(skill => skill !== ''),
+                }
+              : {}),
+          },
+          { merge: true }
+        );
 
       // Send the updated user to the User resolver
       return {

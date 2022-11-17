@@ -14,5 +14,4 @@ type User {
 enum Role {
   STUDENT
   STAFF
-  ADMIN
 }

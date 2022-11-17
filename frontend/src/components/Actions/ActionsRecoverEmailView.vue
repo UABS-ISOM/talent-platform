@@ -23,6 +23,7 @@ import AuthHeader from "@/components/Auth/AuthHeader.vue";
 import GenericAlert from "@/components/GenericAlert.vue";
 import { getAuth, checkActionCode, applyActionCode } from "firebase/auth";
 import { useRoute } from "vue-router";
+import { generateClaims } from "@/firebase";
 
 const restoredEmail = ref("");
 
@@ -48,10 +49,11 @@ onMounted(() => {
       // Revert to the old email
       return applyActionCode(auth, actionCode);
     })
-    .then(() => {
+    .then(async () => {
       // Email reverted
       success.value = true;
-      auth.currentUser?.reload();
+      await auth.currentUser?.reload();
+      generateClaims();
     })
     .catch(() => {
       // Error occurred
