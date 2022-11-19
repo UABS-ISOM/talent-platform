@@ -1,7 +1,7 @@
 <template>
   <div
     v-bind="outerProps"
-    class="flex justify-center items-center"
+    class="flex no-wrap justify-between items-center"
     style="gap: 8px"
   >
     {{ value !== "" ? value : defaultText ?? "" }}
@@ -36,7 +36,6 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { RULES } from "@/helpers";
 
 const props = defineProps<{
   modelValue: string;

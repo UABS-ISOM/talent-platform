@@ -46,6 +46,18 @@ export interface CourseDoc extends DocumentData {
   description: string;
 }
 
+/**
+ * A document in the Firestore courses/admins collection
+ *
+ * @export
+ * @interface CourseDoc
+ * @typedef {CourseDoc}
+ * @extends {DocumentData}
+ */
+export interface CourseAdminDoc extends DocumentData {
+  role: 'lecturer' | 'assistant';
+}
+
 export interface UserMapper {
   _userRecord: UserRecord;
   _userDoc: UserDoc;

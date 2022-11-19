@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered dark class="bg-secondary text-center">
+  <q-card flat bordered dark class="bg-secondary">
     <q-card-section class="q-pb-none">
       <q-avatar
         size="140px"
@@ -9,7 +9,10 @@
         <img :src="photoUrl" style="max-width: 100%" />
       </q-avatar>
 
-      <h2 class="text-h6 q-my-none q-mb-md">
+      <h2
+        class="text-h6 q-my-none q-mb-md q-mx-auto"
+        style="width: max-content; max-width: 100%"
+      >
         <ButtonEditor
           :model-value="name"
           :loading="nameLoading"
@@ -29,7 +32,7 @@
         />
       </h2>
 
-      <div class="text-subtitle1 q-mb-md">{{ roleText }}</div>
+      <div class="text-subtitle1 q-mb-md text-center">{{ roleText }}</div>
 
       <GenericAlert
         v-model="error"

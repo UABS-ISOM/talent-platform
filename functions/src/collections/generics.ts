@@ -39,13 +39,21 @@ export class GenericConverter<T> {
  *
  * @export
  * @template T extends DocumentData.
- * @param {string} collection The name of the Firestore collection.
+ * @param {string[]} path The path to the Firestore collection.
  * @return {CollectionReference<T>}
  */
 export const typedCollection = <T extends DocumentData>(
-  collection: string
+  ...path: string[]
 ): CollectionReference<T> => {
-  return getFirestore()
-    .collection(collection)
-    .withConverter(new GenericConverter<T>());
+  let collection: CollectionReference = getFirestore().collection(path[0]);
+
+  // Add each following pair of path elements as a subcollection
+  for (let i = 1; i < path.length; i += 2) {
+    if (path[i + 1] === undefined)
+      throw new Error('Not a valid collection path.');
+
+    collection = collection.doc(path[i]).collection(path[i + 1]);
+  }
+
+  return collection.withConverter(new GenericConverter<T>());
 };
