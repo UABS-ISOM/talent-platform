@@ -24,7 +24,6 @@ const resolver: MutationResolvers = {
   // Add a new course to the database
   async addCourse(_, { name, description }, { user, dataSources }) {
     // Ensure the user is staff
-    console.log('addCourse user', user);
     user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
     ensureVerified(user);
     ensureStaff(user);
@@ -36,8 +35,21 @@ const resolver: MutationResolvers = {
 
     if (courseData === undefined) throw dataFetchError();
 
+    // Add user to course admins
+    const courseAdminsDs = dataSources.getCourseAdmins(courseData.id);
+    courseAdminsDs.initialize();
+    const adminData = await courseAdminsDs.createOne({
+      id: user.uid,
+      userId: user.uid,
+      role: 'lecturer',
+    });
+
+    if (adminData === undefined) throw dataFetchError();
+
+    console.log(`Added course ${courseData.id} to database`);
+
     // Send the new course to the Course resolver
-    return { _id: courseData.id, _courseDoc: courseData };
+    return { _courseId: courseData.id };
   },
 
   // Edit the current user's details
@@ -73,6 +85,7 @@ const resolver: MutationResolvers = {
 
     // Send the updated user to the User resolver
     return {
+      _uid: user.uid,
       _getUserDoc: createUserDocGetter(user.uid, dataSources),
       _getUserRecord: createUserRecordGetter(user.uid),
     };

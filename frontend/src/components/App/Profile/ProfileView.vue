@@ -62,6 +62,9 @@ const {
         pronouns
         overview
         skills
+        courses {
+          id
+        }
       }
     }
   `),

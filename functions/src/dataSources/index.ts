@@ -1,4 +1,9 @@
-import type { UserDoc, UserExperienceDoc, CourseDoc } from './models';
+import type {
+  UserDoc,
+  UserExperienceDoc,
+  CourseDoc,
+  CourseAdminDoc,
+} from './models';
 import { typedCollection } from './generics';
 import { FirestoreDataSource } from 'apollo-datasource-firestore';
 
@@ -12,8 +17,15 @@ export type DataSources = {
   users: FirestoreDataSource<UserDoc, unknown>;
   userExperiences: FirestoreDataSource<UserExperienceDoc, unknown>;
   courses: FirestoreDataSource<CourseDoc, unknown>;
+  getCourseAdmins: (
+    course: string
+  ) => FirestoreDataSource<CourseAdminDoc, unknown>;
 };
 
+/**
+ * Apollo data sources
+ * @returns Data source objects
+ */
 const dataSources = (): DataSources => ({
   users: new FirestoreDataSource<UserDoc, unknown>(
     typedCollection<UserDoc>('users')
@@ -24,10 +36,10 @@ const dataSources = (): DataSources => ({
   courses: new FirestoreDataSource<CourseDoc, unknown>(
     typedCollection<CourseDoc>('courses')
   ),
-  // getCourseAdmins: (course: string) =>
-  //   new FirestoreDataSource<CourseAdminDoc, Context>(
-  //     typedCollection<CourseAdminDoc>(`courses/${course}/admins`)
-  //   ),
+  getCourseAdmins: (course: string) =>
+    new FirestoreDataSource<CourseAdminDoc, unknown>(
+      typedCollection<CourseAdminDoc>(`courses/${course}/courseAdmins`)
+    ),
 });
 
 export default dataSources;

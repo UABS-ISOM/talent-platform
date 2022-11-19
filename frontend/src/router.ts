@@ -33,7 +33,16 @@ const router = createRouter({
           meta: {
             title: "Course",
           },
-          component: () => import("@/components/App/Course/AppCourseView.vue"),
+          component: () =>
+            import("@/components/App/Course/AppCourseLayout.vue"),
+          children: [
+            {
+              path: "",
+              name: "AppCourseStaff",
+              component: () =>
+                import("@/components/App/Course/AppCourseStaffView.vue"),
+            },
+          ],
         },
         {
           path: "profile",

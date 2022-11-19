@@ -33,10 +33,7 @@ export const createUserRecordGetter = (
   let userRecord: UserRecord | undefined;
 
   return async (): Promise<UserRecord> => {
-    console.log('userRecord before', userRecord !== undefined);
     if (userRecord === undefined) userRecord = await getAuth().getUser(uid);
-    console.log('userRecord after', userRecord !== undefined);
-
     return userRecord;
   };
 };
@@ -49,6 +46,7 @@ const resolver: QueryResolvers = {
     const user = ensureAuth(maybeUser);
 
     return {
+      _uid: user.uid,
       _getUserDoc: createUserDocGetter(user.uid, dataSources),
       _getUserRecord: createUserRecordGetter(user.uid),
     };

@@ -26,7 +26,7 @@ export interface UserDoc extends DocumentData {
  */
 export interface UserExperienceDoc extends DocumentData {
   readonly id: string;
-  readonly collection: 'users';
+  readonly collection: 'userExperiences';
   userId: string;
   title: string;
   company: string;
@@ -46,7 +46,7 @@ export interface UserExperienceDoc extends DocumentData {
  */
 export interface CourseDoc extends DocumentData {
   readonly id: string;
-  readonly collection: 'users';
+  readonly collection: 'courses';
   name: string;
   description: string;
 }
@@ -61,6 +61,7 @@ export interface CourseDoc extends DocumentData {
  */
 export interface CourseAdminDoc extends DocumentData {
   readonly id: string;
-  readonly collection: 'users';
+  readonly collection: 'courses/courseAdmins';
+  userId: string;
   role: 'lecturer' | 'assistant';
 }

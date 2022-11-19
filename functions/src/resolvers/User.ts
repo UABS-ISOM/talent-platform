@@ -1,3 +1,6 @@
+import { getFirestore } from 'firebase-admin/firestore';
+import { GenericConverter } from '../dataSources/generics';
+import type { CourseDoc, CourseAdminDoc } from '../dataSources/models';
 import type { UserResolvers } from '../__generated__/graphql';
 import { Role } from '../__generated__/graphql';
 
@@ -57,7 +60,30 @@ const resolver: UserResolvers = {
   },
 
   // Send a model of the user's courses to the Course resolver
-  courses: () => [],
+  courses: async ({ _uid }) => {
+    // Get courseAdmin documents for the user
+    const coursesSnap = await getFirestore()
+      .collectionGroup('courseAdmins')
+      .withConverter(new GenericConverter<CourseAdminDoc>())
+      .where('userId', '==', _uid)
+      .get();
+
+    // Get the course documents for the courses the user is an admin of
+    const courseIds = coursesSnap.docs
+      .map(
+        doc =>
+          doc.ref.parent.parent?.withConverter(
+            new GenericConverter<CourseDoc>()
+          ).id
+      )
+      .filter((id): id is string => id !== undefined);
+
+    console.log('courseIds', courseIds);
+
+    return courseIds.map(id => ({
+      _courseId: id,
+    }));
+  },
 };
 
 export default resolver;

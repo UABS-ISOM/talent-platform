@@ -1,7 +1,8 @@
 import type { UserRecord } from 'firebase-admin/auth';
-import type { UserDoc, UserExperienceDoc, CourseDoc } from './models';
+import type { UserDoc, UserExperienceDoc } from './models';
 
 export interface UserMapper {
+  _uid: string;
   _getUserDoc: () => Promise<UserDoc>;
   _getUserRecord: () => Promise<UserRecord>;
 }
@@ -12,6 +13,5 @@ export interface UserExperienceMapper {
 }
 
 export interface CourseMapper {
-  _id: string;
-  _courseDoc: CourseDoc;
+  _courseId: string;
 }
