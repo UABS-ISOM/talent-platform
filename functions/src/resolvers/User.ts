@@ -1,41 +1,56 @@
-import { Role, UserResolvers } from '../__generated__/graphql';
+import type { UserResolvers } from '../__generated__/graphql';
+import { Role } from '../__generated__/graphql';
 
 // Resolvers for the User type
 const resolver: UserResolvers = {
   // Resolve information from the user's Firebase Auth record
-  id: parent => parent._userRecord.uid,
-  name: parent => parent._userRecord.displayName ?? 'Unnamed User',
-  email: parent => parent._userRecord.email ?? '',
-  photoUrl: parent =>
-    parent._userRecord.photoURL !== undefined &&
-    parent._userRecord.photoURL !== ''
-      ? parent._userRecord.photoURL
+  id: async ({ _getUserRecord }) => (await _getUserRecord()).uid,
+
+  name: async ({ _getUserRecord }) =>
+    (await _getUserRecord()).displayName ?? 'Unnamed User',
+
+  email: async ({ _getUserRecord }) => (await _getUserRecord()).email ?? '',
+
+  photoUrl: async ({ _getUserRecord }) => {
+    const { photoURL, displayName } = await _getUserRecord();
+    return photoURL !== undefined && photoURL !== ''
+      ? photoURL
       : `https://ui-avatars.com/api/?background=random&name=${encodeURIComponent(
-          parent._userRecord.displayName ?? 'Unnamed User'
-        )}`,
-  roles: parent =>
-    parent._userRecord.emailVerified && parent._userRecord.email !== undefined
-      ? parent._userRecord.email?.endsWith('auckland.ac.nz')
+          displayName ?? 'Unnamed User'
+        )}`;
+  },
+
+  roles: async ({ _getUserRecord }) => {
+    const { emailVerified, email } = await _getUserRecord();
+    return emailVerified && email !== undefined
+      ? email?.endsWith('auckland.ac.nz')
         ? [Role.Staff]
         : [Role.Student]
-      : [],
+      : [];
+  },
 
   // Resolve information from the user's Firestore document
-  pronouns: parent => parent._userDoc.pronouns ?? null,
-  overview: parent => parent._userDoc.overview ?? '',
-  skills: parent => parent._userDoc.skills ?? [],
+  pronouns: async ({ _getUserDoc }) => {
+    return (await _getUserDoc()).pronouns ?? null;
+  },
+
+  overview: async ({ _getUserDoc }) => {
+    return (await _getUserDoc()).overview ?? '';
+  },
+
+  skills: async ({ _getUserDoc }) => {
+    return (await _getUserDoc()).skills ?? [];
+  },
 
   // Send a model of the user's experiences to the UserExperience resolver
-  experience: async (parent, _, { collections }) => {
+  experience: async ({ _getUserRecord }, _, { dataSources }) => {
     // Get all the user's experience from the userExperiences collection
-    const experienceQuery = collections.userExperiences.where(
-      'userId',
-      '==',
-      parent._userRecord.uid
+    const { uid } = await _getUserRecord();
+    const experienceDocs = await dataSources.userExperiences.findManyByQuery(
+      c => c.where('userId', '==', uid)
     );
-    const experienceDocs = await experienceQuery.get();
 
-    return experienceDocs.docs.map(doc => ({
+    return experienceDocs.map(doc => ({
       _id: doc.id,
       _userExperienceDoc: doc.data(),
     }));

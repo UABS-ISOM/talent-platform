@@ -1,9 +1,9 @@
-import {
-  getFirestore,
+import type {
   QueryDocumentSnapshot,
   CollectionReference,
   DocumentData,
 } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 
 /**
  * Converts a Firestore collection reference to a typed reference.

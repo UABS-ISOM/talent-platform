@@ -1,5 +1,4 @@
-import { UserRecord } from 'firebase-admin/auth';
-import { DocumentData } from 'firebase-admin/firestore';
+import type { DocumentData } from 'firebase-admin/firestore';
 
 /**
  * A document in the Firestore users collection
@@ -10,6 +9,8 @@ import { DocumentData } from 'firebase-admin/firestore';
  * @extends {DocumentData}
  */
 export interface UserDoc extends DocumentData {
+  readonly id: string;
+  readonly collection: 'users';
   pronouns?: string;
   overview?: string;
   skills?: string[];
@@ -24,6 +25,8 @@ export interface UserDoc extends DocumentData {
  * @extends {DocumentData}
  */
 export interface UserExperienceDoc extends DocumentData {
+  readonly id: string;
+  readonly collection: 'users';
   userId: string;
   title: string;
   company: string;
@@ -42,6 +45,8 @@ export interface UserExperienceDoc extends DocumentData {
  * @extends {DocumentData}
  */
 export interface CourseDoc extends DocumentData {
+  readonly id: string;
+  readonly collection: 'users';
   name: string;
   description: string;
 }
@@ -55,20 +60,7 @@ export interface CourseDoc extends DocumentData {
  * @extends {DocumentData}
  */
 export interface CourseAdminDoc extends DocumentData {
+  readonly id: string;
+  readonly collection: 'users';
   role: 'lecturer' | 'assistant';
-}
-
-export interface UserMapper {
-  _userRecord: UserRecord;
-  _userDoc: UserDoc;
-}
-
-export interface UserExperienceMapper {
-  _id: string;
-  _userExperienceDoc: UserExperienceDoc;
-}
-
-export interface CourseMapper {
-  _id: string;
-  _courseDoc: CourseDoc;
 }

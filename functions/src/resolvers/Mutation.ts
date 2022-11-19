@@ -1,9 +1,10 @@
-import { MutationResolvers } from '../__generated__/graphql';
+import type { MutationResolvers } from '../__generated__/graphql';
 import { getAuth } from 'firebase-admin/auth';
 import { ensureAuth, ensureStaff, ensureVerified } from '../utils/user';
 import { dataFetchError } from '../utils/errors';
 import escapeHTML from 'escape-html';
 import sanitizeHtml from 'sanitize-html';
+import { createUserDocGetter, createUserRecordGetter } from './Query';
 
 // Resolvers for the Course type
 const resolver: MutationResolvers = {
@@ -21,26 +22,26 @@ const resolver: MutationResolvers = {
   },
 
   // Add a new course to the database
-  async addCourse(_, { name, description }, { user, collections }) {
+  async addCourse(_, { name, description }, { user, dataSources }) {
     // Ensure the user is staff
+    console.log('addCourse user', user);
     user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
     ensureVerified(user);
     ensureStaff(user);
 
-    const courseRef = await collections.courses.add({
+    const courseData = await dataSources.courses.createOne({
       name: escapeHTML(name),
       description: escapeHTML(description),
     });
-    const courseData = (await courseRef.get()).data();
 
     if (courseData === undefined) throw dataFetchError();
 
     // Send the new course to the Course resolver
-    return { _id: courseRef.id, _courseDoc: courseData };
+    return { _id: courseData.id, _courseDoc: courseData };
   },
 
   // Edit the current user's details
-  async editMe(_, { input }, { user, collections }) {
+  async editMe(_, { input }, { user, dataSources }) {
     // Ensure the user is authenticated
     user = ensureAuth(user);
     ensureVerified(user);
@@ -53,31 +54,27 @@ const resolver: MutationResolvers = {
     });
 
     // Update the user's Firestore document
-    const userRef = await collections.users.doc(user.uid);
     if (input.overview !== null || input.skills !== null)
-      await userRef.set(
-        {
-          ...(typeof input.pronouns === 'string'
-            ? { pronouns: escapeHTML(input.pronouns) }
-            : {}),
-          ...(typeof input.overview === 'string'
-            ? { overview: sanitizeHtml(input.overview) }
-            : {}),
-          ...(Array.isArray(input.skills)
-            ? {
-                skills: input.skills
-                  .map(skill => escapeHTML(skill))
-                  .filter(skill => skill !== ''),
-              }
-            : {}),
-        },
-        { merge: true }
-      );
+      await dataSources.users.updateOnePartial(user.uid, {
+        ...(typeof input.pronouns === 'string'
+          ? { pronouns: escapeHTML(input.pronouns) }
+          : {}),
+        ...(typeof input.overview === 'string'
+          ? { overview: sanitizeHtml(input.overview) }
+          : {}),
+        ...(Array.isArray(input.skills)
+          ? {
+              skills: input.skills
+                .map(skill => escapeHTML(skill))
+                .filter(skill => skill !== ''),
+            }
+          : {}),
+      });
 
     // Send the updated user to the User resolver
     return {
-      _userRecord: await getAuth().getUser(user.uid),
-      _userDoc: (await userRef.get()).data() ?? {},
+      _getUserDoc: createUserDocGetter(user.uid, dataSources),
+      _getUserRecord: createUserRecordGetter(user.uid),
     };
   },
 };

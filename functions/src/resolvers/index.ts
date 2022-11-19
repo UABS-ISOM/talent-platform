@@ -1,4 +1,4 @@
-import { Resolvers } from '../__generated__/graphql';
+import type { Resolvers } from '../__generated__/graphql';
 import { DateResolver } from 'graphql-scalars';
 import Query from './Query';
 import Mutation from './Mutation';

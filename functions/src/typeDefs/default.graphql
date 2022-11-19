@@ -1,6 +1,6 @@
 type Query {
   _: Boolean
-  me: User
+  me: User!
 }
 
 type Mutation {

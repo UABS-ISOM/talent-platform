@@ -18,6 +18,8 @@
   },
   "main": "lib/src/index.js",
   "dependencies": {
+    "@google-cloud/firestore": "^4.15.1",
+    "apollo-datasource-firestore": "^5.3.0",
     "apollo-server-cloud-functions": "^3.10.4",
     "escape-html": "^1.0.3",
     "firebase-admin": "^10.0.2",

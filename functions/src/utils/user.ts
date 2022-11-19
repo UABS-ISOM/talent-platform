@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { DecodedIdToken } from 'firebase-admin/auth';
+import type { DecodedIdToken } from 'firebase-admin/auth';
 
 /**
  * Throws an error if the user is not authenticated.
@@ -37,7 +37,7 @@ export const ensureVerified = (user: DecodedIdToken): void => {
  * @param user The user to check.
  */
 export const ensureStaff = (user: DecodedIdToken): void => {
-  if (user?.token.staff === false)
+  if (user?.staff !== true)
     throw new GraphQLError('You are not a staff member.', {
       extensions: {
         code: 'FORBIDDEN',

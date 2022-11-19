@@ -1,4 +1,4 @@
-import { CourseResolvers } from '../__generated__/graphql';
+import type { CourseResolvers } from '../__generated__/graphql';
 
 // Resolvers for the Course type
 const resolver: CourseResolvers = {

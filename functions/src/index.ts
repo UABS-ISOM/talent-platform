@@ -9,7 +9,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 import { getUser } from './utils/auth';
-import collections from './collections';
+import dataSources from './dataSources';
 
 const server = new ApolloServer({
   typeDefs,
@@ -22,8 +22,10 @@ const server = new ApolloServer({
       ? await getUser(req.headers.authorization)
       : undefined;
 
-    return { user, collections };
+    return { user };
   },
+
+  dataSources,
 
   // eslint-disable-next-line new-cap
   plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
