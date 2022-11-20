@@ -48,9 +48,11 @@
           :description="description"
         />
 
-        <GenericNone v-if="courses.length === 0">
-          You don't administer any courses.
-        </GenericNone>
+        <div class="full-width">
+          <GenericNone v-if="courses.length === 0">
+            You don't administer any courses.
+          </GenericNone>
+        </div>
       </template>
 
       <template v-else-if="loading || error">

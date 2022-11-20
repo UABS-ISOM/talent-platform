@@ -38,7 +38,7 @@ const dataSources = (): DataSources => ({
   ),
   getCourseAdmins: (course: string) =>
     new FirestoreDataSource<CourseAdminDoc, unknown>(
-      typedCollection<CourseAdminDoc>(`courses/${course}/courseAdmins`)
+      typedCollection<CourseAdminDoc>('courses', course, 'courseAdmins')
     ),
 });
 

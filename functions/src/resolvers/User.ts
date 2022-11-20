@@ -78,8 +78,6 @@ const resolver: UserResolvers = {
       )
       .filter((id): id is string => id !== undefined);
 
-    console.log('courseIds', courseIds);
-
     return courseIds.map(id => ({
       _courseId: id,
     }));

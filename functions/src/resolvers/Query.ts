@@ -1,9 +1,10 @@
 import type { QueryResolvers } from '../__generated__/graphql';
 import { getAuth } from 'firebase-admin/auth';
-import { ensureAuth } from '../utils/user';
+import { ensureAuth, ensureVerified } from '../utils/user';
 import type { UserDoc } from '../dataSources/models';
 import type { UserRecord } from 'firebase-functions/v1/auth';
 import type { DataSources } from '../dataSources';
+import { forbiddenError } from '../utils/errors';
 
 /**
  * Allow Type resolvers to get the user's Firestore doc.
@@ -41,14 +42,37 @@ export const createUserRecordGetter = (
 // Resolvers for the Course type
 const resolver: QueryResolvers = {
   // Send a model of the current user to the User resolver
-  async me(_, __, { user: maybeUser, dataSources }) {
+  async me(_, __, { user, dataSources }) {
     // Return null if the user is not authenticated
-    const user = ensureAuth(maybeUser);
+    user = ensureAuth(user);
 
     return {
       _uid: user.uid,
       _getUserDoc: createUserDocGetter(user.uid, dataSources),
       _getUserRecord: createUserRecordGetter(user.uid),
+    };
+  },
+
+  // Send a model of the course to the Course resolver
+  async course(_, { courseId }, { user, dataSources }) {
+    // Return null if the user is not authenticated
+    user = ensureAuth(user);
+    ensureVerified(user);
+
+    // Return null if the course does not exist
+    const course = await dataSources.courses.findOneById(courseId);
+    if (course === undefined) return null;
+
+    // Determine if the user is an admin of the course
+    const courseAdminsDs = dataSources.getCourseAdmins(courseId);
+    courseAdminsDs.initialize();
+    const courseAdmin = await courseAdminsDs.findOneById(user.uid);
+
+    // Return error if the user is not an admin
+    if (courseAdmin === undefined) throw forbiddenError();
+
+    return {
+      _courseId: courseId,
     };
   },
 };

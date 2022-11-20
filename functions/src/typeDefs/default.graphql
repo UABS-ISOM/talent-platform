@@ -1,6 +1,8 @@
 type Query {
   _: Boolean
   me: User!
+  course(courseId: ID!): Course
+  courseStaff(courseId: ID!, courseStaffOptions: CourseStaffInput!): [User!]!
 }
 
 type Mutation {
@@ -15,6 +17,11 @@ input EditMeInput {
   pronouns: String
   overview: String
   skills: [String!]
+}
+
+input CourseStaffInput {
+  page: Int!
+  rowsPerPage: Int!
 }
 
 type AuthClaims {
