@@ -11,12 +11,15 @@ const resolver: CourseResolvers = {
   description: async ({ _courseId }, _, { dataSources }) =>
     (await dataSources.courses.findOneById(_courseId))?.description ?? '',
 
-  staff: async ({ _courseId }, _, { dataSources }) => {
+  numStaff: async ({ _courseId }, _, { dataSources }) => {
+    const course = await dataSources.courses.findOneById(_courseId);
+    return course?.numStaff ?? 0;
+  },
+
+  staff: async ({ _courseId, _courseStaffQuery }, _, { dataSources }) => {
     const courseAdmins = await dataSources
       .getCourseAdmins(_courseId)
-      .findManyByQuery(c => c);
-
-    console.log(courseAdmins);
+      .findManyByQuery(_courseStaffQuery);
 
     return courseAdmins.map(admin => ({
       _uid: admin.userId,

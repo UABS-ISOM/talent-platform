@@ -8,6 +8,14 @@ export const dataFetchError = () =>
     },
   });
 
+// A custom GraphQLError for when a something doesn't exist
+export const notFoundError = () => {
+  new GraphQLError('This does not exist.', {
+    extensions: {
+      code: 'NOT_FOUND',
+    },
+  });
+};
 // A custom GraphQLError for when a user is forbidden
 export const forbiddenError = () => {
   new GraphQLError('You do not have access to this.', {

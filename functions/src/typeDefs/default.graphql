@@ -1,14 +1,14 @@
 type Query {
   _: Boolean
   me: User!
-  course(courseId: ID!): Course
-  courseStaff(courseId: ID!, courseStaffOptions: CourseStaffInput!): [User!]!
+  course(courseId: ID!, courseStaffOptions: CourseStaffInput): Course
 }
 
 type Mutation {
   _: Boolean
   generateClaims: AuthClaims!
   addCourse(name: String!, description: String!): Course!
+  addCourseStaff(courseId: ID!, email: String!): User!
   editMe(input: EditMeInput!): User!
 }
 

@@ -49,6 +49,7 @@ export interface CourseDoc extends DocumentData {
   readonly collection: 'courses';
   name: string;
   description: string;
+  numStaff: number;
 }
 
 /**

@@ -1,10 +1,12 @@
 import type { QueryResolvers } from '../__generated__/graphql';
 import { getAuth } from 'firebase-admin/auth';
 import { ensureAuth, ensureVerified } from '../utils/user';
-import type { UserDoc } from '../dataSources/models';
+import type { CourseAdminDoc, UserDoc } from '../dataSources/models';
 import type { UserRecord } from 'firebase-functions/v1/auth';
 import type { DataSources } from '../dataSources';
 import { forbiddenError } from '../utils/errors';
+import type { CollectionReference } from 'firebase-admin/firestore';
+import { typedCollection } from '../dataSources/generics';
 
 /**
  * Allow Type resolvers to get the user's Firestore doc.
@@ -54,7 +56,7 @@ const resolver: QueryResolvers = {
   },
 
   // Send a model of the course to the Course resolver
-  async course(_, { courseId }, { user, dataSources }) {
+  async course(_, { courseId, courseStaffOptions }, { user, dataSources }) {
     // Return null if the user is not authenticated
     user = ensureAuth(user);
     ensureVerified(user);
@@ -71,8 +73,48 @@ const resolver: QueryResolvers = {
     // Return error if the user is not an admin
     if (courseAdmin === undefined) throw forbiddenError();
 
+    // Determine the query used to get the course staff
+    let courseStaffQuery;
+    if (courseStaffOptions) {
+      // Find starting document for the query
+      const startIndex =
+        (courseStaffOptions.page - 1) * courseStaffOptions.rowsPerPage;
+
+      let startId: string | undefined;
+      if (startIndex > 0) {
+        // Get the userId of the document at the start index
+        const first = await typedCollection<CourseAdminDoc>(
+          'courses',
+          courseId,
+          'courseAdmins'
+        )
+          .orderBy('userId')
+          .limit(startIndex)
+          .get();
+
+        if (first.docs.length > 0) {
+          // Found a document to start the query from
+          startId = first.docs[first.docs.length - 1].data().userId;
+
+          courseStaffQuery = (ref: CollectionReference<CourseAdminDoc>) =>
+            ref
+              .orderBy('userId')
+              .startAfter(startId)
+              .limit(courseStaffOptions.rowsPerPage);
+        }
+      }
+    }
+
+    // Otherwise fall back to the default query
+    if (courseStaffQuery === undefined)
+      courseStaffQuery = (ref: CollectionReference<CourseAdminDoc>) =>
+        courseStaffOptions && courseStaffOptions.rowsPerPage > 0
+          ? ref.orderBy('userId').limit(courseStaffOptions.rowsPerPage)
+          : ref.orderBy('userId');
+
     return {
       _courseId: courseId,
+      _courseStaffQuery: courseStaffQuery,
     };
   },
 };
