@@ -12,6 +12,8 @@ import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 import { getUser } from './utils/auth';
 import dataSources from './dataSources';
+import { DataLoaders } from './dataLoaders';
+import { getFirestore } from 'firebase-admin/firestore';
 
 // Ensure that the Firebase Admin SDK is initialised
 initializeApp();
@@ -58,7 +60,13 @@ const handleRequest = async (
           ds.userExperiences.initialize();
           ds.courses.initialize();
 
-          return { user, dataSources: ds };
+          // Initialise dataLoaders
+          const firestore = getFirestore();
+
+          return {
+            user,
+            dataLoaders: new DataLoaders(firestore),
+          };
         },
       })
     );

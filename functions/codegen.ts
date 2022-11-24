@@ -8,7 +8,7 @@ const config: CodegenConfig = {
       config: {
         contextType: '../context#Context',
         mappers: {
-          User: '../dataSources/mappers#UserMapper',
+          User: 'src/mappers#UserMapper',
           UserExperience: '../dataSources/mappers#UserExperienceMapper',
           Course: '../dataSources/mappers#CourseMapper',
         },

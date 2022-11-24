@@ -1,3 +1,4 @@
+import type { CollectionReference } from 'firebase-admin/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { GenericConverter } from '../dataSources/generics';
 import type { CourseDoc, CourseAdminDoc } from '../dataSources/models';
@@ -7,7 +8,7 @@ import { Role } from '../__generated__/graphql';
 // Resolvers for the User type
 const resolver: UserResolvers = {
   // Resolve information from the user's Firebase Auth record
-  id: async ({ _getUserRecord }) => (await _getUserRecord()).uid,
+  id: async ({ _uid }) => _uid,
 
   name: async ({ _getUserRecord }) =>
     (await _getUserRecord()).displayName ?? 'Unnamed User',
@@ -33,34 +34,22 @@ const resolver: UserResolvers = {
   },
 
   // Resolve information from the user's Firestore document
-  pronouns: async ({ _getUserDoc }) => {
-    return (await _getUserDoc()).pronouns ?? null;
-  },
+  pronouns: async ({ _uid }, __, { dataLoaders: { users } }) =>
+    (await users.fetchDocById(_uid)).pronouns ?? null,
 
-  overview: async ({ _getUserDoc }) => {
-    return (await _getUserDoc()).overview ?? '';
-  },
+  overview: async ({ _uid }, __, { dataLoaders: { users } }) =>
+    (await users.fetchDocById(_uid)).overview ?? '',
 
-  skills: async ({ _getUserDoc }) => {
-    return (await _getUserDoc()).skills ?? [];
-  },
+  skills: async ({ _uid }, __, { dataLoaders: { users } }) =>
+    (await users.fetchDocById(_uid)).skills ?? [],
 
   // Send a model of the user's experiences to the UserExperience resolver
-  experience: async ({ _getUserRecord }, _, { dataSources }) => {
-    // Get all the user's experience from the userExperiences collection
-    const { uid } = await _getUserRecord();
-    const experienceDocs = await dataSources.userExperiences.findManyByQuery(
-      c => c.where('userId', '==', uid)
-    );
-
-    return experienceDocs.map(doc => ({
-      _id: doc.id,
-      _userExperienceDoc: doc.data(),
-    }));
-  },
+  experience: async ({ _uid }, _, { dataLoaders: { userExperiences } }) =>
+    await userExperiences.fetchDocsByQuery(c => c.where('userId', '==', _uid)),
 
   // Send a model of the user's courses to the Course resolver
   courses: async ({ _uid }) => {
+    // TODO: Rewrite when data-loader-firestore has support for collection groups
     // Get courseAdmin documents for the user
     const coursesSnap = await getFirestore()
       .collectionGroup('courseAdmins')
@@ -80,6 +69,7 @@ const resolver: UserResolvers = {
 
     return courseIds.map(id => ({
       _courseId: id,
+      _courseStaffQuery: (ref: CollectionReference<CourseAdminDoc>) => ref,
     }));
   },
 };

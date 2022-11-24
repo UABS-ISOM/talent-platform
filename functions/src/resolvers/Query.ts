@@ -44,13 +44,12 @@ export const createUserRecordGetter = (
 // Resolvers for the Course type
 const resolver: QueryResolvers = {
   // Send a model of the current user to the User resolver
-  async me(_, __, { user, dataSources }) {
+  async me(_, __, { user }) {
     // Return null if the user is not authenticated
     user = ensureAuth(user);
 
     return {
       _uid: user.uid,
-      _getUserDoc: createUserDocGetter(user.uid, dataSources),
       _getUserRecord: createUserRecordGetter(user.uid),
     };
   },
