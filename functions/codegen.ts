@@ -9,7 +9,7 @@ const config: CodegenConfig = {
         contextType: '../context#Context',
         mappers: {
           User: 'src/mappers#UserMapper',
-          UserExperience: '../dataSources/mappers#UserExperienceMapper',
+          UserExperience: 'src/mappers#UserExperienceMapper',
           Course: '../dataSources/mappers#CourseMapper',
         },
         scalars: {

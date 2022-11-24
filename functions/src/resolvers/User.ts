@@ -45,7 +45,9 @@ const resolver: UserResolvers = {
 
   // Send a model of the user's experiences to the UserExperience resolver
   experience: async ({ _uid }, _, { dataLoaders: { userExperiences } }) =>
-    await userExperiences.fetchDocsByQuery(c => c.where('userId', '==', _uid)),
+    await (
+      await userExperiences.fetchDocsByQuery(c => c.where('userId', '==', _uid))
+    ).map(doc => ({ _id: doc._id })),
 
   // Send a model of the user's courses to the Course resolver
   courses: async ({ _uid }) => {
