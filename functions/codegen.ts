@@ -8,9 +8,9 @@ const config: CodegenConfig = {
       config: {
         contextType: '../context#Context',
         mappers: {
-          User: 'src/mappers#UserMapper',
-          UserExperience: 'src/mappers#UserExperienceMapper',
-          Course: '../dataSources/mappers#CourseMapper',
+          User: '../mappers#UserMapper',
+          UserExperience: '../mappers#UserExperienceMapper',
+          Course: '../mappers#CourseMapper',
         },
         scalars: {
           Date: 'string',

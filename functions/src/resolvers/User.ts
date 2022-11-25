@@ -1,4 +1,3 @@
-import type { CollectionReference } from 'firebase-admin/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { GenericConverter } from '../dataSources/generics';
 import type { CourseDoc, CourseAdminDoc } from '../dataSources/models';
@@ -70,8 +69,8 @@ const resolver: UserResolvers = {
       .filter((id): id is string => id !== undefined);
 
     return courseIds.map(id => ({
-      _courseId: id,
-      _courseStaffQuery: (ref: CollectionReference<CourseAdminDoc>) => ref,
+      _id: id,
+      _courseStaffQuery: ref => ref,
     }));
   },
 };
