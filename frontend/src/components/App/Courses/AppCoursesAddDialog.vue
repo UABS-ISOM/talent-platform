@@ -25,7 +25,7 @@
     </div>
 
     <GenericAlert v-model="error" type="error" class="q-pa-sm">
-      {{ GENERIC_ERROR }}
+      {{ getErrorMessage(addCourseError) }}
     </GenericAlert>
 
     <div class="q-pa-sm">
@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { RULES, GENERIC_ERROR } from "@/helpers";
+import { RULES, getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import { useMutation } from "@vue/apollo-composable";
 import router from "@/router";
@@ -59,7 +59,7 @@ const description = ref("");
 const error = ref(false);
 const loading = ref(false);
 
-const { mutate: addCourse } = useMutation(
+const { mutate: addCourse, error: addCourseError } = useMutation(
   graphql(`
     mutation AddCourseMutation($name: String!, $description: String!) {
       addCourse(name: $name, description: $description) {
@@ -82,8 +82,8 @@ const onSubmit = async () => {
 
     if (data?.data)
       await router.push({
-        name: "AppCourse",
-        params: { id: data.data.addCourse.id },
+        name: "AppCourseStaff",
+        params: { courseId: data.data.addCourse.id },
       });
   } catch (e) {
     error.value = true;

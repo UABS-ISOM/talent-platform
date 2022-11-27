@@ -17,3 +17,16 @@ export const GENERIC_ERROR =
   "An error occurred. Please check your connection and try again later.";
 
 export const APP_NAME = import.meta.env.VITE_APP_NAME;
+
+/**
+ * Returns a user-friendly error message.
+ * @param error The error to check.
+ * @returns The error message to display.
+ */
+export const getErrorMessage = (error: any) => {
+  console.log(error.message);
+  if (error.message && error.message !== "Failed to fetch")
+    return error.message;
+
+  return GENERIC_ERROR;
+};

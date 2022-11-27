@@ -130,7 +130,6 @@ watch(
   (numStaff) => {
     if (pagination.value === undefined) return;
     pagination.value.rowsNumber = numStaff;
-    console.log("YEET", numStaff);
   }
 );
 

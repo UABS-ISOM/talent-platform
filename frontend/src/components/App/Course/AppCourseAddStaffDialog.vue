@@ -2,6 +2,7 @@
   <q-form autofocus @submit="onSubmit">
     <div class="q-pa-sm">
       <q-input
+        ref="input"
         v-model="email"
         no-error-icon
         hide-bottom-space
@@ -17,7 +18,7 @@
     </GenericAlert>
 
     <GenericAlert v-model="error" type="error" class="q-pa-sm">
-      {{ GENERIC_ERROR }}
+      {{ getErrorMessage(addCourseStaffError) }}
     </GenericAlert>
 
     <div class="q-pa-sm">
@@ -36,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { RULES, GENERIC_ERROR } from "@/helpers";
+import { nextTick, ref, type VNodeRef } from "vue";
+import { RULES, getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import { useMutation } from "@vue/apollo-composable";
 import { graphql } from "@/gql/__generated__";
@@ -50,6 +51,8 @@ const emit = defineEmits<{
   (e: "addStaff"): void;
 }>();
 
+const input = ref<VNodeRef | null>(null);
+
 // Form values
 const email = ref("");
 
@@ -59,7 +62,7 @@ const success = ref(false);
 const loading = ref(false);
 const addedEmails = ref<string>();
 
-const { mutate: addCourseStaff } = useMutation(
+const { mutate: addCourseStaff, error: addCourseStaffError } = useMutation(
   graphql(`
     mutation AddCourseStaffMutation($courseId: ID!, $email: String!) {
       addCourseStaff(courseId: $courseId, email: $email) {
@@ -86,8 +89,13 @@ const onSubmit = async () => {
       addedEmails.value = data.data.addCourseStaff.email;
       email.value = "";
       emit("addStaff");
+
+      nextTick(() => {
+        input.value.resetValidation();
+        input.value.focus();
+      });
     }
-  } catch (e) {
+  } catch (e: unknown) {
     error.value = true;
   }
 

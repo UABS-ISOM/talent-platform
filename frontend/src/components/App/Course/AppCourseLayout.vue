@@ -17,7 +17,7 @@
         type="error"
         class="full-width"
       >
-        {{ GENERIC_ERROR }}
+        {{ getErrorMessage(error) }}
       </GenericAlert>
     </GenericPage>
   </template>
@@ -30,7 +30,7 @@ import { graphql } from "@/gql/__generated__";
 import { useRoute } from "vue-router";
 import AppCourseSidebar from "./AppCourseSidebar.vue";
 import AppCourseLoader from "./AppCourseLoader.vue";
-import { GENERIC_ERROR } from "@/helpers";
+import { getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import GenericPage from "@/components/GenericPage.vue";
 
