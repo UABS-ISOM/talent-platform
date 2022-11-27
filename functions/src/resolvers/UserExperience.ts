@@ -4,18 +4,12 @@ import type { UserExperienceResolvers } from '../__generated__/graphql';
 const resolver: UserExperienceResolvers = {
   // Resolve information from the user experience Firestore document
   id: parent => parent._id,
-  title: async ({ _id }, __, { dataLoaders: { userExperiences } }) =>
-    (await userExperiences.fetchDocById(_id)).title,
-  company: async ({ _id }, __, { dataLoaders: { userExperiences } }) =>
-    (await userExperiences.fetchDocById(_id)).company,
-  location: async ({ _id }, __, { dataLoaders: { userExperiences } }) =>
-    (await userExperiences.fetchDocById(_id)).location,
-  startDate: async ({ _id }, __, { dataLoaders: { userExperiences } }) =>
-    (await userExperiences.fetchDocById(_id)).startDate,
-  endDate: async ({ _id }, __, { dataLoaders: { userExperiences } }) =>
-    (await userExperiences.fetchDocById(_id)).endDate ?? null,
-  description: async ({ _id }, __, { dataLoaders: { userExperiences } }) =>
-    (await userExperiences.fetchDocById(_id)).description,
+  title: parent => parent._userExperienceDoc.title,
+  company: parent => parent._userExperienceDoc.company,
+  location: parent => parent._userExperienceDoc.location,
+  startDate: parent => parent._userExperienceDoc.startDate,
+  endDate: parent => parent._userExperienceDoc.endDate ?? null,
+  description: parent => parent._userExperienceDoc.description,
 };
 
 export default resolver;

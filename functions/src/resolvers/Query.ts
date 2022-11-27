@@ -1,13 +1,28 @@
 import type { QueryResolvers } from '../__generated__/graphql';
 import { getAuth } from 'firebase-admin/auth';
 import { ensureAuth, ensureVerified } from '../utils/user';
-import type { CourseAdminDoc } from '../dataSources/models';
+import type { CourseAdminDoc, UserDoc } from '../dataSources/models';
 import type { UserRecord } from 'firebase-functions/v1/auth';
+import type { DataSources } from '../dataSources';
 import { forbiddenError } from '../utils/errors';
-import type { CollectionReference, Query } from 'firebase-admin/firestore';
+import type { CollectionReference } from 'firebase-admin/firestore';
 import { typedCollection } from '../dataSources/generics';
-import type { OutputDocumentData } from 'data-loader-firestore';
-import type { CourseAdminModel } from '../dataLoaders/models';
+
+/**
+ * Allow Type resolvers to get the user's Firestore doc.
+ * @param uid The user's UID.
+ * @returns
+ */
+export const createUserDocGetter = (
+  uid: string,
+  dataSources: DataSources
+): (() => Promise<UserDoc>) => {
+  return async (): Promise<UserDoc> =>
+    (await dataSources.users.findOneById(uid)) ?? {
+      id: uid,
+      collection: 'users',
+    };
+};
 
 /**
  * Allow Type resolvers to get the user's Firebase Auth record.
@@ -29,40 +44,37 @@ export const createUserRecordGetter = (
 // Resolvers for the Course type
 const resolver: QueryResolvers = {
   // Send a model of the current user to the User resolver
-  async me(_, __, { user }) {
+  async me(_, __, { user, dataSources }) {
     // Return null if the user is not authenticated
     user = ensureAuth(user);
 
     return {
       _uid: user.uid,
+      _getUserDoc: createUserDocGetter(user.uid, dataSources),
       _getUserRecord: createUserRecordGetter(user.uid),
     };
   },
 
   // Send a model of the course to the Course resolver
-  async course(_, { courseId, courseStaffOptions }, { user, dataLoaders }) {
+  async course(_, { courseId, courseStaffOptions }, { user, dataSources }) {
     // Return null if the user is not authenticated
     user = ensureAuth(user);
     ensureVerified(user);
 
     // Return null if the course does not exist
-    const course = await dataLoaders.courses.fetchDocById(courseId);
+    const course = await dataSources.courses.findOneById(courseId);
     if (course === undefined) return null;
 
     // Determine if the user is an admin of the course
-    const courseAdmin = await dataLoaders.courseAdmins.fetchDocById(
-      courseId,
-      user.uid
-    );
+    const courseAdminsDs = dataSources.getCourseAdmins(courseId);
+    courseAdminsDs.initialize();
+    const courseAdmin = await courseAdminsDs.findOneById(user.uid);
+
+    // Return error if the user is not an admin
     if (courseAdmin === undefined) throw forbiddenError();
 
     // Determine the query used to get the course staff
-    let courseStaffQuery:
-      | ((
-          ref: CollectionReference<OutputDocumentData<CourseAdminModel>>
-        ) => Query)
-      | undefined = undefined;
-
+    let courseStaffQuery;
     if (courseStaffOptions) {
       // Find starting document for the query
       const startIndex =
@@ -84,7 +96,7 @@ const resolver: QueryResolvers = {
           // Found a document to start the query from
           startId = first.docs[first.docs.length - 1].data().userId;
 
-          courseStaffQuery = ref =>
+          courseStaffQuery = (ref: CollectionReference<CourseAdminDoc>) =>
             ref
               .orderBy('userId')
               .startAfter(startId)
@@ -95,13 +107,13 @@ const resolver: QueryResolvers = {
 
     // Otherwise fall back to the default query
     if (courseStaffQuery === undefined)
-      courseStaffQuery = ref =>
+      courseStaffQuery = (ref: CollectionReference<CourseAdminDoc>) =>
         courseStaffOptions && courseStaffOptions.rowsPerPage > 0
           ? ref.orderBy('userId').limit(courseStaffOptions.rowsPerPage)
           : ref.orderBy('userId');
 
     return {
-      _id: courseId,
+      _courseId: courseId,
       _courseStaffQuery: courseStaffQuery,
     };
   },
