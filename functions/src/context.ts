@@ -1,5 +1,5 @@
 import type { DecodedIdToken } from 'firebase-admin/auth';
-import { type DataSources } from './dataSources';
+import type { DataLoaders } from './dataLoaders';
 
 /**
  * The context provided to each Apollo resolver
@@ -10,5 +10,5 @@ import { type DataSources } from './dataSources';
  */
 export interface Context {
   user: DecodedIdToken | undefined;
-  dataSources: DataSources;
+  dataLoaders: DataLoaders;
 }
