@@ -103,6 +103,11 @@ const links = ref([
     label: "Staff",
     to: { name: "AppCourseStaff", params: { courseId } },
   },
+  {
+    icon: "mdi-account",
+    label: "Students",
+    to: { name: "AppCourseStudents", params: { courseId } },
+  },
 ]);
 </script>
 

@@ -3,6 +3,7 @@ import type { Firestore } from 'firebase-admin/firestore';
 import type {
   CourseAdminModel,
   CourseModel,
+  CourseStudentModel,
   UserExperienceModel,
   UserModel,
 } from './models';
@@ -16,6 +17,7 @@ export class DataLoaders {
   userExperiences: FirestoreCollectionLoader<UserExperienceModel>;
   courses: FirestoreCollectionLoader<CourseModel>;
   courseAdmins: FirestoreCollectionLoader<CourseAdminModel>;
+  courseStudents: FirestoreCollectionLoader<CourseStudentModel>;
 
   /**
    * Generates a new instance of DataLoaders.
@@ -36,6 +38,11 @@ export class DataLoaders {
       firestore,
       'courses',
       'courseAdmins'
+    );
+    this.courseStudents = new FirestoreCollectionLoader<CourseStudentModel>(
+      firestore,
+      'courses',
+      'courseStudents'
     );
   }
 }

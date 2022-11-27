@@ -38,6 +38,7 @@ const resolver: MutationResolvers = {
         name: escapeHTML(name),
         description: escapeHTML(description),
         numStaff: 1,
+        numStudents: 0,
       },
       true
     );
@@ -64,7 +65,7 @@ const resolver: MutationResolvers = {
     };
   },
 
-  // Add a new course to the database
+  // Add a new course admin to the database
   async addCourseStaff(
     _,
     { courseId, email },
@@ -80,16 +81,19 @@ const resolver: MutationResolvers = {
     if (course === undefined) throw notFoundError();
 
     // Get user
-    const newUser = await getAuth().getUserByEmail(email); // TODO: Add user not found error
+    const newUser = await getAuth().getUserByEmail(email);
 
     // Throw error if the user is already a course admin
     const courseAdmin = await courseAdmins.fetchDocById(courseId, newUser.uid);
     if (courseAdmin !== undefined)
-      throw new GraphQLError('This user is already course staff.', {
-        extensions: {
-          code: 'BAD_USER_INPUT',
-        },
-      });
+      throw new GraphQLError(
+        'This user is already a staff member of this course.',
+        {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        }
+      );
 
     // Add user to course admins
     const adminData = await courseAdmins.createDoc(
@@ -107,6 +111,60 @@ const resolver: MutationResolvers = {
     await courses.createDoc(
       {
         numStaff: course.numStaff + 1,
+      },
+      false,
+      courseId
+    );
+
+    // Send the new course to the Course resolver
+    return {
+      _uid: user.uid,
+      _getUserRecord: createUserRecordGetter(newUser.uid),
+    };
+  },
+
+  // Add a new course student to the database
+  async addCourseStudent(
+    _,
+    { courseId, email },
+    { user, dataLoaders: { courses, courseAdmins, courseStudents } }
+  ) {
+    // Ensure the user is staff
+    user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
+    ensureVerified(user);
+    ensureStaff(user); // TODO: Ensure user is course admin
+
+    // Throw error if the course does not exist
+    const course = await courses.fetchDocById(courseId);
+    if (course === undefined) throw notFoundError();
+
+    // Get user
+    const newUser = await getAuth().getUserByEmail(email);
+
+    // Throw error if the new student user is already a course student
+    const courseAdmin = await courseAdmins.fetchDocById(courseId, newUser.uid);
+    if (courseAdmin !== undefined)
+      throw new GraphQLError('This user is already a student in this course.', {
+        extensions: {
+          code: 'BAD_USER_INPUT',
+        },
+      });
+
+    // Add user to course admins
+    const adminData = await courseStudents.createDoc(
+      {
+        userId: newUser.uid,
+      },
+      true,
+      courseId,
+      newUser.uid
+    );
+    if (adminData === undefined) throw dataFetchError();
+
+    // Increase the number of staff in the course
+    await courses.createDoc(
+      {
+        numStudents: course.numStudents + 1,
       },
       false,
       courseId

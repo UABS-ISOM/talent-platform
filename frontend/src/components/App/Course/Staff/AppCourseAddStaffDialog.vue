@@ -14,7 +14,7 @@
     </div>
 
     <GenericAlert v-model="success" type="success" class="q-pa-sm">
-      Successfully added {{ email }} to the course
+      Successfully added {{ email }} to the course.
     </GenericAlert>
 
     <GenericAlert v-model="error" type="error" class="q-pa-sm">

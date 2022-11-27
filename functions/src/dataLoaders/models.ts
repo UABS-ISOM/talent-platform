@@ -41,6 +41,7 @@ export interface CourseModel extends DocumentData {
   name: string;
   description: string;
   numStaff: number;
+  numStudents: number;
 }
 
 /**
@@ -53,4 +54,15 @@ export interface CourseModel extends DocumentData {
 export interface CourseAdminModel extends DocumentData {
   userId: string;
   role: 'lecturer' | 'assistant';
+}
+
+/**
+ * A document in the Firestore courses/admins collection
+ *
+ * @interface CourseDoc
+ * @typedef {CourseDoc}
+ * @extends {DocumentData}
+ */
+export interface CourseStudentModel extends DocumentData {
+  userId: string;
 }

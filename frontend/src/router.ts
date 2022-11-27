@@ -39,7 +39,15 @@ const router = createRouter({
               path: "",
               name: "AppCourseStaff",
               component: () =>
-                import("@/components/App/Course/AppCourseStaffView.vue"),
+                import("@/components/App/Course/Staff/AppCourseStaffView.vue"),
+            },
+            {
+              path: "students",
+              name: "AppCourseStudents",
+              component: () =>
+                import(
+                  "@/components/App/Course/Students/AppCourseStudentsView.vue"
+                ),
             },
           ],
         },

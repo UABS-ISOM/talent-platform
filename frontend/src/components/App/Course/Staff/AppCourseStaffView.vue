@@ -31,7 +31,7 @@
       type="error"
       class="full-width q-pa-sm"
     >
-      {{ GENERIC_ERROR }}
+      {{ getErrorMessage(error) }}
     </GenericAlert>
   </template>
 
@@ -58,7 +58,7 @@ import { useQuery } from "@vue/apollo-composable";
 import { graphql } from "@/gql/__generated__";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import { GENERIC_ERROR } from "@/helpers";
+import { getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
 import AppCourseAddStaffDialog from "./AppCourseAddStaffDialog.vue";
@@ -102,10 +102,7 @@ const queryParams = computed(() => {
 // Query the course
 const { result, loading, error, refetch } = useQuery(
   graphql(`
-    query getCourseStaff(
-      $courseId: ID!
-      $courseStaffOptions: CourseStaffInput
-    ) {
+    query getCourseStaff($courseId: ID!, $courseStaffOptions: PaginationInput) {
       course(courseId: $courseId, courseStaffOptions: $courseStaffOptions) {
         numStaff
         staff {
@@ -114,7 +111,7 @@ const { result, loading, error, refetch } = useQuery(
       }
     }
 
-    input CourseStaffInput {
+    input PaginationInput {
       page: Int!
       rowsPerPage: Int!
     }
