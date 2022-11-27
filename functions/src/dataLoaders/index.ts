@@ -34,6 +34,7 @@ export class DataLoaders {
     );
     this.courseAdmins = new FirestoreCollectionLoader<CourseAdminModel>(
       firestore,
+      'courses',
       'courseAdmins'
     );
   }

@@ -11,7 +11,6 @@ import type { Context } from './context';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 import { getUser } from './utils/auth';
-import dataSources from './dataSources';
 import { DataLoaders } from './dataLoaders';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -53,12 +52,6 @@ const handleRequest = async (
           const user = req.headers.authorization
             ? await getUser(req.headers.authorization)
             : undefined;
-
-          // Initialise data sources
-          const ds = dataSources();
-          ds.users.initialize();
-          ds.userExperiences.initialize();
-          ds.courses.initialize();
 
           // Initialise dataLoaders
           const firestore = getFirestore();

@@ -34,13 +34,13 @@ const resolver: UserResolvers = {
 
   // Resolve information from the user's Firestore document
   pronouns: async ({ _uid }, __, { dataLoaders: { users } }) =>
-    (await users.fetchDocById(_uid)).pronouns ?? null,
+    (await users.fetchDocById(_uid))?.pronouns ?? null,
 
   overview: async ({ _uid }, __, { dataLoaders: { users } }) =>
-    (await users.fetchDocById(_uid)).overview ?? '',
+    (await users.fetchDocById(_uid))?.overview ?? '',
 
   skills: async ({ _uid }, __, { dataLoaders: { users } }) =>
-    (await users.fetchDocById(_uid)).skills ?? [],
+    (await users.fetchDocById(_uid))?.skills ?? [],
 
   // Send a model of the user's experiences to the UserExperience resolver
   experience: async ({ _uid }, _, { dataLoaders: { userExperiences } }) =>

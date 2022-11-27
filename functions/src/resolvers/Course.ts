@@ -12,7 +12,7 @@ const resolver: CourseResolvers = {
     (await courses.fetchDocById(_id))?.description ?? '',
 
   numStaff: async ({ _id }, _, { dataLoaders: { courses } }) =>
-    (await courses.fetchDocById(_id))?.numStaff,
+    (await courses.fetchDocById(_id))!.numStaff,
 
   staff: async ({ _id }, _, { dataLoaders: { courseAdmins } }) =>
     await (

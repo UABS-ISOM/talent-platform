@@ -33,11 +33,14 @@ const resolver: MutationResolvers = {
     ensureVerified(user);
     ensureStaff(user);
 
-    const courseData = await courses.createDoc({
-      name: escapeHTML(name),
-      description: escapeHTML(description),
-      numStaff: 1,
-    });
+    const courseData = await courses.createDoc(
+      {
+        name: escapeHTML(name),
+        description: escapeHTML(description),
+        numStaff: 1,
+      },
+      true
+    );
 
     if (courseData === undefined) throw dataFetchError();
 
@@ -47,6 +50,7 @@ const resolver: MutationResolvers = {
         userId: user.uid,
         role: 'lecturer',
       },
+      true,
       courseData._id,
       user.uid
     );
@@ -55,7 +59,7 @@ const resolver: MutationResolvers = {
 
     // Send the new course to the Course resolver
     return {
-      _id: courseData.id,
+      _id: courseData._id,
       _courseStaffQuery: ref => ref,
     };
   },
@@ -93,16 +97,18 @@ const resolver: MutationResolvers = {
         userId: newUser.uid,
         role: 'lecturer',
       },
+      true,
       courseId,
       newUser.uid
     );
     if (adminData === undefined) throw dataFetchError();
 
     // Increase the number of staff in the course
-    await courses.updateDoc(
+    await courses.createDoc(
       {
         numStaff: course.numStaff + 1,
       },
+      false,
       courseId
     );
 
@@ -128,7 +134,7 @@ const resolver: MutationResolvers = {
 
     // Update the user's Firestore document
     if (input.overview !== null || input.skills !== null)
-      await users.updateDoc(
+      await users.createDoc(
         {
           ...(typeof input.pronouns === 'string'
             ? { pronouns: escapeHTML(input.pronouns) }
@@ -144,6 +150,7 @@ const resolver: MutationResolvers = {
               }
             : {}),
         },
+        false,
         user.uid
       );
 
