@@ -1,32 +1,26 @@
 import type { CourseResolvers } from '../__generated__/graphql';
-import { createUserDocGetter, createUserRecordGetter } from './Query';
+import { createUserRecordGetter } from './Query';
 
 // Resolvers for the Course type
 const resolver: CourseResolvers = {
-  id: parent => parent._courseId,
+  id: parent => parent._id,
 
-  name: async ({ _courseId }, _, { dataSources }) =>
-    (await dataSources.courses.findOneById(_courseId))?.name ?? '',
+  name: async ({ _id }, _, { dataLoaders: { courses } }) =>
+    (await courses.fetchDocById(_id))?.name ?? '',
 
-  description: async ({ _courseId }, _, { dataSources }) =>
-    (await dataSources.courses.findOneById(_courseId))?.description ?? '',
+  description: async ({ _id }, _, { dataLoaders: { courses } }) =>
+    (await courses.fetchDocById(_id))?.description ?? '',
 
-  numStaff: async ({ _courseId }, _, { dataSources }) => {
-    const course = await dataSources.courses.findOneById(_courseId);
-    return course?.numStaff ?? 0;
-  },
+  numStaff: async ({ _id }, _, { dataLoaders: { courses } }) =>
+    (await courses.fetchDocById(_id))!.numStaff,
 
-  staff: async ({ _courseId, _courseStaffQuery }, _, { dataSources }) => {
-    const courseAdmins = await dataSources
-      .getCourseAdmins(_courseId)
-      .findManyByQuery(_courseStaffQuery);
-
-    return courseAdmins.map(admin => ({
+  staff: async ({ _id }, _, { dataLoaders: { courseAdmins } }) =>
+    await (
+      await courseAdmins.fetchDocsByQuery(c => c, _id)
+    ).map(admin => ({
       _uid: admin.userId,
-      _getUserDoc: createUserDocGetter(admin.userId, dataSources),
       _getUserRecord: createUserRecordGetter(admin.userId),
-    }));
-  },
+    })),
 };
 
 export default resolver;
