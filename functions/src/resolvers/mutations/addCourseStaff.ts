@@ -2,7 +2,6 @@ import type { MutationResolvers } from '../../__generated__/graphql';
 import { getAuth } from 'firebase-admin/auth';
 import { ensureAuth, ensureStaff, ensureVerified } from '../../utils/user';
 import { dataFetchError, notFoundError } from '../../utils/errors';
-import { createUserRecordGetter } from '../Query';
 import { GraphQLError } from 'graphql';
 
 // Add a new course admin to the database
@@ -59,6 +58,5 @@ export const addCourseStaff: MutationResolvers['addCourseStaff'] = async (
   // Send the new course to the Course resolver
   return {
     _uid: user.uid,
-    _getUserRecord: createUserRecordGetter(newUser.uid),
   };
 };

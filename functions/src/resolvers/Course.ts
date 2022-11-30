@@ -1,5 +1,4 @@
 import type { CourseResolvers } from '../__generated__/graphql';
-import { createUserRecordGetter } from './Query';
 
 // Resolvers for the Course type
 const resolver: CourseResolvers = {
@@ -22,7 +21,6 @@ const resolver: CourseResolvers = {
       await courseAdmins.fetchDocsByQuery(c => c, _id)
     ).map(admin => ({
       _uid: admin.userId,
-      _getUserRecord: createUserRecordGetter(admin.userId),
     })),
 
   students: async ({ _id }, _, { dataLoaders: { courseStudents } }) =>
@@ -30,7 +28,6 @@ const resolver: CourseResolvers = {
       await courseStudents.fetchDocsByQuery(c => c, _id)
     ).map(student => ({
       _uid: student.userId,
-      _getUserRecord: createUserRecordGetter(student.userId),
     })),
 };
 

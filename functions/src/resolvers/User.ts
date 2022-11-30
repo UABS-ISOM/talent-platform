@@ -6,13 +6,14 @@ const resolver: UserResolvers = {
   // Resolve information from the user's Firebase Auth record
   id: async ({ _uid }) => _uid,
 
-  name: async ({ _getUserRecord }) =>
-    (await _getUserRecord()).displayName ?? 'Unnamed User',
+  name: async ({ _uid }, _, { dataLoaders: { userRecords } }) =>
+    (await userRecords.load(_uid)).displayName ?? 'Unnamed User',
 
-  email: async ({ _getUserRecord }) => (await _getUserRecord()).email ?? '',
+  email: async ({ _uid }, _, { dataLoaders: { userRecords } }) =>
+    (await userRecords.load(_uid)).email ?? '',
 
-  photoUrl: async ({ _getUserRecord }) => {
-    const { photoURL, displayName } = await _getUserRecord();
+  photoUrl: async ({ _uid }, _, { dataLoaders: { userRecords } }) => {
+    const { photoURL, displayName } = await userRecords.load(_uid);
     return photoURL !== undefined && photoURL !== ''
       ? photoURL
       : `https://ui-avatars.com/api/?background=random&name=${encodeURIComponent(
@@ -20,8 +21,8 @@ const resolver: UserResolvers = {
         )}`;
   },
 
-  roles: async ({ _getUserRecord }) => {
-    const { emailVerified, email } = await _getUserRecord();
+  roles: async ({ _uid }, _, { dataLoaders: { userRecords } }) => {
+    const { emailVerified, email } = await userRecords.load(_uid);
     return emailVerified && email !== undefined
       ? email?.endsWith('auckland.ac.nz')
         ? [Role.Staff]

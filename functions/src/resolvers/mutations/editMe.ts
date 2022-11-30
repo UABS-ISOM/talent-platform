@@ -3,7 +3,6 @@ import escapeHTML from 'escape-html';
 import sanitizeHtml from 'sanitize-html';
 import { getAuth } from 'firebase-admin/auth';
 import { ensureAuth, ensureVerified } from '../../utils/user';
-import { createUserRecordGetter } from '../Query';
 
 // Edit the current user's details
 export const editMe: MutationResolvers['editMe'] = async (
@@ -47,6 +46,5 @@ export const editMe: MutationResolvers['editMe'] = async (
   // Send the updated user to the User resolver
   return {
     _uid: user.uid,
-    _getUserRecord: createUserRecordGetter(user.uid),
   };
 };
