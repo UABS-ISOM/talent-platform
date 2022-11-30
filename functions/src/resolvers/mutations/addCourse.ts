@@ -30,7 +30,6 @@ export const addCourse: MutationResolvers['addCourse'] = async (
   const adminData = await courseAdmins.createDoc(
     {
       userId: user.uid,
-      role: 'lecturer',
     },
     true,
     courseData._id,
@@ -43,5 +42,6 @@ export const addCourse: MutationResolvers['addCourse'] = async (
   return {
     _id: courseData._id,
     _courseStaffQuery: ref => ref,
+    _courseStudentsQuery: ref => ref,
   };
 };

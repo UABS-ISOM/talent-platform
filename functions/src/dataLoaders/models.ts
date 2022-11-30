@@ -53,7 +53,6 @@ export interface CourseModel extends DocumentData {
  */
 export interface CourseAdminModel extends DocumentData {
   userId: string;
-  role: 'lecturer' | 'assistant';
 }
 
 /**

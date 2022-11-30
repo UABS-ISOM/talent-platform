@@ -65,9 +65,14 @@ const addedEmails = ref<string>();
 const { mutate: addCourseStudent, error: addCourseStudentError } = useMutation(
   graphql(`
     mutation AddCourseStudentsMutation($courseId: ID!, $email: String!) {
-      addCourseStudent(courseId: $courseId, email: $email) {
+      addCourseMember(courseId: $courseId, email: $email, type: STUDENT) {
         email
       }
+    }
+
+    enum CourseMemberEnum {
+      STUDENT
+      STAFF
     }
   `)
 );
@@ -86,7 +91,7 @@ const onSubmit = async () => {
 
     if (data?.data) {
       success.value = true;
-      addedEmails.value = data.data.addCourseStudent.email;
+      addedEmails.value = data.data.addCourseMember.email;
       email.value = "";
       emit("addStudent");
 

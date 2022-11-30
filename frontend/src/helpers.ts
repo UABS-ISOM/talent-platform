@@ -24,7 +24,6 @@ export const APP_NAME = import.meta.env.VITE_APP_NAME;
  * @returns The error message to display.
  */
 export const getErrorMessage = (error: any) => {
-  console.log(error.message);
   if (error.message && error.message !== "Failed to fetch")
     return error.message;
 

@@ -80,6 +80,12 @@ const columns: QTableProps["columns"] = [
     align: "left",
     field: "name",
   },
+  {
+    name: "email",
+    label: "Email",
+    align: "left",
+    field: "email",
+  },
 ];
 
 // Get the course
@@ -113,7 +119,9 @@ const { result, loading, error, refetch } = useQuery(
       ) {
         numStudents
         students {
+          id
           name
+          email
         }
       }
     }

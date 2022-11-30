@@ -28,5 +28,4 @@ export interface CourseAdminDoc extends DocumentData {
   readonly id: string;
   readonly collection: 'courses/courseAdmins';
   userId: string;
-  role: 'lecturer' | 'assistant';
 }

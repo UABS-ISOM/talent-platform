@@ -36,6 +36,7 @@
           :key="index"
           v-ripple
           :to="to"
+          exact
           clickable
         >
           <q-item-section avatar>

@@ -62,7 +62,6 @@ import { getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
 import AppCourseAddStaffDialog from "./AppCourseAddStaffDialog.vue";
-import type { QueryCourseArgs } from "@/gql/__generated__/graphql";
 
 const showAddStaffDialog = ref(false);
 
@@ -81,6 +80,12 @@ const columns: QTableProps["columns"] = [
     align: "left",
     field: "name",
   },
+  {
+    name: "email",
+    label: "Email",
+    align: "left",
+    field: "email",
+  },
 ];
 
 // Get the course
@@ -90,28 +95,15 @@ const pagination = ref<QTableProps["pagination"]>({
   rowsNumber: 0,
 });
 
-const queryParams = ref<QueryCourseArgs>({
-  courseId: courseId as string,
-  courseStaffOptions: {
-    rowsPerPage: pagination.value?.rowsPerPage ?? 1,
-  },
-});
-
-/**
- * Processes a request from the table
- * @param props The table props
- */
-const onRequest: QTableProps["onRequest"] = async ({
-  pagination: { page, rowsPerPage },
-}) => {
-  if (pagination.value === undefined) return;
-
-  // Set new query parameters
-  queryParams.value.courseStaffOptions = {
-    page,
-    rowsPerPage,
+const queryParams = computed(() => {
+  return {
+    courseId: courseId as string,
+    courseStaffOptions: {
+      page: pagination.value?.page ?? 1,
+      rowsPerPage: pagination.value?.rowsPerPage ?? 1,
+    },
   };
-};
+});
 
 // Query the course
 const { result, loading, error, refetch } = useQuery(
@@ -122,14 +114,13 @@ const { result, loading, error, refetch } = useQuery(
         staff {
           id
           name
+          email
         }
       }
     }
 
     input PaginationInput {
       page: Int
-      afterDoc: String
-      beforeDoc: String
       rowsPerPage: Int!
     }
   `),
@@ -146,4 +137,18 @@ watch(
     pagination.value.rowsNumber = numStaff;
   }
 );
+
+/**
+ * Processes a request from the table
+ * @param props The table props
+ */
+const onRequest: QTableProps["onRequest"] = async ({
+  pagination: { page, rowsPerPage },
+}) => {
+  if (pagination.value === undefined) return;
+
+  // Set new query parameters
+  pagination.value.page = page;
+  pagination.value.rowsPerPage = rowsPerPage;
+};
 </script>
