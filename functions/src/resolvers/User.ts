@@ -1,6 +1,3 @@
-import { getFirestore } from 'firebase-admin/firestore';
-import { GenericConverter } from '../dataSources/generics';
-import type { CourseDoc, CourseAdminDoc } from '../dataSources/models';
 import type { UserResolvers } from '../__generated__/graphql';
 import { Role } from '../__generated__/graphql';
 
@@ -49,27 +46,14 @@ const resolver: UserResolvers = {
     ).map(doc => ({ _id: doc._id })),
 
   // Send a model of the user's courses to the Course resolver
-  courses: async ({ _uid }) => {
-    // TODO: Rewrite when data-loader-firestore has support for collection groups
+  courses: async ({ _uid }, _, { dataLoaders: { courseAdmins } }) => {
     // Get courseAdmin documents for the user
-    const coursesSnap = await getFirestore()
-      .collectionGroup('courseAdmins')
-      .withConverter(new GenericConverter<CourseAdminDoc>())
-      .where('userId', '==', _uid)
-      .get();
+    const courseAdminDocs = await courseAdmins.fetchDocsByCollectionGroupQuery(
+      c => c.where('userId', '==', _uid)
+    );
 
-    // Get the course documents for the courses the user is an admin of
-    const courseIds = coursesSnap.docs
-      .map(
-        doc =>
-          doc.ref.parent.parent?.withConverter(
-            new GenericConverter<CourseDoc>()
-          ).id
-      )
-      .filter((id): id is string => id !== undefined);
-
-    return courseIds.map(id => ({
-      _id: id,
+    return courseAdminDocs.map(({ _path }) => ({
+      _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
       _courseStaffQuery: ref => ref,
     }));
   },
