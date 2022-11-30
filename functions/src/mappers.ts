@@ -15,4 +15,7 @@ export interface CourseMapper {
   _courseStaffQuery: (
     ref: CollectionReference<OutputDocumentData<CourseAdminModel>>
   ) => Query;
+  _courseStudentsQuery: (
+    ref: CollectionReference<OutputDocumentData<CourseAdminModel>>
+  ) => Query;
 }

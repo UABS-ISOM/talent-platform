@@ -62,6 +62,7 @@ import { getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
 import AppCourseAddStaffDialog from "./AppCourseAddStaffDialog.vue";
+import type { QueryCourseArgs } from "@/gql/__generated__/graphql";
 
 const showAddStaffDialog = ref(false);
 
@@ -89,15 +90,28 @@ const pagination = ref<QTableProps["pagination"]>({
   rowsNumber: 0,
 });
 
-const queryParams = computed(() => {
-  return {
-    courseId: courseId as string,
-    courseStaffOptions: {
-      page: pagination.value?.page ?? 1,
-      rowsPerPage: pagination.value?.rowsPerPage ?? 1,
-    },
-  };
+const queryParams = ref<QueryCourseArgs>({
+  courseId: courseId as string,
+  courseStaffOptions: {
+    rowsPerPage: pagination.value?.rowsPerPage ?? 1,
+  },
 });
+
+/**
+ * Processes a request from the table
+ * @param props The table props
+ */
+const onRequest: QTableProps["onRequest"] = async ({
+  pagination: { page, rowsPerPage },
+}) => {
+  if (pagination.value === undefined) return;
+
+  // Set new query parameters
+  queryParams.value.courseStaffOptions = {
+    page,
+    rowsPerPage,
+  };
+};
 
 // Query the course
 const { result, loading, error, refetch } = useQuery(
@@ -106,13 +120,16 @@ const { result, loading, error, refetch } = useQuery(
       course(courseId: $courseId, courseStaffOptions: $courseStaffOptions) {
         numStaff
         staff {
+          id
           name
         }
       }
     }
 
     input PaginationInput {
-      page: Int!
+      page: Int
+      afterDoc: String
+      beforeDoc: String
       rowsPerPage: Int!
     }
   `),
@@ -129,18 +146,4 @@ watch(
     pagination.value.rowsNumber = numStaff;
   }
 );
-
-/**
- * Processes a request from the table
- * @param props The table props
- */
-const onRequest: QTableProps["onRequest"] = async ({
-  pagination: { page, rowsPerPage },
-}) => {
-  if (pagination.value === undefined) return;
-
-  // Set new query parameters
-  pagination.value.page = page;
-  pagination.value.rowsPerPage = rowsPerPage;
-};
 </script>

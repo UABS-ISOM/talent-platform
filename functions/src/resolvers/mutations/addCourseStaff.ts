@@ -26,7 +26,7 @@ export const addCourseStaff: MutationResolvers['addCourseStaff'] = async (
   const courseAdmin = await courseAdmins.fetchDocById(courseId, newUser.uid);
   if (courseAdmin !== undefined)
     throw new GraphQLError(
-      'This user is already a staff member of this course.',
+      'This user is already a staff member in this course.',
       {
         extensions: {
           code: 'BAD_USER_INPUT',

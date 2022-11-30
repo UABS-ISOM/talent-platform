@@ -25,7 +25,9 @@ input EditMeInput {
 }
 
 input PaginationInput {
-  page: Int!
+  page: Int
+  afterDoc: String
+  beforeDoc: String
   rowsPerPage: Int!
 }
 
