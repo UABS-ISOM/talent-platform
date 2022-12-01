@@ -60,14 +60,21 @@ const email = ref("");
 const error = ref(false);
 const success = ref(false);
 const loading = ref(false);
-const addedEmails = ref<string>();
 
 const { mutate: addCourseStudent, error: addCourseStudentError } = useMutation(
   graphql(`
-    mutation AddCourseStudentsMutation($courseId: ID!, $email: String!) {
-      addCourseMember(courseId: $courseId, email: $email, type: STUDENT) {
-        email
+    mutation AddCourseStudentsMutation(
+      $courseId: ID!
+      $members: [CourseMemberInput!]!
+    ) {
+      addCourseMembers(courseId: $courseId, members: $members, type: STUDENT) {
+        id
       }
+    }
+
+    input CourseMemberInput {
+      name: String
+      email: String!
     }
 
     enum CourseMemberEnum {
@@ -86,12 +93,11 @@ const onSubmit = async () => {
     // Add the course and redirect to the course page
     const data = await addCourseStudent({
       courseId: props.courseId,
-      email: email.value,
+      members: [{ email: email.value }],
     });
 
     if (data?.data) {
       success.value = true;
-      addedEmails.value = data.data.addCourseMember.email;
       email.value = "";
       emit("addStudent");
 

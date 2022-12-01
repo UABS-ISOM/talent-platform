@@ -5,7 +5,7 @@ export const getPaginatedDocs = (
   orderField: string,
   input: PaginationInput | undefined | null
 ) => {
-  const rowsPerPage = Math.max(1, input?.rowsPerPage ?? 25);
+  const rowsPerPage = Math.max(1, input?.rowsPerPage ?? 50);
 
   // Doc to start after is given
   if (input?.afterDoc)

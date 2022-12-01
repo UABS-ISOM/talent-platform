@@ -38,6 +38,7 @@
           :to="to"
           exact
           clickable
+          @click="showDrawer = false"
         >
           <q-item-section avatar>
             <q-icon :name="icon" />

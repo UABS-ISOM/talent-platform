@@ -12,8 +12,17 @@ type Mutation {
   _: Boolean
   generateClaims: AuthClaims!
   addCourse(name: String!, description: String!): Course!
-  addCourseMember(courseId: ID!, email: String!, type: CourseMemberEnum!): User!
+  addCourseMembers(
+    courseId: ID!
+    members: [CourseMemberInput!]!
+    type: CourseMemberEnum!
+  ): [User!]!
   editMe(input: EditMeInput!): User!
+}
+
+input CourseMemberInput {
+  name: String
+  email: String!
 }
 
 enum CourseMemberEnum {

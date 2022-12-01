@@ -1,13 +1,13 @@
 import type { MutationResolvers } from '../__generated__/graphql';
 import { generateClaims } from './mutations/generateClaims';
 import { addCourse } from './mutations/addCourse';
-import { addCourseMember } from './mutations/addCourseMember';
+import { addCourseMembers } from './mutations/addCourseMembers';
 
 // Resolvers for the Course type
 const resolver: MutationResolvers = {
   generateClaims,
   addCourse,
-  addCourseMember,
+  addCourseMembers,
 };
 
 export default resolver;

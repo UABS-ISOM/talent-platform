@@ -91,7 +91,7 @@ const columns: QTableProps["columns"] = [
 // Get the course
 const pagination = ref<QTableProps["pagination"]>({
   page: 1,
-  rowsPerPage: 25,
+  rowsPerPage: 50,
   rowsNumber: 0,
 });
 
