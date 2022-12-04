@@ -90,6 +90,8 @@ const { mutate: editMe } = useMutation(
     }
 
     input EditMeInput {
+      name: String
+      pronouns: String
       overview: String
       skills: [String!]
     }

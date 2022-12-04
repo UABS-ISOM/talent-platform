@@ -74,3 +74,19 @@ const handleRequest = async (
 export const graphql = functions
   .region('australia-southeast1')
   .https.onRequest(handleRequest);
+
+// Add a user doc when created
+export const onUserCreated = functions.auth
+  .user()
+  .onCreate(({ uid, displayName }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection('users')
+      .doc(uid)
+      .set(displayName ? { displayName } : {});
+  });
+
+// Delete a user's records when deleted
+// TODO: implement
+// export const onUserDeleted = functions.auth.user().onDelete(() => {});

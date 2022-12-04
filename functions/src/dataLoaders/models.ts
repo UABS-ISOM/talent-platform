@@ -8,6 +8,7 @@ import type { DocumentData } from 'firebase-admin/firestore';
  * @extends {DocumentData}
  */
 export interface UserModel extends DocumentData {
+  displayName?: string;
   pronouns?: string;
   overview?: string;
   skills?: string[];
