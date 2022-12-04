@@ -11,8 +11,8 @@ export const courseStudents: QueryResolvers['courseStudents'] = async (
   // Return null if the user is not authenticated
   user = ensureAuth(user);
   ensureVerified(user);
-  ensureCourseExists(courseId, courses);
-  ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
+  await ensureCourseExists(courseId, courses);
+  await ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
 
   return (
     await courseStudents.fetchDocsByQuery(

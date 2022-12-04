@@ -78,10 +78,8 @@ export const ensureMemberOfCourse = async (
 ): Promise<void> => {
   // Determine if the user is an admin of the course
   if (
-    !(
-      (await courseStudents.fetchDocById(courseId, uid)) !== undefined ||
-      (await courseAdmins.fetchDocById(courseId, uid)) !== undefined
-    )
+    (await courseStudents.fetchDocById(courseId, uid)) === undefined &&
+    (await courseAdmins.fetchDocById(courseId, uid)) === undefined
   )
     throw new GraphQLError('You are not a member of this course.', {
       extensions: {

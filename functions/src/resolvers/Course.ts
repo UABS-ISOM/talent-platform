@@ -1,4 +1,10 @@
+import {
+  ensureStaffMemberOfCourse,
+  ensureStudentOfCourse,
+} from '../utils/roles';
+import { ensureAuth } from '../utils/user';
 import type { CourseResolvers } from '../__generated__/graphql';
+import { CourseMemberEnum } from '../__generated__/graphql';
 
 // Resolvers for the Course type
 const resolver: CourseResolvers = {
@@ -39,6 +45,23 @@ const resolver: CourseResolvers = {
         _uid: student.userId,
       })
     ),
+
+  myRole: async (
+    { _id },
+    _,
+    { user, dataLoaders: { courseStudents, courseAdmins } }
+  ) => {
+    const currentUser = ensureAuth(user);
+
+    return ensureStudentOfCourse(_id, currentUser.uid, courseStudents)
+      .then(() => {
+        return CourseMemberEnum.Student;
+      })
+      .catch(async () => {
+        await ensureStaffMemberOfCourse(_id, currentUser.uid, courseAdmins);
+        return CourseMemberEnum.Staff;
+      });
+  },
 };
 
 export default resolver;

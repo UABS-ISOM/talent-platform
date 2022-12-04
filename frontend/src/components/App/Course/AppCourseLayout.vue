@@ -3,14 +3,24 @@
     v-if="course !== undefined"
     :name="course?.name ?? ''"
     :description="course?.description ?? ''"
+    :role="course?.myRole"
   >
     <router-view />
   </AppCourseSidebar>
 
-  <template v-else-if="loading || error">
+  <template v-else-if="loading || course === undefined || error">
     <AppCourseLoader v-if="loading" />
 
     <GenericPage>
+      <GenericAlert
+        :model-value="course === undefined"
+        static
+        type="error"
+        class="full-width"
+      >
+        This course doesn't exist.
+      </GenericAlert>
+
       <GenericAlert
         :model-value="error !== null"
         static
@@ -46,6 +56,7 @@ const { result, loading, error } = useQuery(
         id
         name
         description
+        myRole
       }
     }
   `),

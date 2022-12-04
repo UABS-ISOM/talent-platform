@@ -87,10 +87,12 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
+import { CourseMemberEnum } from "@/gql/__generated__/graphql";
 
-defineProps<{
+const props = defineProps<{
   name: string;
   description: string;
+  role: CourseMemberEnum;
 }>();
 
 const showDrawer = ref(false);
@@ -101,15 +103,24 @@ const {
 
 const links = ref([
   {
-    icon: "mdi-school",
-    label: "Staff",
-    to: { name: "AppCourseStaff", params: { courseId } },
+    icon: "mdi-account-search",
+    label: "Find Students",
+    to: { name: "AppCourseFindStudents", params: { courseId } },
   },
-  {
-    icon: "mdi-account",
-    label: "Students",
-    to: { name: "AppCourseStudents", params: { courseId } },
-  },
+  ...(props.role === CourseMemberEnum.Staff
+    ? [
+        {
+          icon: "mdi-school",
+          label: "Staff",
+          to: { name: "AppCourseStaff", params: { courseId } },
+        },
+        {
+          icon: "mdi-account",
+          label: "Students",
+          to: { name: "AppCourseStudents", params: { courseId } },
+        },
+      ]
+    : []),
 ]);
 </script>
 

@@ -1,28 +1,25 @@
 import { ensureAuth, ensureVerified } from '../../utils/user';
 import type { QueryResolvers } from '../../__generated__/graphql';
-import { forbiddenError } from '../../utils/errors';
 import { getPaginatedDocs } from '../../utils/pagination';
+import { ensureCourseExists, ensureMemberOfCourse } from '../../utils/roles';
 
 // Send a model of the course to the Course resolver
 export const course: QueryResolvers['course'] = async (
   _,
   { courseId, courseStaffOptions, courseStudentOptions },
-  { user, dataLoaders }
+  { user, dataLoaders: { courses, courseAdmins, courseStudents } }
 ) => {
   // Return null if the user is not authenticated
   user = ensureAuth(user);
   ensureVerified(user);
 
   // Return null if the course does not exist
-  if ((await dataLoaders.courses.fetchDocById(courseId)) === undefined)
+  try {
+    await ensureCourseExists(courseId, courses);
+  } catch (error) {
     return null;
-
-  // Determine if the user is an admin of the course
-  if (
-    (await dataLoaders.courseAdmins.fetchDocById(courseId, user.uid)) ===
-    undefined
-  )
-    throw forbiddenError();
+  }
+  await ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
 
   return {
     _id: courseId,

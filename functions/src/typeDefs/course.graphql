@@ -6,4 +6,5 @@ type Course {
   numStudents: Int!
   staff: [User!]!
   students: [User!]!
+  myRole: CourseMemberEnum!
 }

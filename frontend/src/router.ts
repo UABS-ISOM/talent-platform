@@ -37,6 +37,14 @@ const router = createRouter({
           children: [
             {
               path: "",
+              name: "AppCourseFindStudents",
+              component: () =>
+                import(
+                  "@/components/App/Course/FindStudents/AppCourseFindStudents.vue"
+                ),
+            },
+            {
+              path: "staff",
               name: "AppCourseStaff",
               component: () =>
                 import("@/components/App/Course/Staff/AppCourseStaffView.vue"),
