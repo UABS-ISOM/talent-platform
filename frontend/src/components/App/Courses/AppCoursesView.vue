@@ -9,8 +9,37 @@
       </p>
     </div>
 
-    <div class="q-pa-sm">
-      <GenericNone>You're not enrolled in any courses.</GenericNone>
+    <div class="row content-start">
+      <template v-if="studentCourses !== undefined">
+        <AppCourseCard
+          v-for="{ id, name, description } in studentCourses"
+          :id="id"
+          :key="id"
+          :name="name"
+          :description="description"
+        />
+
+        <div class="full-width">
+          <GenericNone v-if="studentCourses.length === 0">
+            You're not enrolled in any courses.
+          </GenericNone>
+        </div>
+      </template>
+
+      <template v-else-if="studentLoading || studentError">
+        <template v-if="studentLoading">
+          <AppCourseCardLoader v-for="i in 3" :key="i" />
+        </template>
+
+        <GenericAlert
+          :model-value="studentError !== null"
+          static
+          type="error"
+          class="full-width"
+        >
+          {{ getErrorMessage(studentError) }}
+        </GenericAlert>
+      </template>
     </div>
 
     <div class="q-px-sm q-py-md">
@@ -39,9 +68,9 @@
     </div>
 
     <div class="row content-start">
-      <template v-if="courses !== undefined">
+      <template v-if="adminCourses !== undefined">
         <AppCourseCard
-          v-for="{ id, name, description } in courses"
+          v-for="{ id, name, description } in adminCourses"
           :id="id"
           :key="id"
           :name="name"
@@ -49,24 +78,24 @@
         />
 
         <div class="full-width">
-          <GenericNone v-if="courses.length === 0">
+          <GenericNone v-if="adminCourses.length === 0">
             You don't administer any courses.
           </GenericNone>
         </div>
       </template>
 
-      <template v-else-if="loading || error">
-        <template v-if="loading">
+      <template v-else-if="adminLoading || adminError">
+        <template v-if="adminLoading">
           <AppCourseCardLoader v-for="i in 3" :key="i" />
         </template>
 
         <GenericAlert
-          :model-value="error !== null"
+          :model-value="adminError !== null"
           static
           type="error"
           class="full-width"
         >
-          {{ getErrorMessage(error) }}
+          {{ getErrorMessage(adminError) }}
         </GenericAlert>
       </template>
     </div>
@@ -91,11 +120,16 @@ const showCreateDialog = ref(false);
 const mainStore = useMainStore();
 
 // Get the user's profile
-const { result, loading, error } = useQuery(
+const {
+  result: studentResult,
+  loading: studentLoading,
+  error: studentError,
+} = useQuery(
   graphql(`
-    query getCourses {
+    query getStudentCourses {
       me {
-        courses {
+        id
+        studentCourses {
           id
           name
           description
@@ -106,5 +140,32 @@ const { result, loading, error } = useQuery(
   null,
   { fetchPolicy: "cache-and-network" }
 );
-const courses = computed(() => result.value?.me.courses ?? undefined);
+const studentCourses = computed(
+  () => studentResult.value?.me.studentCourses ?? undefined
+);
+
+// Get the user's profile
+const {
+  result: adminResult,
+  loading: adminLoading,
+  error: adminError,
+} = useQuery(
+  graphql(`
+    query getAdminCourses {
+      me {
+        id
+        adminCourses {
+          id
+          name
+          description
+        }
+      }
+    }
+  `),
+  null,
+  { fetchPolicy: "cache-and-network" }
+);
+const adminCourses = computed(
+  () => adminResult.value?.me.adminCourses ?? undefined
+);
 </script>

@@ -118,7 +118,7 @@ const pagination = ref<QTableProps["pagination"]>({
 const queryParams = computed(() => {
   return {
     courseId: courseId as string,
-    courseStaffOptions: {
+    courseStudentOptions: {
       page: pagination.value?.page ?? 1,
       rowsPerPage: pagination.value?.rowsPerPage ?? 1,
     },

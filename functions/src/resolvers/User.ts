@@ -47,7 +47,7 @@ const resolver: UserResolvers = {
     ).map(doc => ({ _id: doc._id })),
 
   // Send a model of the user's courses to the Course resolver
-  courses: async ({ _uid }, _, { dataLoaders: { courseAdmins } }) => {
+  adminCourses: async ({ _uid }, _, { dataLoaders: { courseAdmins } }) => {
     // Get courseAdmin documents for the user
     const courseAdminDocs = await courseAdmins.fetchDocsByCollectionGroupQuery(
       c => c.where('userId', '==', _uid)
@@ -55,6 +55,22 @@ const resolver: UserResolvers = {
 
     return courseAdminDocs.map(({ _path }) => ({
       _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
+      _courseStudentsQuery: ref => ref,
+      _courseStaffQuery: ref => ref,
+    }));
+  },
+
+  // Send a model of the user's courses to the Course resolver
+  studentCourses: async ({ _uid }, _, { dataLoaders: { courseStudents } }) => {
+    // Get courseAdmin documents for the user
+    const courseStudentDocs =
+      await courseStudents.fetchDocsByCollectionGroupQuery(c =>
+        c.where('userId', '==', _uid)
+      );
+
+    return courseStudentDocs.map(({ _path }) => ({
+      _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
+      _courseStudentsQuery: ref => ref,
       _courseStaffQuery: ref => ref,
     }));
   },

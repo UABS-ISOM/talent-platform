@@ -25,6 +25,8 @@ export const getPaginatedDocs = (
     const page = Math.max(1, input.page);
     const numDocsPreceeding = (page - 1) * rowsPerPage;
 
+    console.log('numDocsPreceeding', numDocsPreceeding);
+
     return (ref: CollectionReference) =>
       ref.orderBy(orderField).limit(rowsPerPage).offset(numDocsPreceeding);
   }

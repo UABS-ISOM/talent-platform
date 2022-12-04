@@ -8,7 +8,8 @@ type User {
   overview: String!
   skills: [String!]!
   experience: [UserExperience!]!
-  courses: [Course!]!
+  adminCourses: [Course!]!
+  studentCourses: [Course!]!
 }
 
 enum Role {

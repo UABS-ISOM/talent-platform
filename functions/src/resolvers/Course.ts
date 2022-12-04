@@ -31,14 +31,14 @@ const resolver: CourseResolvers = {
   students: async (
     { _id, _courseStudentsQuery },
     _,
-    { dataLoaders: { courseStudents } }
+    { dataLoaders: { courseStudents: cs } }
   ) =>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (
-      await courseStudents.fetchDocsByQuery(_courseStudentsQuery as any, _id)
-    ).map(student => ({
-      _uid: student.userId,
-    })),
+    (await cs.fetchDocsByQuery(_courseStudentsQuery as any, _id)).map(
+      student => ({
+        _uid: student.userId,
+      })
+    ),
 };
 
 export default resolver;

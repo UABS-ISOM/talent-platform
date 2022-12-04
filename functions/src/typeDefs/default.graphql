@@ -6,6 +6,7 @@ type Query {
     courseStaffOptions: PaginationInput
     courseStudentOptions: PaginationInput
   ): Course
+  courseStudents(courseId: ID!, options: PaginationInput!): [User!]!
 }
 
 type Mutation {

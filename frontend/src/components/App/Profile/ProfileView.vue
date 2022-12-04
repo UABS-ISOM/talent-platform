@@ -62,7 +62,7 @@ const {
         pronouns
         overview
         skills
-        courses {
+        adminCourses {
           id
         }
       }
@@ -112,7 +112,6 @@ const save = async (
   loading.value = true;
 
   try {
-    // Add the course and redirect to the course page
     await editMe({ input });
     onSuccess();
   } catch (e) {

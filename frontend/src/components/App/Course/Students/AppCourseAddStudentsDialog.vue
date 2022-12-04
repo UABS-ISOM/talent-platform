@@ -148,6 +148,8 @@ watch(file, (v) => {
       { once: true }
     );
     reader.readAsText(v);
+  } else {
+    students.value = [];
   }
 });
 
@@ -247,6 +249,8 @@ const onSubmit = async () => {
 
     if (processedStudents.value === numStudents.value) {
       success.value = true;
+      processedStudents.value = 0;
+      file.value = null;
       emit("addStudent");
     }
   }
