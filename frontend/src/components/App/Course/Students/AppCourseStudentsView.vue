@@ -7,17 +7,35 @@
   >
     <h2 class="text-h4 q-my-none">Students</h2>
 
+    <q-space />
+
+    <q-btn
+      no-caps
+      outline
+      color="primary"
+      icon="mdi-paperclip"
+      label="Add students"
+      @click="showAddStudentsDialog = true"
+    />
+
     <q-btn
       no-caps
       unelevated
       color="primary"
       icon="mdi-plus"
       label="Add student"
-      @click="showAddStaffDialog = true"
+      @click="showAddStudentDialog = true"
     />
 
-    <CustomDialog v-model="showAddStaffDialog" title="Add Students">
-      <AppCourseAddStaffDialog
+    <CustomDialog v-model="showAddStudentsDialog" title="Add Students">
+      <AppCourseAddStudentsDialog
+        :course-id="(courseId as string)"
+        @add-student="refetch"
+      />
+    </CustomDialog>
+
+    <CustomDialog v-model="showAddStudentDialog" title="Add Student">
+      <AppCourseAddStudentDialog
         :course-id="(courseId as string)"
         @add-student="refetch"
       />
@@ -61,9 +79,11 @@ import { computed } from "vue";
 import { getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
-import AppCourseAddStaffDialog from "./AppCourseAddStudentDialog.vue";
+import AppCourseAddStudentsDialog from "./AppCourseAddStudentsDialog.vue";
+import AppCourseAddStudentDialog from "./AppCourseAddStudentDialog.vue";
 
-const showAddStaffDialog = ref(false);
+const showAddStudentsDialog = ref(false);
+const showAddStudentDialog = ref(false);
 
 // Get the course ID
 const {
