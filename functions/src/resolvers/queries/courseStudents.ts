@@ -1,4 +1,4 @@
-import { getPaginatedDocs } from '../../utils/pagination';
+import { searchUsers } from '../../utils/algolia';
 import { ensureCourseExists, ensureMemberOfCourse } from '../../utils/roles';
 import { ensureAuth, ensureVerified } from '../../utils/user';
 import type { QueryResolvers } from '../../__generated__/graphql';
@@ -6,7 +6,7 @@ import type { QueryResolvers } from '../../__generated__/graphql';
 export const courseStudents: QueryResolvers['courseStudents'] = async (
   _,
   { courseId, options },
-  { user, dataLoaders: { courses, courseAdmins, courseStudents } }
+  { user, dataLoaders: { courses, users, courseAdmins, courseStudents } }
 ) => {
   // Return null if the user is not authenticated
   user = ensureAuth(user);
@@ -15,11 +15,10 @@ export const courseStudents: QueryResolvers['courseStudents'] = async (
   await ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
 
   return (
-    await courseStudents.fetchDocsByQuery(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      getPaginatedDocs('userId', options) as any
-    )
+    options.query
+      ? await searchUsers(options.query, courseId, users)
+      : await courseStudents.fetchDocsByQuery(c => c, courseId)
   ).map(student => ({
-    _uid: student.userId,
+    _uid: student._id,
   }));
 };

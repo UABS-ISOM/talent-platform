@@ -5,6 +5,7 @@ import { ensureAuth, ensureStaff, ensureVerified } from '../../utils/user';
 import type { MutationResolvers } from '../../__generated__/graphql';
 import { CourseMemberEnum } from '../../__generated__/graphql';
 import { dataFetchError, notFoundError } from '../../utils/errors';
+import { indexUser } from '../../utils/algoliaSync';
 
 // Add multiple members to a course, and return the members added
 export const addCourseMembers: MutationResolvers['addCourseMembers'] = async (
@@ -84,6 +85,9 @@ export const addCourseMembers: MutationResolvers['addCourseMembers'] = async (
     false,
     courseId
   );
+
+  // Sync new user data with Algolia
+  await Promise.all(uidsCreated.map(uid => indexUser(uid)));
 
   return uidsCreated.map(async uid => ({
     _uid: uid,

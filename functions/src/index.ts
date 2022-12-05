@@ -13,6 +13,7 @@ import resolvers from './resolvers';
 import { getUser } from './utils/auth';
 import { DataLoaders } from './dataLoaders';
 import { getFirestore } from 'firebase-admin/firestore';
+import { indexUser } from './utils/algoliaSync';
 
 // Ensure that the Firebase Admin SDK is initialised
 initializeApp();
@@ -78,13 +79,14 @@ export const graphql = functions
 // Add a user doc when created
 export const onUserCreated = functions.auth
   .user()
-  .onCreate(({ uid, displayName }) => {
-    const firestore = getFirestore();
+  .onCreate(async ({ uid, displayName }) => {
+    const data = displayName ? { displayName } : {};
 
-    firestore
-      .collection('users')
-      .doc(uid)
-      .set(displayName ? { displayName } : {});
+    const firestore = getFirestore();
+    await Promise.all([
+      firestore.collection('users').doc(uid).set(data),
+      indexUser(uid),
+    ]);
   });
 
 // Delete a user's records when deleted

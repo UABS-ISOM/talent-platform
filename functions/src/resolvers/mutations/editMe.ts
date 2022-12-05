@@ -3,6 +3,7 @@ import escapeHTML from 'escape-html';
 import sanitizeHtml from 'sanitize-html';
 import { getAuth } from 'firebase-admin/auth';
 import { ensureAuth } from '../../utils/user';
+import { indexUser } from '../../utils/algoliaSync';
 
 // Edit the current user's details
 export const editMe: MutationResolvers['editMe'] = async (
@@ -44,6 +45,9 @@ export const editMe: MutationResolvers['editMe'] = async (
       false,
       user.uid
     );
+
+  // Sync new user data with Algolia
+  indexUser(user.uid);
 
   // Send the updated user to the User resolver
   return {

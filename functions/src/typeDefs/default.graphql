@@ -6,7 +6,7 @@ type Query {
     courseStaffOptions: PaginationInput
     courseStudentOptions: PaginationInput
   ): Course
-  courseStudents(courseId: ID!, options: PaginationInput!): [User!]!
+  courseStudents(courseId: ID!, options: SearchInput!): [User!]!
 }
 
 type Mutation {
@@ -43,6 +43,10 @@ input PaginationInput {
   afterDoc: String
   beforeDoc: String
   rowsPerPage: Int!
+}
+
+input SearchInput {
+  query: String
 }
 
 type AuthClaims {

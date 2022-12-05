@@ -7,26 +7,11 @@
   >
     <h2 class="text-h4 q-my-none">Find Students</h2>
 
-    <q-input v-model="search" outlined dense placeholder="Search">
-      <template #after>
-        <q-btn round dense flat icon="mdi-magnify" />
-      </template>
-    </q-input>
+    <SearchBox v-model="query" @search="search" />
   </div>
 
-  <template v-if="loading || error">
-    <GenericAlert
-      :model-value="error !== null"
-      static
-      type="error"
-      class="full-width q-pa-sm"
-    >
-      {{ getErrorMessage(error) }}
-    </GenericAlert>
-  </template>
-
-  <div class="row content-start">
-    <template v-if="students !== undefined">
+  <div class="row content-start q-pa-sm">
+    <template v-if="students !== undefined && error === null">
       <AppCourseFindStudentsCard
         v-for="{ id, photoUrl, name, overview, skills } in students"
         :id="id"
@@ -37,7 +22,7 @@
         :skills="skills"
       />
 
-      <div class="full-width">
+      <div class="full-width q-pa-sm">
         <GenericNone v-if="students.length === 0">
           There aren't any students enrolled in this course.
         </GenericNone>
@@ -71,49 +56,42 @@ import { useRoute } from "vue-router";
 import GenericNone from "@/components/GenericNone.vue";
 import AppCourseFindStudentsCard from "./AppCourseFindStudentsCard.vue";
 import AppCourseFindStudentsCardLoader from "./AppCourseFindStudentsCardLoader.vue";
+import SearchBox from "@/components/SearchBox.vue";
 
 const {
   params: { courseId },
 } = useRoute();
 
-const search = ref("");
+const query = ref("");
 
-const queryParams = computed(() => {
-  return {
-    courseId: courseId as string,
-  };
+const queryParams = ref({
+  courseId: courseId as string,
+  options: { query: null } as { query: string | null },
 });
+
+const search = () => {
+  queryParams.value.options.query = query.value;
+};
 
 // Query the course
 const { result, loading, error } = useQuery(
   graphql(`
-    query getFindCourseStudents(
-      $courseId: ID!
-      $courseStudentOptions: PaginationInput
-    ) {
-      course(
-        courseId: $courseId
-        courseStaffOptions: null
-        courseStudentOptions: $courseStudentOptions
-      ) {
-        numStudents
-        students {
-          id
-          photoUrl
-          name
-          overview
-          skills
-        }
+    query getFindCourseStudents($courseId: ID!, $options: SearchInput!) {
+      courseStudents(courseId: $courseId, options: $options) {
+        id
+        photoUrl
+        name
+        overview
+        skills
       }
     }
 
-    input PaginationInput {
-      page: Int!
-      rowsPerPage: Int!
+    input SearchInput {
+      query: String
     }
   `),
   queryParams,
   { fetchPolicy: "cache-and-network" }
 );
-const students = computed(() => result.value?.course?.students);
+const students = computed(() => result.value?.courseStudents);
 </script>
