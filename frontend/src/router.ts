@@ -36,7 +36,30 @@ const router = createRouter({
             import("@/components/App/Course/AppCourseLayout.vue"),
           children: [
             {
-              path: "",
+              path: "chats",
+              component: () =>
+                import("@/components/App/Course/Chats/AppCourseChats.vue"),
+              children: [
+                {
+                  path: "",
+                  name: "AppCourseChats",
+                  component: () =>
+                    import(
+                      "@/components/App/Course/Chats/AppCourseEmptyChat.vue"
+                    ),
+                },
+                {
+                  path: ":chatId",
+                  name: "AppCourseChat",
+                  component: () =>
+                    import(
+                      "@/components/App/Course/Chats/Chat/AppCourseChat.vue"
+                    ),
+                },
+              ],
+            },
+            {
+              path: "find",
               name: "AppCourseFindStudents",
               component: () =>
                 import(

@@ -1,6 +1,6 @@
 <template>
   <router-link
-    :to="{ name: 'AppCourseFindStudents', params: { courseId: id } }"
+    :to="{ name: 'AppCourseChats', params: { courseId: id } }"
     class="q-pa-sm col-12 col-sm-6 col-md-4 col-lg-3 text-black"
     style="text-decoration: none"
   >

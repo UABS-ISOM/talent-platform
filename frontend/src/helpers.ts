@@ -29,3 +29,24 @@ export const getErrorMessage = (error: any) => {
 
   return GENERIC_ERROR;
 };
+
+/**
+ * Formats a time difference ms to a human-readable string.
+ * @param timeDiff The time difference in milliseconds.
+ * @returns The formatted time difference.
+ */
+export const formatTimeDiff = (timeDiff: number) => {
+  const seconds = Math.floor(timeDiff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  if (seconds < 60) return `${seconds}s`;
+  if (minutes < 60) return `${minutes}m`;
+  if (hours < 24) return `${hours}h`;
+  if (days < 30) return `${days}d`;
+  if (months < 12) return `${months}mo`;
+  return `${years}y`;
+};
