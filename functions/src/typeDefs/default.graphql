@@ -7,6 +7,8 @@ type Query {
     courseStudentOptions: PaginationInput
   ): Course
   courseStudents(courseId: ID!, options: SearchInput!): [User!]!
+  courseChat(courseId: ID!, chatId: String!): CourseChat!
+  chatHistory(courseId: ID!, chatId: String!, afterDoc: String): [ChatMessage!]!
 }
 
 type Mutation {
@@ -19,6 +21,12 @@ type Mutation {
     type: CourseMemberEnum!
   ): [User!]!
   editMe(input: EditMeInput!): User!
+  addCourseChatMember(courseId: ID!, chatId: String, uid: String!): CourseChat!
+  addCourseChatMessage(
+    courseId: ID!
+    chatId: String!
+    message: String!
+  ): ChatMessage!
 }
 
 input CourseMemberInput {

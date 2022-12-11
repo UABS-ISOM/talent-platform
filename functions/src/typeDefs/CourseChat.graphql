@@ -1,0 +1,11 @@
+type CourseChat {
+  id: ID!
+  users: [User!]!
+}
+
+type ChatMessage {
+  id: ID!
+  sender: User!
+  message: String!
+  createdAt: Int!
+}

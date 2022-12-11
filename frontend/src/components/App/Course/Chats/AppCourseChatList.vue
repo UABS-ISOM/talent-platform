@@ -1,5 +1,6 @@
 <template>
   <div
+    class="q-py-sm"
     :style="{
       'flex-grow': $q.screen.lt.md ? 1 : undefined,
       width: $q.screen.gt.sm ? '360px' : undefined,

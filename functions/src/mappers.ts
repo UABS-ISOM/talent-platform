@@ -19,3 +19,14 @@ export interface CourseMapper {
     ref: CollectionReference<OutputDocumentData<CourseAdminModel>>
   ) => Query;
 }
+
+export interface CourseChatMapper {
+  _courseId: string;
+  _chatId: string;
+}
+
+export interface ChatMessageWrapper {
+  _courseId: string;
+  _chatId: string;
+  _messageId: string;
+}

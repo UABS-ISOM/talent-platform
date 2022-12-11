@@ -15,6 +15,30 @@
         <q-item-section>
           <h2 class="text-h6 q-my-none">{{ name }}</h2>
         </q-item-section>
+
+        <q-item-section side>
+          <q-btn flat round dense icon="mdi-chat">
+            <q-menu>
+              <q-list style="min-width: 100px; max-width: 200px">
+                <q-item v-close-popup clickable>
+                  <q-item-section avatar>
+                    <q-icon name="mdi-account" />
+                  </q-item-section>
+
+                  <q-item-section>Open chat</q-item-section>
+                </q-item>
+
+                <q-item v-close-popup clickable>
+                  <q-item-section avatar>
+                    <q-icon name="mdi-account-multiple" />
+                  </q-item-section>
+
+                  <q-item-section>Add to group chat</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-item-section>
       </q-item>
 
       <q-separator />

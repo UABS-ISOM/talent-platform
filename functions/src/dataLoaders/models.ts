@@ -66,3 +66,27 @@ export interface CourseAdminModel extends DocumentData {
 export interface CourseStudentModel extends DocumentData {
   userId: string;
 }
+
+/**
+ * A document in the Firestore courses/chats collection
+ *
+ * @interface CourseChats
+ * @typedef {CourseChats}
+ * @extends {DocumentData}
+ */
+export interface CourseChatModel extends DocumentData {
+  userIds: string[];
+}
+
+/**
+ * A document in the Firestore courses/chats collection
+ *
+ * @interface ChatMessageModel
+ * @typedef {ChatMessageModel}
+ * @extends {DocumentData}
+ */
+export interface ChatMessageModel extends DocumentData {
+  sender: string;
+  message: string;
+  createdAt: number;
+}

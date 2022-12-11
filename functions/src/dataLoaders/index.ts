@@ -3,7 +3,9 @@ import DataLoader from 'dataloader';
 import type { UserRecord } from 'firebase-admin/auth';
 import type { Firestore } from 'firebase-admin/firestore';
 import type {
+  ChatMessageModel,
   CourseAdminModel,
+  CourseChatModel,
   CourseModel,
   CourseStudentModel,
   UserExperienceModel,
@@ -22,6 +24,8 @@ export class DataLoaders {
   courses: FirestoreCollectionLoader<CourseModel>;
   courseAdmins: FirestoreCollectionLoader<CourseAdminModel>;
   courseStudents: FirestoreCollectionLoader<CourseStudentModel>;
+  courseChats: FirestoreCollectionLoader<CourseChatModel>;
+  chatMessages: FirestoreCollectionLoader<ChatMessageModel>;
 
   /**
    * Generates a new instance of DataLoaders.
@@ -48,6 +52,17 @@ export class DataLoaders {
       firestore,
       'courses',
       'courseStudents'
+    );
+    this.courseChats = new FirestoreCollectionLoader<CourseChatModel>(
+      firestore,
+      'courses',
+      'courseChats'
+    );
+    this.chatMessages = new FirestoreCollectionLoader<ChatMessageModel>(
+      firestore,
+      'courses',
+      'courseChats',
+      'messages'
     );
   }
 }
