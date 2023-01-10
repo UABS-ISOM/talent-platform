@@ -21,13 +21,34 @@
     </q-card-section>
 
     <q-separator />
-    <AppCourseChatMessages />
+    <AppCourseChatMessages :course-id="courseId" :chat-id="chatId" />
     <q-separator />
-    <AppCourseChatInput />
+    <AppCourseChatInput :course-id="courseId" :chat-id="chatId" />
   </q-card>
 </template>
 
 <script setup lang="ts">
+import { useRoute } from "vue-router";
+import { graphql } from "@/gql/__generated__";
+import { useQuery } from "@vue/apollo-composable";
 import AppCourseChatInput from "./AppCourseChatInput.vue";
 import AppCourseChatMessages from "./AppCourseChatMessages.vue";
+
+const {
+  params: { courseId, chatId },
+} = useRoute() as unknown as { params: { courseId: string; chatId: string } };
+
+// Ensure the chat exists
+// TODO: Show a 404 page if the chat doesn't exist
+const { result, loading, error } = useQuery(
+  graphql(`
+    query getCourseChat($courseId: ID!, $chatId: String!) {
+      courseChat(courseId: $courseId, chatId: $chatId) {
+        id
+      }
+    }
+  `),
+  { courseId: courseId, chatId: chatId },
+  { fetchPolicy: "cache-and-network" }
+);
 </script>

@@ -23,11 +23,11 @@ export const chatHistory: QueryResolvers['chatHistory'] = async (
     c: CollectionReference<OutputDocumentData<ChatMessageModel>>
   ) =>
     afterDoc
-      ? c.orderBy(FieldPath.documentId(), 'desc').startAfter(afterDoc).limit(10)
-      : c.orderBy('chatId', 'desc').limit(10);
+      ? c.orderBy('createdAt', 'desc').startAfter(afterDoc).limit(10)
+      : c.orderBy('createdAt', 'desc').limit(10);
 
   return (
-    await chatMessages.fetchDocsByQuery(messageQuery, 'courseId', 'chatId')
+    await chatMessages.fetchDocsByQuery(messageQuery, courseId, chatId)
   ).map(({ _id }) => ({
     _courseId: courseId,
     _chatId: chatId,

@@ -12,7 +12,7 @@
       <h2 class="text-h4 q-my-none">Chats</h2>
     </div>
 
-    <q-list class="q-py-sm">
+    <q-list v-if="chats.length > 0" class="q-py-sm">
       <AppCourseChatListItem
         v-for="({ id, members, lastMessage }, chatIndex) in chats"
         :id="id"
@@ -22,6 +22,13 @@
         :time-string="formattedTimes[chatIndex]"
       />
     </q-list>
+
+    <p v-else class="q-px-md q-py-sm">
+      <GenericNone>
+        You don't have any chats yet. Start a conversation from the "Find
+        Students" page.
+      </GenericNone>
+    </p>
   </div>
 </template>
 
@@ -29,219 +36,26 @@
 import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import { formatTimeDiff } from "@/helpers";
 import AppCourseChatListItem from "./AppCourseChatListItem.vue";
+import GenericNone from "@/components/GenericNone.vue";
+import { watchChats, type CourseChatData } from "./api";
+import { auth } from "@/firebase";
+import type { QuerySnapshot } from "@firebase/firestore";
 
-const chats = ref([
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-  {
-    id: "OUYOR84HWUPR8H7G",
-    members: [
-      { name: "Karen" },
-      { name: "Mark" },
-      { name: "Henry" },
-      { name: "Andrew" },
-      { name: "Matthew" },
-    ],
-    lastMessage: {
-      sender: "Andrew",
-      message: "Lorem ipsum dolor sit amet paparti am inim.",
-      created: new Date().getTime(),
-    },
-  },
-]);
+const props = defineProps<{
+  courseId: string;
+}>();
+
+const chats = ref<CourseChatData[]>([]);
+
+/**
+ * Loads a new lot of chats.
+ * @param snapshot The new document snapshots.
+ */
+const onNext = (snapshot: QuerySnapshot<CourseChatData>) => {
+  chats.value.push(...snapshot.docs.map((doc) => doc.data()));
+};
+
+watchChats(props.courseId, auth.currentUser?.uid ?? "", onNext, () => {});
 
 // Update current time every minute
 const timeInterval = ref<number | undefined>();

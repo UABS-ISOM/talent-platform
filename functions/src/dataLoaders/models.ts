@@ -76,6 +76,7 @@ export interface CourseStudentModel extends DocumentData {
  */
 export interface CourseChatModel extends DocumentData {
   userIds: string[];
+  personal?: boolean;
 }
 
 /**

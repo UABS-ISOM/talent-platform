@@ -7,5 +7,5 @@ type ChatMessage {
   id: ID!
   sender: User!
   message: String!
-  createdAt: Int!
+  createdAt: String!
 }

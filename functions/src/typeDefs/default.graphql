@@ -8,6 +8,7 @@ type Query {
   ): Course
   courseStudents(courseId: ID!, options: SearchInput!): [User!]!
   courseChat(courseId: ID!, chatId: String!): CourseChat!
+  coursePersonalChat(courseId: ID!, otherUid: String!): CourseChat!
   chatHistory(courseId: ID!, chatId: String!, afterDoc: String): [ChatMessage!]!
 }
 

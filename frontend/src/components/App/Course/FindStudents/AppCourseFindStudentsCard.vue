@@ -17,10 +17,14 @@
         </q-item-section>
 
         <q-item-section side>
-          <q-btn flat round dense icon="mdi-chat">
+          <q-btn flat round dense icon="mdi-chat" @click.prevent>
             <q-menu>
               <q-list style="min-width: 100px; max-width: 200px">
-                <q-item v-close-popup clickable>
+                <q-item
+                  v-close-popup
+                  clickable
+                  @click="getPersonalChatOptions.enabled = true"
+                >
                   <q-item-section avatar>
                     <q-icon name="mdi-account" />
                   </q-item-section>
@@ -71,13 +75,49 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { graphql } from "@/gql/__generated__";
+import { useQuery } from "@vue/apollo-composable";
+import router from "@/router";
+
+const {
+  params: { courseId },
+} = useRoute() as unknown as { params: { courseId: string } };
+
+const props = defineProps<{
   id: string;
   photoUrl: string;
   name: string;
   overview: string;
   skills: string[];
 }>();
+
+// Query to get the chat between two people
+const getPersonalChatOptions = ref({
+  enabled: false,
+});
+
+const { result: personalChat } = useQuery(
+  graphql(`
+    query getCoursePersonalChat($courseId: ID!, $otherUid: String!) {
+      coursePersonalChat(courseId: $courseId, otherUid: $otherUid) {
+        id
+      }
+    }
+  `),
+  { courseId: courseId, otherUid: props.id },
+  getPersonalChatOptions
+);
+
+// Go to personal chat if query returns a chat
+watch(personalChat, (v) => {
+  if (v?.coursePersonalChat?.id)
+    router.push({
+      name: "AppCourseChat",
+      params: { courseId: courseId, chatId: v.coursePersonalChat.id },
+    });
+});
 </script>
 
 <style scoped>

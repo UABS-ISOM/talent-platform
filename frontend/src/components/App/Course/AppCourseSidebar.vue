@@ -39,7 +39,6 @@
           :key="index"
           v-ripple
           :to="to"
-          exact
           clickable
           @click="showDrawer = false"
         >

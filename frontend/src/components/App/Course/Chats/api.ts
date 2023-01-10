@@ -24,7 +24,7 @@ export interface CourseChatModel extends DocumentData {
   userIds: string[];
 }
 
-type CourseChatData = OutputDocumentData<CourseChatModel>;
+export type CourseChatData = OutputDocumentData<CourseChatModel>;
 
 /**
  * A document in the Firestore courses/chats/messages collection
@@ -39,7 +39,7 @@ export interface CourseChatMessageModel extends DocumentData {
   created: number;
 }
 
-type CourseChatMessageData = OutputDocumentData<CourseChatMessageModel>;
+export type CourseChatMessageData = OutputDocumentData<CourseChatMessageModel>;
 
 /**
  * A document in the Firestore courses/chats collection

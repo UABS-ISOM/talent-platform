@@ -218,7 +218,6 @@ const { mutate: addCourseStudents, error: addCourseStudentsError } =
  * Add students from the uploaded CSV.
  */
 const onSubmit = async () => {
-  console.log(students.value);
   if (loading.value) return;
 
   error.value = false;

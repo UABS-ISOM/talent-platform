@@ -6,11 +6,15 @@ import type {
 import type { UserModel } from '../dataLoaders/models';
 
 const searchClient = algoliasearch(
-  'CBK1HQDRFR',
-  '581e24a51a38ec39c772741d70b9cc6c'
+  process.env.ALGOLIA_ID,
+  process.env.ALGOLIA_SEARCH_KEY
 );
 
-const usersSearchIndex = searchClient.initIndex('users_uabs_talent_platform');
+const usersSearchIndex = searchClient.initIndex(
+  process.env.FUNCTIONS_EMULATOR === 'true'
+    ? process.env.DEV_ALGOLIA_USERS_INDEX
+    : process.env.ALGOLIA_USERS_INDEX
+);
 
 /**
  * Search for users in the Algolia users index.

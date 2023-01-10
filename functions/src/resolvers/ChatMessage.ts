@@ -25,8 +25,11 @@ const resolver: ChatMessageResolvers = {
     _,
     { dataLoaders: { chatMessages } }
   ) =>
-    (await chatMessages.fetchDocById(_courseId, _chatId, _messageId))!
-      .createdAt,
+    (await chatMessages.fetchDocById(
+      _courseId,
+      _chatId,
+      _messageId
+    ))!.createdAt.toString(),
 };
 
 export default resolver;

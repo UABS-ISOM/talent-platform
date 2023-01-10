@@ -106,8 +106,6 @@ const onSubmit = () => {
       // Password reset email sent
       successEmailAddress.value = auth.currentUser?.email ?? "";
       success.value = true;
-
-      console.log(data);
     })
     .catch(() => {
       // Error occurred

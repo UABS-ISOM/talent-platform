@@ -8,7 +8,10 @@
       margin: -0.5rem;
     "
   >
-    <AppCourseChatList v-if="$q.screen.gt.sm || !route.params.chatId" />
+    <AppCourseChatList
+      v-if="$q.screen.gt.sm || !route.params.chatId"
+      :course-id="(route.params.courseId as string)"
+    />
 
     <router-view v-if="$q.screen.gt.sm || route.params.chatId" />
   </div>

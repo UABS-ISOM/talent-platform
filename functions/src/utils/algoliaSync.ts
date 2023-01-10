@@ -35,6 +35,12 @@ export const indexUser = async (objectID: string) => {
 
   const user: AlgoliaUserObject = { ...data, objectID, studentCourses };
 
-  const index = client.initIndex(process.env.ALGOLIA_USERS_INDEX);
+  console.log(process.env);
+
+  const index = client.initIndex(
+    process.env.FUNCTIONS_EMULATOR === 'true'
+      ? process.env.DEV_ALGOLIA_USERS_INDEX
+      : process.env.ALGOLIA_USERS_INDEX
+  );
   await index.saveObject(user);
 };
