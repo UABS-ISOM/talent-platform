@@ -10,6 +10,7 @@ type User {
   experience: [UserExperience!]!
   adminCourses: [Course!]!
   studentCourses: [Course!]!
+  repCourses: [Course!]!
 }
 
 enum Role {

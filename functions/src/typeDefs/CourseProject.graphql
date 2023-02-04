@@ -1,0 +1,21 @@
+type CourseProject {
+  id: ID!
+  name: String!
+  overview: String
+  status: CourseProjectStatusEnum!
+}
+
+input EditCourseProjectInput {
+  projectId: ID!
+  courseId: ID!
+  name: String
+  overview: String
+  status: CourseProjectStatusEnum
+}
+
+enum CourseProjectStatusEnum {
+  DRAFT
+  PENDING
+  REJECTED
+  ACTIVE
+}

@@ -5,6 +5,7 @@ import { courseStudents } from './queries/courseStudents';
 import { courseChat } from './queries/courseChat';
 import { chatHistory } from './queries/chatHistory';
 import { coursePersonalChat } from './queries/coursePersonalChat';
+import { courseProject } from './queries/courseProject';
 
 // Resolvers for the Course type
 const resolver: QueryResolvers = {
@@ -14,6 +15,7 @@ const resolver: QueryResolvers = {
   courseChat,
   chatHistory,
   coursePersonalChat,
+  courseProject,
 };
 
 export default resolver;

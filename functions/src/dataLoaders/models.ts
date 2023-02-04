@@ -43,6 +43,7 @@ export interface CourseModel extends DocumentData {
   description: string;
   numStaff: number;
   numStudents: number;
+  numReps: number;
 }
 
 /**
@@ -57,13 +58,24 @@ export interface CourseAdminModel extends DocumentData {
 }
 
 /**
- * A document in the Firestore courses/admins collection
+ * A document in the Firestore courses/students collection
  *
  * @interface CourseDoc
  * @typedef {CourseDoc}
  * @extends {DocumentData}
  */
 export interface CourseStudentModel extends DocumentData {
+  userId: string;
+}
+
+/**
+ * A document in the Firestore courses/students collection
+ *
+ * @interface CourseDoc
+ * @typedef {CourseDoc}
+ * @extends {DocumentData}
+ */
+export interface CourseRepModel extends DocumentData {
   userId: string;
 }
 
@@ -90,4 +102,18 @@ export interface ChatMessageModel extends DocumentData {
   sender: string;
   message: string;
   createdAt: number;
+}
+
+/**
+ * A document in the Firestore courses/project collection
+ *
+ * @interface ChatMessageModel
+ * @typedef {ChatMessageModel}
+ * @extends {DocumentData}
+ */
+export interface CourseProjectModel extends DocumentData {
+  userId: string;
+  name: string;
+  overview?: string;
+  status: string;
 }

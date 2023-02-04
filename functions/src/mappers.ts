@@ -18,6 +18,9 @@ export interface CourseMapper {
   _courseStudentsQuery: (
     ref: CollectionReference<OutputDocumentData<CourseAdminModel>>
   ) => Query;
+  _courseRepsQuery: (
+    ref: CollectionReference<OutputDocumentData<CourseAdminModel>>
+  ) => Query;
 }
 
 export interface CourseChatMapper {
@@ -29,4 +32,9 @@ export interface ChatMessageWrapper {
   _courseId: string;
   _chatId: string;
   _messageId: string;
+}
+
+export interface CourseProjectsMapper {
+  _courseId: string;
+  _projectId: string;
 }

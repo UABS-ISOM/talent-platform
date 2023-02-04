@@ -6,8 +6,8 @@ import { ensureCourseExists, ensureMemberOfCourse } from '../../utils/roles';
 // Send a model of the course to the Course resolver
 export const course: QueryResolvers['course'] = async (
   _,
-  { courseId, courseStaffOptions, courseStudentOptions },
-  { user, dataLoaders: { courses, courseAdmins, courseStudents } }
+  { courseId, courseStaffOptions, courseStudentOptions, courseRepOptions },
+  { user, dataLoaders: { courses, courseAdmins, courseStudents, courseReps } }
 ) => {
   // Return null if the user is not authenticated
   user = ensureAuth(user);
@@ -19,11 +19,18 @@ export const course: QueryResolvers['course'] = async (
   } catch (error) {
     return null;
   }
-  await ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
+  await ensureMemberOfCourse(
+    courseId,
+    user.uid,
+    courseAdmins,
+    courseStudents,
+    courseReps
+  );
 
   return {
     _id: courseId,
     _courseStaffQuery: getPaginatedDocs('userId', courseStaffOptions),
     _courseStudentsQuery: getPaginatedDocs('userId', courseStudentOptions),
+    _courseRepsQuery: getPaginatedDocs('userId', courseRepOptions),
   };
 };

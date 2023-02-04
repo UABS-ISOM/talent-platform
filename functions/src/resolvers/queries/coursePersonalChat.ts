@@ -7,13 +7,27 @@ import type { QueryResolvers } from '../../__generated__/graphql';
 export const coursePersonalChat: QueryResolvers['coursePersonalChat'] = async (
   _,
   { courseId, otherUid },
-  { user, dataLoaders: { courses, courseChats, courseStudents, courseAdmins } }
+  {
+    user,
+    dataLoaders: {
+      courses,
+      courseChats,
+      courseStudents,
+      courseAdmins,
+      courseReps,
+    },
+  }
 ) => {
   user = ensureAuth(user);
   ensureVerified(user);
   await ensureCourseExists(courseId, courses);
-  await ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
-  await ensureMemberOfCourse(courseId, otherUid, courseAdmins, courseStudents);
+  await ensureMemberOfCourse(
+    courseId,
+    user.uid,
+    courseAdmins,
+    courseStudents,
+    courseReps
+  );
 
   // Get user's personal chats
   const chats = await courseChats.fetchDocsByQuery(

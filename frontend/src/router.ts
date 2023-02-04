@@ -73,11 +73,49 @@ const router = createRouter({
                 import("@/components/App/Course/Staff/AppCourseStaffView.vue"),
             },
             {
+              path: "reps",
+              name: "AppCourseReps",
+              component: () =>
+                import("@/components/App/Course/Reps/AppCourseRepsView.vue"),
+            },
+            {
               path: "students",
               name: "AppCourseStudents",
               component: () =>
                 import(
                   "@/components/App/Course/Students/AppCourseStudentsView.vue"
+                ),
+            },
+            {
+              path: "projects",
+              name: "AppCourseMyProjects",
+              component: () =>
+                import(
+                  "@/components/App/Course/MyProjects/AppCourseProjectsView.vue"
+                ),
+            },
+            {
+              path: "editproject/:projectId",
+              name: "AppCourseEditProject",
+              component: () =>
+                import(
+                  "@/components/App/Course/EditProject/AppCourseEditProjectView.vue"
+                ),
+            },
+            {
+              path: "pendingprojects",
+              name: "AppCoursePendingProjects",
+              component: () =>
+                import(
+                  "@/components/App/Course/PendingProjects/AppCoursePendingProjectsView.vue"
+                ),
+            },
+            {
+              path: "browseprojects",
+              name: "AppCourseBrowseProjects",
+              component: () =>
+                import(
+                  "@/components/App/Course/BrowseProjects/AppCourseBrowseProjectsView.vue"
                 ),
             },
           ],

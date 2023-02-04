@@ -11,7 +11,7 @@ import { indexUser } from '../../utils/algoliaSync';
 export const addCourseMembers: MutationResolvers['addCourseMembers'] = async (
   _,
   { courseId, members, type },
-  { user, dataLoaders: { courses, courseAdmins, courseStudents } }
+  { user, dataLoaders: { courses, courseAdmins, courseStudents, courseReps } }
 ) => {
   // Ensure the user is staff
   user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
@@ -46,7 +46,12 @@ export const addCourseMembers: MutationResolvers['addCourseMembers'] = async (
     )),
   ];
 
-  const col = type === CourseMemberEnum.Staff ? courseAdmins : courseStudents;
+  const col =
+    type === CourseMemberEnum.Staff
+      ? courseAdmins
+      : type === CourseMemberEnum.Student
+      ? courseStudents
+      : courseReps;
 
   // Create user entries, and save the new entries that were created
   const uidsCreated = (
@@ -79,8 +84,12 @@ export const addCourseMembers: MutationResolvers['addCourseMembers'] = async (
       ? {
           numStaff: course.numStaff + uidsCreated.length,
         }
-      : {
+      : type === CourseMemberEnum.Student
+      ? {
           numStudents: course.numStudents + uidsCreated.length,
+        }
+      : {
+          numReps: course.numReps + uidsCreated.length,
         },
     false,
     courseId

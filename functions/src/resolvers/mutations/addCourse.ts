@@ -20,6 +20,7 @@ export const addCourse: MutationResolvers['addCourse'] = async (
       description: escapeHTML(description),
       numStaff: 1,
       numStudents: 0,
+      numReps: 0,
     },
     true
   );
@@ -43,5 +44,6 @@ export const addCourse: MutationResolvers['addCourse'] = async (
     _id: courseData._id,
     _courseStaffQuery: ref => ref,
     _courseStudentsQuery: ref => ref,
+    _courseRepsQuery: ref => ref,
   };
 };

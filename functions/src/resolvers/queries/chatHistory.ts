@@ -1,6 +1,5 @@
 import type { OutputDocumentData } from 'data-loader-firestore';
 import type { CollectionReference } from 'firebase-admin/firestore';
-import { FieldPath } from 'firebase-admin/firestore';
 import type { ChatMessageModel } from '../../dataLoaders/models';
 import {
   ensureCourseChatExists,

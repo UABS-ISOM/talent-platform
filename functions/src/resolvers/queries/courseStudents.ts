@@ -6,13 +6,22 @@ import type { QueryResolvers } from '../../__generated__/graphql';
 export const courseStudents: QueryResolvers['courseStudents'] = async (
   _,
   { courseId, options },
-  { user, dataLoaders: { courses, users, courseAdmins, courseStudents } }
+  {
+    user,
+    dataLoaders: { courses, users, courseAdmins, courseStudents, courseReps },
+  }
 ) => {
   // Return null if the user is not authenticated
   user = ensureAuth(user);
   ensureVerified(user);
   await ensureCourseExists(courseId, courses);
-  await ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
+  await ensureMemberOfCourse(
+    courseId,
+    user.uid,
+    courseAdmins,
+    courseStudents,
+    courseReps
+  );
 
   return (
     options.query

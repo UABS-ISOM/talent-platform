@@ -116,17 +116,50 @@ const links = ref([
     label: "Find Students",
     to: { name: "AppCourseFindStudents", params: { courseId } },
   },
+  ...(props.role === CourseMemberEnum.Student
+    ? [
+        {
+          icon: "mdi-file-search-outline",
+          label: "Browse Projects",
+          to: { name: "AppCourseBrowseProjects", params: { courseId } },
+        },
+      ]
+    : []),
   ...(props.role === CourseMemberEnum.Staff
     ? [
+        {
+          icon: "mdi-file-search-outline",
+          label: "Browse Projects",
+          to: { name: "AppCourseBrowseProjects", params: { courseId } },
+        },
         {
           icon: "mdi-school",
           label: "Staff",
           to: { name: "AppCourseStaff", params: { courseId } },
         },
         {
+          icon: "mdi-domain",
+          label: "Company Reps",
+          to: { name: "AppCourseReps", params: { courseId } },
+        },
+        {
           icon: "mdi-account",
           label: "Students",
           to: { name: "AppCourseStudents", params: { courseId } },
+        },
+        {
+          icon: "mdi-file-document-outline",
+          label: "Pending Projects",
+          to: { name: "AppCoursePendingProjects", params: { courseId } },
+        },
+      ]
+    : []),
+  ...(props.role === CourseMemberEnum.Rep
+    ? [
+        {
+          icon: "mdi-file-document-outline",
+          label: "My Projects",
+          to: { name: "AppCourseMyProjects", params: { courseId } },
         },
       ]
     : []),

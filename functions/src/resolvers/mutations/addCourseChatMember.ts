@@ -15,7 +15,13 @@ export const addCourseChatMember: MutationResolvers['addCourseChatMember'] =
     { courseId, chatId, uid },
     {
       user,
-      dataLoaders: { courseAdmins, courseStudents, courseChats, courses },
+      dataLoaders: {
+        courseAdmins,
+        courseStudents,
+        courseReps,
+        courseChats,
+        courses,
+      },
     }
   ) => {
     user = ensureAuth(user);
@@ -45,7 +51,13 @@ export const addCourseChatMember: MutationResolvers['addCourseChatMember'] =
     } else {
       // Create a new chat and add the user to it
       ensureCourseExists(courseId, courses);
-      ensureMemberOfCourse(courseId, user.uid, courseAdmins, courseStudents);
+      ensureMemberOfCourse(
+        courseId,
+        user.uid,
+        courseAdmins,
+        courseStudents,
+        courseReps
+      );
 
       if (user.uid !== uid)
         throw new GraphQLError('You can only start a chat with yourself.', {

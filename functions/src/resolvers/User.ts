@@ -57,6 +57,7 @@ const resolver: UserResolvers = {
       _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
       _courseStudentsQuery: ref => ref,
       _courseStaffQuery: ref => ref,
+      _courseRepsQuery: ref => ref,
     }));
   },
 
@@ -72,6 +73,22 @@ const resolver: UserResolvers = {
       _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
       _courseStudentsQuery: ref => ref,
       _courseStaffQuery: ref => ref,
+      _courseRepsQuery: ref => ref,
+    }));
+  },
+
+  // Send a model of the user's courses to the Course resolver
+  repCourses: async ({ _uid }, _, { dataLoaders: { courseReps } }) => {
+    // Get courseAdmin documents for the user
+    const courseRepDocs = await courseReps.fetchDocsByCollectionGroupQuery(c =>
+      c.where('userId', '==', _uid)
+    );
+
+    return courseRepDocs.map(({ _path }) => ({
+      _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
+      _courseStudentsQuery: ref => ref,
+      _courseStaffQuery: ref => ref,
+      _courseRepsQuery: ref => ref,
     }));
   },
 };

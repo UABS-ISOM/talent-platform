@@ -4,6 +4,7 @@ import type {
   CourseModel,
   CourseAdminModel,
   CourseStudentModel,
+  CourseRepModel,
 } from '../dataLoaders/models';
 
 /**
@@ -64,6 +65,29 @@ export const ensureStudentOfCourse = async (
 };
 
 /**
+ * Throws an error if the user is not a company representative in a course.
+ * @param courseId The course ID.
+ * @param user The user.
+ * @param courseReps The course reps data loader.
+ */
+export const ensureRepInCourse = async (
+  courseId: string,
+  uid: string,
+  courseReps: FirestoreCollectionLoader<CourseRepModel>
+): Promise<void> => {
+  // Determine if the user is an admin of the course
+  if ((await courseReps.fetchDocById(courseId, uid)) === undefined)
+    throw new GraphQLError(
+      'You are not a company representative in this course.',
+      {
+        extensions: {
+          code: 'FORBIDDEN',
+        },
+      }
+    );
+};
+
+/**
  * Throws an error if the user is not a staff member or student of a course.
  * @param courseId The course ID.
  * @param user The user.
@@ -74,12 +98,14 @@ export const ensureMemberOfCourse = async (
   courseId: string,
   uid: string,
   courseAdmins: FirestoreCollectionLoader<CourseAdminModel>,
-  courseStudents: FirestoreCollectionLoader<CourseStudentModel>
+  courseStudents: FirestoreCollectionLoader<CourseStudentModel>,
+  courseReps: FirestoreCollectionLoader<CourseRepModel>
 ): Promise<void> => {
   // Determine if the user is an admin of the course
   if (
     (await courseStudents.fetchDocById(courseId, uid)) === undefined &&
-    (await courseAdmins.fetchDocById(courseId, uid)) === undefined
+    (await courseAdmins.fetchDocById(courseId, uid)) === undefined &&
+    (await courseReps.fetchDocById(courseId, uid)) === undefined
   )
     throw new GraphQLError('You are not a member of this course.', {
       extensions: {

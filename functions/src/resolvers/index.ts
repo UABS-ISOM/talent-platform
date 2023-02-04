@@ -7,6 +7,7 @@ import UserExperience from './UserExperience';
 import Course from './Course';
 import CourseChat from './CourseChat';
 import ChatMessage from './ChatMessage';
+import CourseProject from './CourseProject';
 
 const resolvers: Resolvers = {
   Query,
@@ -17,6 +18,7 @@ const resolvers: Resolvers = {
   Course,
   CourseChat,
   ChatMessage,
+  CourseProject,
   Date: DateResolver,
 };
 

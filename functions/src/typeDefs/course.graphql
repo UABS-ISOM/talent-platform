@@ -4,7 +4,10 @@ type Course {
   description: String!
   numStaff: Int!
   numStudents: Int!
+  numReps: Int!
   staff: [User!]!
   students: [User!]!
+  reps: [User!]!
   myRole: CourseMemberEnum!
+  myProjects: [CourseProject!]!
 }
