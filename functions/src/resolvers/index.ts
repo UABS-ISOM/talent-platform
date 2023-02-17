@@ -8,6 +8,7 @@ import Course from './Course';
 import CourseChat from './CourseChat';
 import ChatMessage from './ChatMessage';
 import CourseProject from './CourseProject';
+import CourseGroupProject from './CourseGroupProject';
 
 const resolvers: Resolvers = {
   Query,
@@ -19,6 +20,7 @@ const resolvers: Resolvers = {
   CourseChat,
   ChatMessage,
   CourseProject,
+  CourseGroupProject,
   Date: DateResolver,
 };
 

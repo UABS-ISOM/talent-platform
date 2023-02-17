@@ -3,6 +3,8 @@ type CourseProject {
   name: String!
   overview: String
   status: CourseProjectStatusEnum!
+  owner: User!
+  groupProject: CourseGroupProject
 }
 
 input EditCourseProjectInput {
@@ -13,9 +15,31 @@ input EditCourseProjectInput {
   status: CourseProjectStatusEnum
 }
 
+type CourseGroupProject {
+  id: ID!
+  starred: Boolean!
+  bid: String!
+  bidStatus: CourseProjectBidStatusEnum!
+}
+
+input EditGroupProjectInput {
+  courseId: ID!
+  projectId: ID!
+  starred: Boolean
+}
+
 enum CourseProjectStatusEnum {
   DRAFT
   PENDING
   REJECTED
   ACTIVE
+}
+
+enum CourseProjectBidStatusEnum {
+  DRAFT
+  PENDING
+  REJECTED
+  PENDING_REP
+  REJECTED_REP
+  APPROVED_REP
 }

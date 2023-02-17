@@ -66,6 +66,7 @@ export interface CourseAdminModel extends DocumentData {
  */
 export interface CourseStudentModel extends DocumentData {
   userId: string;
+  groupId?: string;
 }
 
 /**
@@ -107,8 +108,8 @@ export interface ChatMessageModel extends DocumentData {
 /**
  * A document in the Firestore courses/project collection
  *
- * @interface ChatMessageModel
- * @typedef {ChatMessageModel}
+ * @interface CourseProjectModel
+ * @typedef {CourseProjectModel}
  * @extends {DocumentData}
  */
 export interface CourseProjectModel extends DocumentData {
@@ -116,4 +117,28 @@ export interface CourseProjectModel extends DocumentData {
   name: string;
   overview?: string;
   status: string;
+}
+
+/**
+ * A document in the Firestore courses/groupProject collection
+ *
+ * @interface CourseGroupModel
+ * @typedef {CourseGroupModel}
+ * @extends {DocumentData}
+ */
+export type CourseGroupModel = DocumentData;
+
+/**
+ * A document in the Firestore courses/groupProject collection
+ *
+ * @interface CourseGroupProjectModel
+ * @typedef {CourseGroupProjectModel}
+ * @extends {DocumentData}
+ */
+export interface CourseGroupProjectModel extends DocumentData {
+  groupId: string;
+  projectId: string;
+  starred: boolean;
+  bid: string;
+  bidStatus: string;
 }

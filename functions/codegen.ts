@@ -14,6 +14,7 @@ const config: CodegenConfig = {
           CourseChat: '../mappers#CourseChatMapper',
           ChatMessage: '../mappers#ChatMessageWrapper',
           CourseProject: '../mappers#CourseProjectsMapper',
+          CourseGroupProject: '../mappers#CourseGroupProjectMapper',
         },
         scalars: {
           Date: 'string',

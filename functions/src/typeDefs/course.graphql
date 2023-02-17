@@ -10,4 +10,7 @@ type Course {
   reps: [User!]!
   myRole: CourseMemberEnum!
   myProjects: [CourseProject!]!
+  pendingProjects: [CourseProject!]!
+  activeProjects: [CourseProject!]!
+  pendingBids: [CourseGroupProject!]!
 }

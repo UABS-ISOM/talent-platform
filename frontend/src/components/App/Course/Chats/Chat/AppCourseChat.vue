@@ -17,7 +17,23 @@
         :to="{ name: 'AppCourseChats' }"
       />
 
-      <div class="text-h6">Our Changing Planet</div>
+      <div class="row" style="justify-content: space-between; flex-grow: 1">
+        <div class="text-h6">Chat with Unnamed User</div>
+
+        <q-btn flat round dense icon="mdi-dots-vertical" @click.prevent>
+          <q-menu>
+            <q-list style="min-width: 100px; max-width: 200px">
+              <q-item v-close-popup clickable>
+                <q-item-section avatar>
+                  <q-icon name="mdi-account-plus" />
+                </q-item-section>
+
+                <q-item-section>Join chat as group</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
+      </div>
     </q-card-section>
 
     <q-separator />

@@ -152,6 +152,11 @@ const links = ref([
           label: "Pending Projects",
           to: { name: "AppCoursePendingProjects", params: { courseId } },
         },
+        {
+          icon: "mdi-gavel",
+          label: "Pending Bids",
+          to: { name: "AppCoursePendingBids", params: { courseId } },
+        },
       ]
     : []),
   ...(props.role === CourseMemberEnum.Rep

@@ -35,8 +35,6 @@ export const indexUser = async (objectID: string) => {
 
   const user: AlgoliaUserObject = { ...data, objectID, studentCourses };
 
-  console.log(process.env);
-
   const index = client.initIndex(
     process.env.FUNCTIONS_EMULATOR === 'true'
       ? process.env.DEV_ALGOLIA_USERS_INDEX

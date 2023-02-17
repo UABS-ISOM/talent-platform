@@ -7,6 +7,8 @@ import { addCourseChatMember } from './mutations/addCourseChatMember';
 import { addCourseChatMessage } from './mutations/addCourseChatMessage';
 import { addCourseProject } from './mutations/addCourseProject';
 import { editCourseProject } from './mutations/editCourseProject';
+import { approveCourseProject } from './mutations/approveCourseProject';
+import { editCourseGroupProject } from './mutations/editCourseGroupProject';
 
 // Resolvers for the Course type
 const resolver: MutationResolvers = {
@@ -18,6 +20,8 @@ const resolver: MutationResolvers = {
   addCourseChatMessage,
   addCourseProject,
   editCourseProject,
+  approveCourseProject,
+  editCourseGroupProject,
 };
 
 export default resolver;

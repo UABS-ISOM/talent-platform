@@ -16,7 +16,7 @@ export const addCourseMembers: MutationResolvers['addCourseMembers'] = async (
   // Ensure the user is staff
   user = ensureAuth(user); // TODO: What if user token provided is incorrect/doesn't exist?
   ensureVerified(user);
-  ensureStaff(user);
+  ensureStaff(user); // TODO: You mean ensureStaffInCourse?
 
   // Throw error if not staff
   if ((await courseAdmins.fetchDocById(courseId, user.uid)) === undefined)

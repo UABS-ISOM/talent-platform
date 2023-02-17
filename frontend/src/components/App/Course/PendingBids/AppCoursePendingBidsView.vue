@@ -5,31 +5,30 @@
     } q-pr-sm`"
     style="gap: 8px"
   >
-    <h2 class="text-h4 q-my-none">Pending Projects</h2>
+    <h2 class="text-h4 q-my-none">Pending Bids</h2>
   </div>
 
   <p class="q-pa-sm q-mb-none">
-    Here you can approve projects that industry representatives have asked to be
-    displayed to students.
+    Here you can approve bids for projects before they are sent to industry
+    representatives.
   </p>
 
   <div class="q-pa-sm">
     <template v-if="projects !== undefined && error === null">
-      <q-list>
+      <q-list v-if="yeet">
         <AppCoursePendingProjectsItem
-          v-for="{ id, name, overview, owner: { name: ownerName } } in projects"
+          v-for="{ id, bid, bidStatus } in projects"
           :key="id"
           :course-id="(courseId as string)"
           :project-id="id"
-          :name="name"
-          :owner-name="ownerName"
-          :overview="overview ?? ''"
+          :bid="bid"
+          :bid-status="bidStatus"
           @removed-item="refetch"
         />
       </q-list>
 
       <div class="full-width q-pa-sm">
-        <GenericNone v-if="projects.length === 0">
+        <GenericNone v-if="projects.length === 0 || !yeet">
           There aren't any projects pending approval in this course.
         </GenericNone>
       </div>
@@ -63,7 +62,7 @@ import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { getErrorMessage } from "@/helpers";
 import GenericNone from "@/components/GenericNone.vue";
-import AppCoursePendingProjectsItem from "./AppCoursePendingProjectsItem.vue";
+import AppCoursePendingProjectsItem from "./AppCoursePendingBidsItem.vue";
 import GenericAlert from "@/components/GenericAlert.vue";
 import { useQuery } from "@vue/apollo-composable";
 import { graphql } from "@/gql/__generated__";
@@ -73,19 +72,22 @@ const {
   params: { courseId },
 } = useRoute();
 
+const yeet = ref(true);
+
+const refetch = () => {
+  yeet.value = false;
+};
+
 // Query the course
-const { result, loading, error, refetch } = useQuery(
+const { result, loading, error } = useQuery(
   graphql(`
-    query getPendingProjects($courseId: ID!) {
+    query getPendingBids($courseId: ID!) {
       course(courseId: $courseId) {
         id
-        pendingProjects {
+        pendingBids {
           id
-          name
-          overview
-          owner {
-            name
-          }
+          bid
+          bidStatus
         }
       }
     }
@@ -97,5 +99,5 @@ const { result, loading, error, refetch } = useQuery(
   { fetchPolicy: "cache-and-network" }
 );
 
-const projects = computed(() => result.value?.course?.pendingProjects);
+const projects = computed(() => result.value?.course?.pendingBids);
 </script>

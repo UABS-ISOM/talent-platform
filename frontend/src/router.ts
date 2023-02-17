@@ -118,6 +118,22 @@ const router = createRouter({
                   "@/components/App/Course/BrowseProjects/AppCourseBrowseProjectsView.vue"
                 ),
             },
+            {
+              path: "editbid/:projectId",
+              name: "AppCourseEditBid",
+              component: () =>
+                import(
+                  "@/components/App/Course/EditBid/AppCourseEditBidView.vue"
+                ),
+            },
+            {
+              path: "pendingbids",
+              name: "AppCoursePendingBids",
+              component: () =>
+                import(
+                  "@/components/App/Course/PendingBids/AppCoursePendingBidsView.vue"
+                ),
+            },
           ],
         },
         {

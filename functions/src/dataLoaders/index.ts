@@ -12,6 +12,8 @@ import type {
   UserExperienceModel,
   UserModel,
   CourseProjectModel,
+  CourseGroupProjectModel,
+  CourseGroupModel,
 } from './models';
 import { userRecordBatchFn } from './userRecord';
 
@@ -30,6 +32,8 @@ export class DataLoaders {
   courseChats: FirestoreCollectionLoader<CourseChatModel>;
   chatMessages: FirestoreCollectionLoader<ChatMessageModel>;
   courseProjects: FirestoreCollectionLoader<CourseProjectModel>;
+  courseGroups: FirestoreCollectionLoader<CourseGroupModel>;
+  courseGroupProjects: FirestoreCollectionLoader<CourseGroupProjectModel>;
 
   /**
    * Generates a new instance of DataLoaders.
@@ -78,5 +82,16 @@ export class DataLoaders {
       'courses',
       'courseProjects'
     );
+    this.courseGroups = new FirestoreCollectionLoader<CourseGroupModel>(
+      firestore,
+      'courses',
+      'courseGroups'
+    );
+    this.courseGroupProjects =
+      new FirestoreCollectionLoader<CourseGroupProjectModel>(
+        firestore,
+        'courses',
+        'courseGroupProjects'
+      );
   }
 }

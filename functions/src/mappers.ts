@@ -38,3 +38,8 @@ export interface CourseProjectsMapper {
   _courseId: string;
   _projectId: string;
 }
+
+export interface CourseGroupProjectMapper {
+  _courseId: string;
+  _groupProjectId: string;
+}

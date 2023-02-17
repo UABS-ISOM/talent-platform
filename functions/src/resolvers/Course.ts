@@ -1,11 +1,16 @@
 import {
+  ensureMemberOfCourse,
   ensureRepInCourse,
   ensureStaffMemberOfCourse,
   ensureStudentOfCourse,
 } from '../utils/roles';
 import { ensureAuth, ensureVerified } from '../utils/user';
 import type { CourseResolvers } from '../__generated__/graphql';
-import { CourseMemberEnum } from '../__generated__/graphql';
+import {
+  CourseProjectBidStatusEnum,
+  CourseProjectStatusEnum,
+  CourseMemberEnum,
+} from '../__generated__/graphql';
 
 // Resolvers for the Course type
 const resolver: CourseResolvers = {
@@ -95,6 +100,69 @@ const resolver: CourseResolvers = {
         _id
       )
     ).map(p => ({ _courseId: _id, _projectId: p._id }));
+  },
+
+  pendingProjects: async (
+    { _id },
+    _,
+    { user, dataLoaders: { courseAdmins, courseProjects } }
+  ) => {
+    // Ensure the user is a rep
+    user = ensureAuth(user);
+    ensureVerified(user);
+    await ensureStaffMemberOfCourse(_id, user.uid, courseAdmins);
+
+    return (
+      await courseProjects.fetchDocsByQuery(
+        c => c.where('status', '==', CourseProjectStatusEnum.Pending),
+        _id
+      )
+    ).map(p => ({ _courseId: _id, _projectId: p._id }));
+  },
+
+  activeProjects: async (
+    { _id },
+    _,
+    {
+      user,
+      dataLoaders: { courseAdmins, courseProjects, courseStudents, courseReps },
+    }
+  ) => {
+    // Ensure the user is a rep
+    user = ensureAuth(user);
+    ensureVerified(user);
+    await ensureMemberOfCourse(
+      _id,
+      user.uid,
+      courseAdmins,
+      courseStudents,
+      courseReps
+    );
+
+    return (
+      await courseProjects.fetchDocsByQuery(
+        c => c.where('status', '==', CourseProjectStatusEnum.Active),
+        _id
+      )
+    ).map(p => ({ _courseId: _id, _projectId: p._id }));
+  },
+
+  pendingBids: async (
+    { _id },
+    _,
+    { user, dataLoaders: { courseAdmins, courseGroupProjects } }
+  ) => {
+    // Ensure the user is a rep
+    user = ensureAuth(user);
+    ensureVerified(user);
+    await ensureStaffMemberOfCourse(_id, user.uid, courseAdmins);
+
+    return (
+      await courseGroupProjects.fetchDocsByQuery(
+        c => c.where('bidStatus', '==', CourseProjectBidStatusEnum.PendingRep),
+        _id
+      )
+    ).map(g => ({ _courseId: _id, _groupProjectId: g._id }));
   },
 };
 

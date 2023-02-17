@@ -37,16 +37,7 @@ type Mutation {
     projectId: ID!
     approved: Boolean!
   ): CourseProject!
-  approveGroupProjectBid(
-    courseId: ID!
-    projectId: ID!
-    approved: Boolean!
-  ): CourseProject!
-  acceptGroupProjectBid(
-    courseId: ID!
-    projectId: ID!
-    accepted: Boolean!
-  ): CourseProject!
+  editCourseGroupProject(input: EditGroupProjectInput!): CourseGroupProject!
 }
 
 input CourseMemberInput {

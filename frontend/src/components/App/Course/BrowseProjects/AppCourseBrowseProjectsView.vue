@@ -26,54 +26,7 @@
 
   <q-tab-panels v-model="tab" animated>
     <q-tab-panel name="browse" class="q-pa-sm">
-      <div class="text-h6">Browse Projects</div>
-      <p>
-        Here you can browse projects available to make bids on for this course.
-      </p>
-
-      <q-list>
-        <q-expansion-item
-          popup
-          default-opened
-          label="Embedded System"
-          caption="Submitted by Bill Gates"
-        >
-          <q-separator />
-          <q-card>
-            <q-card-section>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Quidem, eius reprehenderit eos corrupti commodi magni quaerat ex
-                numquam, dolorum officiis modi facere maiores architecto
-                suscipit iste eveniet doloribus ullam aliquid.
-              </p>
-
-              <div class="row justify-end">
-                <q-btn
-                  no-caps
-                  unelevated
-                  flat
-                  type="submit"
-                  :color="starred ? 'warning' : 'black'"
-                  icon="mdi-star"
-                  :label="starred ? 'Unstar' : 'Star'"
-                  class="q-mr-sm"
-                  @click="starred = !starred"
-                />
-
-                <q-btn
-                  no-caps
-                  unelevated
-                  type="submit"
-                  color="primary"
-                  icon="mdi-plus"
-                  label="Create bid"
-                />
-              </div>
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-      </q-list>
+      <AppCourseBrowseProjectsBrowse :course-id="courseId as string" />
     </q-tab-panel>
 
     <q-tab-panel name="starred" class="q-pa-sm">
@@ -95,7 +48,11 @@
 <script setup lang="ts">
 import GenericNone from "@/components/GenericNone.vue";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
+import AppCourseBrowseProjectsBrowse from "./AppCourseBrowseProjectsBrowse.vue";
+
+const route = useRoute();
+const { courseId } = route.params;
 
 const tab = ref("browse");
-const starred = ref(false);
 </script>
