@@ -52,7 +52,8 @@ const resolver: CourseResolvers = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (await cs.fetchDocsByQuery(_courseStudentsQuery as any, _id)).map(
       student => ({
-        _uid: student.userId,
+        _courseId: _id,
+        _studentId: student.userId,
       })
     ),
 

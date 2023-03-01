@@ -23,11 +23,20 @@ export const courseStudents: QueryResolvers['courseStudents'] = async (
     courseReps
   );
 
+  console.log('test');
+
   return (
     options.query
       ? await searchUsers(options.query, courseId, users)
       : await courseStudents.fetchDocsByQuery(c => c, courseId)
-  ).map(student => ({
-    _uid: student._id,
-  }));
+  ).map(student => {
+    const a = {
+      _courseId: courseId,
+      _studentId: student._id,
+    };
+
+    console.log(a);
+
+    return a;
+  });
 };

@@ -56,7 +56,7 @@
   <q-table
     ref="tableRef"
     v-model:pagination="pagination"
-    :rows="course?.students ?? []"
+    :rows="students ?? []"
     :columns="columns"
     row-key="id"
     :loading="loading"
@@ -65,8 +65,20 @@
     flat
     bordered
     @request="onRequest"
+    @row-click="onRowClick"
   >
   </q-table>
+
+  <CustomDialog
+    v-model="showStudentDialog"
+    :title="studentDialogName"
+    width="min(calc(100vw - 1rem), 90vw)"
+  >
+    <AppCourseFindStudentsStudent
+      :course-id="(courseId as string)"
+      :uid="studentDialogId"
+    />
+  </CustomDialog>
 </template>
 
 <script setup lang="ts">
@@ -81,9 +93,20 @@ import GenericAlert from "@/components/GenericAlert.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
 import AppCourseAddStudentsDialog from "./AppCourseAddStudentsDialog.vue";
 import AppCourseAddStudentDialog from "./AppCourseAddStudentDialog.vue";
+import AppCourseFindStudentsStudent from "../FindStudents/AppCourseFindStudentsStudent.vue";
 
 const showAddStudentsDialog = ref(false);
 const showAddStudentDialog = ref(false);
+
+const studentDialogName = ref("");
+const studentDialogId = ref("");
+const showStudentDialog = ref(false);
+
+const onRowClick: QTableProps["onRowClick"] = (_, { id, name }) => {
+  studentDialogId.value = id;
+  studentDialogName.value = name;
+  showStudentDialog.value = true;
+};
 
 // Get the course ID
 const {
@@ -105,6 +128,12 @@ const columns: QTableProps["columns"] = [
     label: "Email",
     align: "left",
     field: "email",
+  },
+  {
+    name: "group",
+    label: "Group",
+    align: "left",
+    field: "group",
   },
 ];
 
@@ -140,8 +169,13 @@ const { result, loading, error, refetch } = useQuery(
         numStudents
         students {
           id
-          name
-          email
+          group {
+            name
+          }
+          user {
+            name
+            email
+          }
         }
       }
     }
@@ -155,6 +189,15 @@ const { result, loading, error, refetch } = useQuery(
   { fetchPolicy: "cache-and-network" }
 );
 const course = computed(() => result.value?.course ?? undefined);
+const students = computed(
+  () =>
+    result.value?.course?.students.map((s) => ({
+      id: s.id,
+      name: s.user.name,
+      email: s.user.email,
+      group: s.group?.name,
+    })) ?? undefined
+);
 
 // Update the number of rows in the table
 watch(

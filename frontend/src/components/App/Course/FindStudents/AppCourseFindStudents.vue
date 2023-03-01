@@ -13,7 +13,7 @@
   <div class="row content-start q-pa-sm">
     <template v-if="students !== undefined && error === null">
       <AppCourseFindStudentsCard
-        v-for="{ id, photoUrl, name, overview, skills } in students"
+        v-for="{ id, user: { photoUrl, name, overview, skills } } in students"
         :id="id"
         :key="id"
         :photo-url="photoUrl"
@@ -80,10 +80,12 @@ const { result, loading, error } = useQuery(
     query getFindCourseStudents($courseId: ID!, $options: SearchInput!) {
       courseStudents(courseId: $courseId, options: $options) {
         id
-        photoUrl
-        name
-        overview
-        skills
+        user {
+          photoUrl
+          name
+          overview
+          skills
+        }
       }
     }
 

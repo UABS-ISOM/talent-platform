@@ -3,22 +3,24 @@
     <q-card-section class="q-pb-none">
       <div class="row items-center justify-between q-mb-sm">
         <h2 class="text-h6 q-my-none q-mr-sm">{{ props.title }}</h2>
-        <q-btn
-          v-if="editMode"
-          flat
-          round
-          color="primary"
-          icon="mdi-close"
-          @click="editMode = false"
-        />
-        <q-btn
-          v-else
-          flat
-          round
-          color="primary"
-          icon="mdi-pencil"
-          @click="editMode = true"
-        />
+        <template v-if="!readonly">
+          <q-btn
+            v-if="editMode"
+            flat
+            round
+            color="primary"
+            icon="mdi-close"
+            @click="editMode = false"
+          />
+          <q-btn
+            v-else
+            flat
+            round
+            color="primary"
+            icon="mdi-pencil"
+            @click="editMode = true"
+          />
+        </template>
       </div>
 
       <slot :edit-mode="editMode" />
@@ -32,6 +34,7 @@ import { computed } from "vue";
 const props = defineProps<{
   title: string;
   modelValue?: boolean; // Whether the card is in edit mode
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);

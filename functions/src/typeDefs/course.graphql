@@ -6,7 +6,7 @@ type Course {
   numStudents: Int!
   numReps: Int!
   staff: [User!]!
-  students: [User!]!
+  students: [CourseStudent!]!
   reps: [User!]!
   groupChats: [CourseChat!]!
   myRole: CourseMemberEnum!

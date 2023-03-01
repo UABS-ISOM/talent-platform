@@ -1,10 +1,9 @@
 <template>
-  <router-link
-    :to="{ name: 'AppCourseFindStudents', params: { courseId: id } }"
-    class="q-pa-sm col-12 col-sm-6 col-md-4 col-lg-3 text-black"
-    style="text-decoration: none"
+  <button
+    class="button q-pa-sm col-12 col-sm-6 col-md-4 col-lg-3 text-black"
+    @click="showStudentDialog = true"
   >
-    <q-card flat bordered>
+    <q-card flat bordered class="full-width">
       <q-item>
         <q-item-section avatar>
           <q-avatar>
@@ -17,7 +16,7 @@
         </q-item-section>
 
         <q-item-section side>
-          <q-btn flat round dense icon="mdi-chat" @click.prevent>
+          <q-btn flat round dense icon="mdi-chat" @click.stop>
             <q-menu>
               <q-list style="min-width: 100px; max-width: 200px">
                 <q-item
@@ -87,7 +86,15 @@
         </q-chip>
       </div>
     </q-card>
-  </router-link>
+  </button>
+
+  <CustomDialog
+    v-model="showStudentDialog"
+    :title="name"
+    width="min(calc(100vw - 1rem), 90vw)"
+  >
+    <AppCourseFindStudentsStudent :course-id="courseId" :uid="id" />
+  </CustomDialog>
 </template>
 
 <script setup lang="ts">
@@ -98,8 +105,10 @@ import { useQuery } from "@vue/apollo-composable";
 import router from "@/router";
 import CustomDialog from "@/components/CustomDialog.vue";
 import AppCourseFindStudentsAddToChat from "./AppCourseFindStudentsAddToChat.vue";
+import AppCourseFindStudentsStudent from "./AppCourseFindStudentsStudent.vue";
 
 const showAddToChatDialog = ref(false);
+const showStudentDialog = ref(false);
 
 const {
   params: { courseId },
@@ -141,6 +150,19 @@ watch(personalChat, (v) => {
 </script>
 
 <style scoped>
+.button {
+  display: flex;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  text-decoration: none;
+  text-align: left;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  appearance: none;
+}
+
 .truncated-paragraph {
   overflow: hidden;
   text-overflow: ellipsis;

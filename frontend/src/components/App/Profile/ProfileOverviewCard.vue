@@ -1,5 +1,5 @@
 <template>
-  <ProfileCard v-model="editMode" title="About Me">
+  <ProfileCard v-model="editMode" title="About Me" :readonly="readonly">
     <q-form v-if="editMode" @submit.prevent="save">
       <q-editor
         ref="editor"
@@ -32,7 +32,12 @@
 
     <template v-else>
       <p v-if="overview === ''" class="text-grey-6">
-        You can add a short bio here. This will be displayed on your profile.
+        <template v-if="readonly">
+          This user hasn't written anything here.
+        </template>
+        <template v-else>
+          You can add a short bio here. This will be displayed on your profile.
+        </template>
       </p>
 
       <!-- eslint-disable-next-line vue/no-v-html -->
@@ -51,6 +56,7 @@ import GenericAlert from "@/components/GenericAlert.vue";
 
 const props = defineProps<{
   overview: string;
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits(["save"]);

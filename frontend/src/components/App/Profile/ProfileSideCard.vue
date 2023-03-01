@@ -18,10 +18,12 @@
           :loading="nameLoading"
           :popup-props="{ title: 'Set your Name', validate: (v: string) => v !== '' }"
           :input-props="{ rules: [RULES.required] }"
+          :readonly="readonly"
           @update:model-value="(v) => save('name', v)"
         />
 
         <ButtonEditor
+          v-if="!readonly"
           :model-value="pronouns ?? ''"
           :loading="pronounsLoading"
           default-text="No pronouns set"
@@ -59,6 +61,7 @@ const props = defineProps<{
   photoUrl: string;
   roles: Role[];
   pronouns?: string;
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits(["save"]);

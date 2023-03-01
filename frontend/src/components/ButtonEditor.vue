@@ -7,6 +7,7 @@
     {{ value !== "" ? value : defaultText ?? "" }}
 
     <q-btn
+      v-if="!readonly"
       flat
       round
       icon="mdi-pencil"
@@ -41,6 +42,7 @@ const props = defineProps<{
   modelValue: string;
   loading?: boolean;
   defaultText?: string;
+  readonly?: boolean;
   outerProps?: {
     [key: string]: any;
   };

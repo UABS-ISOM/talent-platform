@@ -7,7 +7,8 @@ type Query {
     courseStudentOptions: PaginationInput
     courseRepOptions: PaginationInput
   ): Course
-  courseStudents(courseId: ID!, options: SearchInput!): [User!]!
+  courseStudents(courseId: ID!, options: SearchInput!): [CourseStudent!]!
+  courseStudent(courseId: ID!, uid: String!): CourseStudent!
   courseChat(courseId: ID!, chatId: String!): CourseChat!
   coursePersonalChat(courseId: ID!, otherUid: String!): CourseChat!
   chatHistory(courseId: ID!, chatId: String!, afterDoc: String): [ChatMessage!]!
@@ -79,6 +80,7 @@ input SearchInput {
 type CourseStudent {
   id: ID!
   groupId: ID
+  group: CourseChat
   user: User!
 }
 

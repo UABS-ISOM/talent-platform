@@ -7,10 +7,17 @@
     <template v-if="bids !== undefined && error === null">
       <q-list>
         <AppCourseEditProjectBidsItem
-          v-for="{ id, bid, group: { name: groupName } } in bids"
+          v-for="{
+            id,
+            bid,
+            group: { id: groupId, name: groupName, users },
+          } in bids"
           :key="id"
           :bid="bid"
           :group-name="groupName"
+          :users="users"
+          :course-id="courseId"
+          :group-id="groupId"
         />
       </q-list>
 
@@ -70,6 +77,15 @@ const { result, loading, error } = useQuery(
           group {
             id
             name
+            users {
+              id
+              groupId
+              user {
+                id
+                photoUrl
+                name
+              }
+            }
           }
         }
       }

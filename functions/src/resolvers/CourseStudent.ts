@@ -12,6 +12,24 @@ const resolver: CourseStudentResolvers = {
   ) =>
     (await courseStudents.fetchDocById(_courseId, _studentId))?.groupId ?? null,
 
+  group: async (
+    { _courseId, _studentId },
+    _,
+    { dataLoaders: { courseStudents } }
+  ) => {
+    const group = await courseStudents.fetchDocById(_courseId, _studentId);
+    const groupId =
+      (await courseStudents.fetchDocById(_courseId, _studentId))?.groupId ??
+      null;
+
+    return groupId
+      ? {
+          _courseId,
+          _chatId: groupId,
+        }
+      : null;
+  },
+
   user: async ({ _studentId }) => ({ _uid: _studentId }),
 };
 

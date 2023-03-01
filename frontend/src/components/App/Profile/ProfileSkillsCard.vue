@@ -1,5 +1,5 @@
 <template>
-  <ProfileCard v-model="editMode" title="Skills">
+  <ProfileCard v-model="editMode" title="Skills" :readonly="readonly">
     <template v-if="editMode">
       <q-form autofocus @submit="addSkill">
         <q-input
@@ -57,8 +57,13 @@
 
     <template v-else>
       <p v-if="skills.length == 0" class="text-grey-6">
-        You can add a list of your skills here. This will be displayed on your
-        profile.
+        <template v-if="readonly">
+          This user hasn't written anything here.
+        </template>
+        <template v-else>
+          You can add a list of your skills here. This will be displayed on your
+          profile.
+        </template>
       </p>
 
       <div v-else style="margin: -4px -4px 16px -4px">
@@ -79,6 +84,7 @@ import { GENERIC_ERROR } from "@/helpers";
 
 const props = defineProps<{
   skills: string[];
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits(["save"]);

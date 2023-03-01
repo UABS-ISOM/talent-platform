@@ -1,6 +1,11 @@
 <template>
   <q-dialog v-model="show">
-    <q-card style="width: 420px">
+    <q-card
+      :style="{
+        maxWidth: width ?? '420px',
+        width: '100%',
+      }"
+    >
       <q-card-section class="row items-center justify-between">
         <h2 class="text-h6 q-my-none q-mr-sm">{{ title }}</h2>
 
@@ -22,6 +27,7 @@ import { computed, ref, watch } from "vue";
 const props = defineProps<{
   modelValue?: boolean;
   title: string;
+  width?: string;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
