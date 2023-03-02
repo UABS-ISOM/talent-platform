@@ -62,7 +62,7 @@ const {
         pronouns
         overview
         skills
-        courses {
+        adminCourses {
           id
         }
       }
@@ -90,6 +90,8 @@ const { mutate: editMe } = useMutation(
     }
 
     input EditMeInput {
+      name: String
+      pronouns: String
       overview: String
       skills: [String!]
     }
@@ -112,7 +114,6 @@ const save = async (
   loading.value = true;
 
   try {
-    // Add the course and redirect to the course page
     await editMe({ input });
     onSuccess();
   } catch (e) {

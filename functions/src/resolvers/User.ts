@@ -1,6 +1,3 @@
-import { getFirestore } from 'firebase-admin/firestore';
-import { GenericConverter } from '../dataSources/generics';
-import type { CourseDoc, CourseAdminDoc } from '../dataSources/models';
 import type { UserResolvers } from '../__generated__/graphql';
 import { Role } from '../__generated__/graphql';
 
@@ -9,13 +6,14 @@ const resolver: UserResolvers = {
   // Resolve information from the user's Firebase Auth record
   id: async ({ _uid }) => _uid,
 
-  name: async ({ _getUserRecord }) =>
-    (await _getUserRecord()).displayName ?? 'Unnamed User',
+  name: async ({ _uid }, _, { dataLoaders: { userRecords } }) =>
+    (await userRecords.load(_uid)).displayName ?? 'Unnamed User',
 
-  email: async ({ _getUserRecord }) => (await _getUserRecord()).email ?? '',
+  email: async ({ _uid }, _, { dataLoaders: { userRecords } }) =>
+    (await userRecords.load(_uid)).email ?? '',
 
-  photoUrl: async ({ _getUserRecord }) => {
-    const { photoURL, displayName } = await _getUserRecord();
+  photoUrl: async ({ _uid }, _, { dataLoaders: { userRecords } }) => {
+    const { photoURL, displayName } = await userRecords.load(_uid);
     return photoURL !== undefined && photoURL !== ''
       ? photoURL
       : `https://ui-avatars.com/api/?background=random&name=${encodeURIComponent(
@@ -23,8 +21,8 @@ const resolver: UserResolvers = {
         )}`;
   },
 
-  roles: async ({ _getUserRecord }) => {
-    const { emailVerified, email } = await _getUserRecord();
+  roles: async ({ _uid }, _, { dataLoaders: { userRecords } }) => {
+    const { emailVerified, email } = await userRecords.load(_uid);
     return emailVerified && email !== undefined
       ? email?.endsWith('auckland.ac.nz')
         ? [Role.Staff]
@@ -49,28 +47,48 @@ const resolver: UserResolvers = {
     ).map(doc => ({ _id: doc._id })),
 
   // Send a model of the user's courses to the Course resolver
-  courses: async ({ _uid }) => {
-    // TODO: Rewrite when data-loader-firestore has support for collection groups
+  adminCourses: async ({ _uid }, _, { dataLoaders: { courseAdmins } }) => {
     // Get courseAdmin documents for the user
-    const coursesSnap = await getFirestore()
-      .collectionGroup('courseAdmins')
-      .withConverter(new GenericConverter<CourseAdminDoc>())
-      .where('userId', '==', _uid)
-      .get();
+    const courseAdminDocs = await courseAdmins.fetchDocsByCollectionGroupQuery(
+      c => c.where('userId', '==', _uid)
+    );
 
-    // Get the course documents for the courses the user is an admin of
-    const courseIds = coursesSnap.docs
-      .map(
-        doc =>
-          doc.ref.parent.parent?.withConverter(
-            new GenericConverter<CourseDoc>()
-          ).id
-      )
-      .filter((id): id is string => id !== undefined);
-
-    return courseIds.map(id => ({
-      _id: id,
+    return courseAdminDocs.map(({ _path }) => ({
+      _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
+      _courseStudentsQuery: ref => ref,
       _courseStaffQuery: ref => ref,
+      _courseRepsQuery: ref => ref,
+    }));
+  },
+
+  // Send a model of the user's courses to the Course resolver
+  studentCourses: async ({ _uid }, _, { dataLoaders: { courseStudents } }) => {
+    // Get courseAdmin documents for the user
+    const courseStudentDocs =
+      await courseStudents.fetchDocsByCollectionGroupQuery(c =>
+        c.where('userId', '==', _uid)
+      );
+
+    return courseStudentDocs.map(({ _path }) => ({
+      _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
+      _courseStudentsQuery: ref => ref,
+      _courseStaffQuery: ref => ref,
+      _courseRepsQuery: ref => ref,
+    }));
+  },
+
+  // Send a model of the user's courses to the Course resolver
+  repCourses: async ({ _uid }, _, { dataLoaders: { courseReps } }) => {
+    // Get courseAdmin documents for the user
+    const courseRepDocs = await courseReps.fetchDocsByCollectionGroupQuery(c =>
+      c.where('userId', '==', _uid)
+    );
+
+    return courseRepDocs.map(({ _path }) => ({
+      _id: _path?.split('/')[1] ?? '', // Get the course ID from the document path
+      _courseStudentsQuery: ref => ref,
+      _courseStaffQuery: ref => ref,
+      _courseRepsQuery: ref => ref,
     }));
   },
 };

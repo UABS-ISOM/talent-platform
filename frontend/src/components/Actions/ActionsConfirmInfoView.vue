@@ -56,7 +56,9 @@ import { RULES, GENERIC_ERROR } from "@/helpers";
 import AuthCard from "@/components/Auth/AuthCard.vue";
 import GenericAlert from "@/components/GenericAlert.vue";
 import ActionsSignOutButton from "./ActionsSignOutButton.vue";
-import { getAuth, updateProfile, sendEmailVerification } from "firebase/auth";
+import { getAuth, sendEmailVerification } from "firebase/auth";
+import { useMutation } from "@vue/apollo-composable";
+import { graphql } from "@/gql/__generated__";
 
 const auth = getAuth();
 
@@ -70,6 +72,22 @@ const error = ref(false);
 const errorMessage = ref("");
 const loading = ref(false);
 
+// Mutation to save the user's profile
+const { mutate: editMe } = useMutation(
+  graphql(`
+    mutation ConfirmInfoMutation($input: EditMeInput!) {
+      editMe(input: $input) {
+        id
+        name
+      }
+    }
+
+    input EditMeInput {
+      name: String
+    }
+  `)
+);
+
 /**
  * Updates the user's name then send verification email.
  */
@@ -81,17 +99,13 @@ const onSubmit = () => {
   loading.value = true;
 
   Promise.all([
-    updateProfile(auth.currentUser, {
-      displayName: name.value,
-    }),
+    editMe({ input: { name: name.value } }),
     sendEmailVerification(auth.currentUser),
   ])
     .then((data) => {
       // Password reset email sent
       successEmailAddress.value = auth.currentUser?.email ?? "";
       success.value = true;
-
-      console.log(data);
     })
     .catch(() => {
       // Error occurred

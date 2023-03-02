@@ -1,0 +1,50 @@
+type CourseProject {
+  id: ID!
+  name: String!
+  overview: String
+  status: CourseProjectStatusEnum!
+  owner: User!
+  groupProject: CourseGroupProject
+  approvedBids: [CourseGroupProject!]!
+}
+
+input EditCourseProjectInput {
+  projectId: ID!
+  courseId: ID!
+  name: String
+  overview: String
+  status: CourseProjectStatusEnum
+}
+
+type CourseGroupProject {
+  id: ID!
+  starred: Boolean!
+  bid: String!
+  bidStatus: CourseProjectBidStatusEnum!
+  project: CourseProject!
+  group: CourseChat!
+}
+
+input EditGroupProjectInput {
+  courseId: ID!
+  projectId: ID!
+  starred: Boolean
+  bid: String
+  bidStatus: CourseProjectBidStatusEnum
+}
+
+enum CourseProjectStatusEnum {
+  DRAFT
+  PENDING
+  REJECTED
+  ACTIVE
+}
+
+enum CourseProjectBidStatusEnum {
+  DRAFT
+  PENDING
+  REJECTED
+  PENDING_REP
+  REJECTED_REP
+  APPROVED_REP
+}

@@ -3,5 +3,16 @@ type Course {
   name: String!
   description: String!
   numStaff: Int!
+  numStudents: Int!
+  numReps: Int!
   staff: [User!]!
+  students: [User!]!
+  reps: [User!]!
+  groupChats: [CourseChat!]!
+  myRole: CourseMemberEnum!
+  myGroup: CourseChat
+  myProjects: [CourseProject!]!
+  pendingProjects: [CourseProject!]!
+  activeProjects: [CourseProject!]!
+  pendingBids: [CourseGroupProject!]!
 }

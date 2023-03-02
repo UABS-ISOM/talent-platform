@@ -14,7 +14,12 @@
     </div>
 
     <GenericAlert v-model="success" type="success" class="q-pa-sm">
-      Successfully added {{ email }} to the course
+      <template v-if="addedEmail">
+        Successfully added {{ addedEmail }} to the course.
+      </template>
+      <template v-else>
+        This user is already a staff member in this course.
+      </template>
     </GenericAlert>
 
     <GenericAlert v-model="error" type="error" class="q-pa-sm">
@@ -30,7 +35,7 @@
         color="primary"
         class="full-width"
         icon="mdi-plus"
-        label="Add course"
+        label="Add staff"
       />
     </div>
   </q-form>
@@ -60,14 +65,28 @@ const email = ref("");
 const error = ref(false);
 const success = ref(false);
 const loading = ref(false);
-const addedEmails = ref<string>();
+const addedEmail = ref<string>();
 
 const { mutate: addCourseStaff, error: addCourseStaffError } = useMutation(
   graphql(`
-    mutation AddCourseStaffMutation($courseId: ID!, $email: String!) {
-      addCourseStaff(courseId: $courseId, email: $email) {
+    mutation AddCourseStaffMutation(
+      $courseId: ID!
+      $members: [CourseMemberInput!]!
+    ) {
+      addCourseMembers(courseId: $courseId, members: $members, type: STAFF) {
+        id
         email
       }
+    }
+
+    input CourseMemberInput {
+      name: String
+      email: String!
+    }
+
+    enum CourseMemberEnum {
+      STUDENT
+      STAFF
     }
   `)
 );
@@ -81,12 +100,12 @@ const onSubmit = async () => {
     // Add the course and redirect to the course page
     const data = await addCourseStaff({
       courseId: props.courseId,
-      email: email.value,
+      members: [{ email: email.value }],
     });
 
     if (data?.data) {
       success.value = true;
-      addedEmails.value = data.data.addCourseStaff.email;
+      addedEmail.value = data.data.addCourseMembers[0]?.email;
       email.value = "";
       emit("addStaff");
 

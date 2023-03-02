@@ -13,6 +13,7 @@ import resolvers from './resolvers';
 import { getUser } from './utils/auth';
 import { DataLoaders } from './dataLoaders';
 import { getFirestore } from 'firebase-admin/firestore';
+import { indexUser } from './utils/algoliaSync';
 
 // Ensure that the Firebase Admin SDK is initialised
 initializeApp();
@@ -74,3 +75,20 @@ const handleRequest = async (
 export const graphql = functions
   .region('australia-southeast1')
   .https.onRequest(handleRequest);
+
+// Add a user doc when created
+export const onUserCreated = functions.auth
+  .user()
+  .onCreate(async ({ uid, displayName }) => {
+    const data = displayName ? { displayName } : {};
+
+    const firestore = getFirestore();
+    await Promise.all([
+      firestore.collection('users').doc(uid).set(data),
+      indexUser(uid),
+    ]);
+  });
+
+// Delete a user's records when deleted
+// TODO: implement
+// export const onUserDeleted = functions.auth.user().onDelete(() => {});

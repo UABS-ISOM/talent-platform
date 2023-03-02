@@ -11,6 +11,11 @@ const config: CodegenConfig = {
           User: '../mappers#UserMapper',
           UserExperience: '../mappers#UserExperienceMapper',
           Course: '../mappers#CourseMapper',
+          CourseChat: '../mappers#CourseChatMapper',
+          ChatMessage: '../mappers#ChatMessageWrapper',
+          CourseProject: '../mappers#CourseProjectsMapper',
+          CourseGroupProject: '../mappers#CourseGroupProjectMapper',
+          CourseStudent: '../mappers#CourseStudentMapper',
         },
         scalars: {
           Date: 'string',

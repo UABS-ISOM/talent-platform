@@ -11,6 +11,7 @@ import { provideApolloClient, useMutation } from "@vue/apollo-composable";
 import { graphql } from "./gql/__generated__";
 import { Notify } from "quasar";
 import type { GraphQLError } from "graphql";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -23,6 +24,7 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
+export const firestore = getFirestore();
 
 // Update the auth state when the user changes
 onAuthStateChanged(auth, async () => {
@@ -49,6 +51,7 @@ onAuthStateChanged(auth, async () => {
 // Connect to the emulators if we're in development
 if (import.meta.env.DEV) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  connectFirestoreEmulator(firestore, "127.0.0.1", 8081);
 }
 
 /**

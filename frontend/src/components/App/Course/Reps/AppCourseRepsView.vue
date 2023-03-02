@@ -5,21 +5,21 @@
     } q-pr-sm`"
     style="gap: 8px"
   >
-    <h2 class="text-h4 q-my-none">Staff</h2>
+    <h2 class="text-h4 q-my-none">Company Representatives</h2>
 
     <q-btn
       no-caps
       unelevated
       color="primary"
       icon="mdi-plus"
-      label="Add staff"
-      @click="showAddStaffDialog = true"
+      label="Add reps"
+      @click="showAddRepsDialog = true"
     />
 
-    <CustomDialog v-model="showAddStaffDialog" title="Add Staff">
+    <CustomDialog v-model="showAddRepsDialog" title="Add Reps">
       <AppCourseAddStaffDialog
         :course-id="(courseId as string)"
-        @add-staff="refetch"
+        @add-rep="refetch"
       />
     </CustomDialog>
   </div>
@@ -31,14 +31,14 @@
       type="error"
       class="full-width q-pa-sm"
     >
-      {{ GENERIC_ERROR }}
+      {{ getErrorMessage(error) }}
     </GenericAlert>
   </template>
 
   <q-table
     ref="tableRef"
     v-model:pagination="pagination"
-    :rows="course?.staff ?? []"
+    :rows="course?.reps ?? []"
     :columns="columns"
     row-key="id"
     :loading="loading"
@@ -58,12 +58,12 @@ import { useQuery } from "@vue/apollo-composable";
 import { graphql } from "@/gql/__generated__";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import { GENERIC_ERROR } from "@/helpers";
+import { getErrorMessage } from "@/helpers";
 import GenericAlert from "@/components/GenericAlert.vue";
 import CustomDialog from "@/components/CustomDialog.vue";
-import AppCourseAddStaffDialog from "./AppCourseAddStaffDialog.vue";
+import AppCourseAddStaffDialog from "./AppCourseAddRepsDialog.vue";
 
-const showAddStaffDialog = ref(false);
+const showAddRepsDialog = ref(false);
 
 // Get the course ID
 const {
@@ -80,19 +80,25 @@ const columns: QTableProps["columns"] = [
     align: "left",
     field: "name",
   },
+  {
+    name: "email",
+    label: "Email",
+    align: "left",
+    field: "email",
+  },
 ];
 
 // Get the course
 const pagination = ref<QTableProps["pagination"]>({
   page: 1,
-  rowsPerPage: 25,
+  rowsPerPage: 50,
   rowsNumber: 0,
 });
 
 const queryParams = computed(() => {
   return {
     courseId: courseId as string,
-    courseStaffOptions: {
+    courseRepOptions: {
       page: pagination.value?.page ?? 1,
       rowsPerPage: pagination.value?.rowsPerPage ?? 1,
     },
@@ -102,20 +108,24 @@ const queryParams = computed(() => {
 // Query the course
 const { result, loading, error, refetch } = useQuery(
   graphql(`
-    query getCourseStaff(
-      $courseId: ID!
-      $courseStaffOptions: CourseStaffInput
-    ) {
-      course(courseId: $courseId, courseStaffOptions: $courseStaffOptions) {
-        numStaff
-        staff {
+    query getCourseReps($courseId: ID!, $courseRepOptions: PaginationInput) {
+      course(
+        courseId: $courseId
+        courseStaffOptions: null
+        courseStudentOptions: null
+        courseRepOptions: $courseRepOptions
+      ) {
+        numReps
+        reps {
+          id
           name
+          email
         }
       }
     }
 
-    input CourseStaffInput {
-      page: Int!
+    input PaginationInput {
+      page: Int
       rowsPerPage: Int!
     }
   `),
@@ -126,10 +136,10 @@ const course = computed(() => result.value?.course ?? undefined);
 
 // Update the number of rows in the table
 watch(
-  () => course.value?.numStaff,
-  (numStaff) => {
+  () => course.value?.numReps,
+  (numReps) => {
     if (pagination.value === undefined) return;
-    pagination.value.rowsNumber = numStaff;
+    pagination.value.rowsNumber = numReps; // TODO: Rows number is not num of reps
   }
 );
 

@@ -36,10 +36,103 @@ const router = createRouter({
             import("@/components/App/Course/AppCourseLayout.vue"),
           children: [
             {
-              path: "",
+              path: "chats",
+              component: () =>
+                import("@/components/App/Course/Chats/AppCourseChats.vue"),
+              children: [
+                {
+                  path: "",
+                  name: "AppCourseChats",
+                  component: () =>
+                    import(
+                      "@/components/App/Course/Chats/AppCourseEmptyChat.vue"
+                    ),
+                },
+                {
+                  path: ":chatId",
+                  name: "AppCourseChat",
+                  component: () =>
+                    import(
+                      "@/components/App/Course/Chats/Chat/AppCourseChat.vue"
+                    ),
+                },
+              ],
+            },
+            {
+              path: "find",
+              name: "AppCourseFindStudents",
+              component: () =>
+                import(
+                  "@/components/App/Course/FindStudents/AppCourseFindStudents.vue"
+                ),
+            },
+            {
+              path: "staff",
               name: "AppCourseStaff",
               component: () =>
-                import("@/components/App/Course/AppCourseStaffView.vue"),
+                import("@/components/App/Course/Staff/AppCourseStaffView.vue"),
+            },
+            {
+              path: "reps",
+              name: "AppCourseReps",
+              component: () =>
+                import("@/components/App/Course/Reps/AppCourseRepsView.vue"),
+            },
+            {
+              path: "students",
+              name: "AppCourseStudents",
+              component: () =>
+                import(
+                  "@/components/App/Course/Students/AppCourseStudentsView.vue"
+                ),
+            },
+            {
+              path: "projects",
+              name: "AppCourseMyProjects",
+              component: () =>
+                import(
+                  "@/components/App/Course/MyProjects/AppCourseProjectsView.vue"
+                ),
+            },
+            {
+              path: "editproject/:projectId",
+              name: "AppCourseEditProject",
+              component: () =>
+                import(
+                  "@/components/App/Course/EditProject/AppCourseEditProjectView.vue"
+                ),
+            },
+            {
+              path: "pendingprojects",
+              name: "AppCoursePendingProjects",
+              component: () =>
+                import(
+                  "@/components/App/Course/PendingProjects/AppCoursePendingProjectsView.vue"
+                ),
+            },
+            {
+              path: "browseprojects",
+              name: "AppCourseBrowseProjects",
+              component: () =>
+                import(
+                  "@/components/App/Course/BrowseProjects/AppCourseBrowseProjectsView.vue"
+                ),
+            },
+            {
+              path: "editbid/:projectId",
+              name: "AppCourseEditBid",
+              component: () =>
+                import(
+                  "@/components/App/Course/EditBid/AppCourseEditBidView.vue"
+                ),
+            },
+            {
+              path: "pendingbids",
+              name: "AppCoursePendingBids",
+              component: () =>
+                import(
+                  "@/components/App/Course/PendingBids/AppCoursePendingBidsView.vue"
+                ),
             },
           ],
         },

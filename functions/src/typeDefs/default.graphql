@@ -1,15 +1,61 @@
 type Query {
   _: Boolean
   me: User!
-  course(courseId: ID!, courseStaffOptions: CourseStaffInput): Course
+  course(
+    courseId: ID!
+    courseStaffOptions: PaginationInput
+    courseStudentOptions: PaginationInput
+    courseRepOptions: PaginationInput
+  ): Course
+  courseStudents(courseId: ID!, options: SearchInput!): [User!]!
+  courseChat(courseId: ID!, chatId: String!): CourseChat!
+  coursePersonalChat(courseId: ID!, otherUid: String!): CourseChat!
+  chatHistory(courseId: ID!, chatId: String!, afterDoc: String): [ChatMessage!]!
+  courseProject(courseId: ID!, projectId: ID!): CourseProject! # For reps
 }
 
 type Mutation {
   _: Boolean
   generateClaims: AuthClaims!
   addCourse(name: String!, description: String!): Course!
-  addCourseStaff(courseId: ID!, email: String!): User!
+  addCourseMembers(
+    courseId: ID!
+    members: [CourseMemberInput!]!
+    type: CourseMemberEnum!
+  ): [User!]!
+  editCourseStudentGroup(courseId: ID!, groupId: ID): CourseStudent!
   editMe(input: EditMeInput!): User!
+  editCourseChat(courseId: ID!, chatId: String!, name: String!): CourseChat!
+  addCourseChatMember(courseId: ID!, chatId: String, uid: String!): CourseChat!
+  addCourseChatMessage(
+    courseId: ID!
+    chatId: String!
+    message: String!
+  ): ChatMessage!
+  addCourseProject(courseId: ID!, name: String!): CourseProject!
+  editCourseProject(input: EditCourseProjectInput!): CourseProject!
+  approveCourseProject(
+    courseId: ID!
+    projectId: ID!
+    approved: Boolean!
+  ): CourseProject!
+  editCourseGroupProject(input: EditGroupProjectInput!): CourseGroupProject!
+  approveCourseProjectBid(
+    courseId: ID!
+    groupProjectId: ID!
+    approved: Boolean!
+  ): CourseGroupProject!
+}
+
+input CourseMemberInput {
+  name: String
+  email: String!
+}
+
+enum CourseMemberEnum {
+  STUDENT
+  STAFF
+  REP
 }
 
 input EditMeInput {
@@ -19,9 +65,21 @@ input EditMeInput {
   skills: [String!]
 }
 
-input CourseStaffInput {
-  page: Int!
+input PaginationInput {
+  page: Int
+  afterDoc: String
+  beforeDoc: String
   rowsPerPage: Int!
+}
+
+input SearchInput {
+  query: String
+}
+
+type CourseStudent {
+  id: ID!
+  groupId: ID
+  user: User!
 }
 
 type AuthClaims {
