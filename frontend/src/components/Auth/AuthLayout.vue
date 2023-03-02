@@ -1,5 +1,6 @@
 <template>
   <q-layout
+    v-if="mainStore.userLoaded"
     :style="{
       backgroundImage: `url(${background})`,
       backgroundSize: 'cover',
@@ -23,6 +24,9 @@
 import { ref } from "vue";
 import { onBeforeRouteUpdate } from "vue-router";
 import background from "@/assets/background.jpg";
+import { useMainStore } from "@/mainStore";
+
+const mainStore = useMainStore();
 
 const animation = ref<"animate__fadeInLeft" | "animate__fadeInRight">(
   "animate__fadeInRight"

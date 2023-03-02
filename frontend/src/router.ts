@@ -3,7 +3,6 @@ import {
   createWebHistory,
   type RouteLocationNormalized,
 } from "vue-router";
-import { useMainStore } from "@/mainStore";
 import { setTitle } from "@/helpers";
 import { getAuth } from "firebase/auth";
 
@@ -283,9 +282,9 @@ export const findCorrectedRoute = (
   route: RouteLocationNormalized = router.currentRoute.value
 ) => {
   // Get user info
-  const mainStore = useMainStore();
-  if (!mainStore.userLoaded) return; // Function will be called again when the user is loaded
+  // const mainStore = useMainStore();
   const user = getAuth().currentUser;
+  // if (!user && !mainStore.userLoaded) return; // Function will be called again when the user is loaded
 
   // User status checks
   const requiresAuth = route.matched.some((route) => route.meta.requiresAuth);

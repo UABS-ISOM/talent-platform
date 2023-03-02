@@ -62,6 +62,8 @@
       <q-item
         v-for="{ id, groupId, user: { photoUrl, name: userName } } in users"
         :key="id"
+        clickable
+        @click="onClick(id, userName)"
       >
         <q-item-section avatar>
           <q-avatar>
@@ -78,6 +80,18 @@
       </q-item>
     </q-list>
   </div>
+
+  <CustomDialog
+    v-model="showStudentDialog"
+    :title="studentDialogName"
+    width="min(calc(100vw - 1rem), 90vw)"
+  >
+    <AppCourseFindStudentsStudent
+      v-if="showStudentDialog"
+      :course-id="(courseId as string)"
+      :uid="studentDialogId"
+    />
+  </CustomDialog>
 </template>
 
 <script setup lang="ts">
@@ -86,6 +100,8 @@ import { auth } from "@/firebase";
 import type { GetCourseChatQuery } from "@/gql/__generated__/graphql";
 import { useMutation } from "@vue/apollo-composable";
 import { graphql } from "@/gql/__generated__";
+import CustomDialog from "@/components/CustomDialog.vue";
+import AppCourseFindStudentsStudent from "../../FindStudents/AppCourseFindStudentsStudent.vue";
 
 const newName = ref("");
 
@@ -100,6 +116,16 @@ const props = defineProps<{
   name: string;
   users: GetCourseChatQuery["courseChat"]["users"];
 }>();
+
+const studentDialogName = ref("");
+const studentDialogId = ref("");
+const showStudentDialog = ref(false);
+
+const onClick = (id: string, userName: string) => {
+  studentDialogId.value = id;
+  studentDialogName.value = userName;
+  showStudentDialog.value = true;
+};
 
 watch(
   () => props.name,
