@@ -17,7 +17,6 @@ const resolver: CourseStudentResolvers = {
     _,
     { dataLoaders: { courseStudents } }
   ) => {
-    const group = await courseStudents.fetchDocById(_courseId, _studentId);
     const groupId =
       (await courseStudents.fetchDocById(_courseId, _studentId))?.groupId ??
       null;
