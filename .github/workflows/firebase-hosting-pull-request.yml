@@ -12,7 +12,7 @@ jobs:
       url: https://uabs-talent-platform.web.app/
     steps:
       - uses: actions/checkout@v2
-      - run: cd frontend && npm ci && npm run build
+      - run: cd frontend && npm run build
         env:
           VITE_APP_NAME: ${{secrets.VITE_APP_NAME}}
           VITE_GRAPHQL_SERVER: ${{secrets.VITE_GRAPHQL_SERVER}}
