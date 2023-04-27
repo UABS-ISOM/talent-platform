@@ -192,7 +192,8 @@ const router = createRouter({
           meta: {
             title: "Reset Password",
           },
-          component: () => {},
+          component: () =>
+            import("@/components/Actions/ActionsResetPasswordView.vue"),
         },
 
         {
