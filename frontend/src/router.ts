@@ -285,7 +285,7 @@ export const findCorrectedRoute = (
   // Get user info
   // const mainStore = useMainStore();
   const user = getAuth().currentUser;
-  // if (!user && !mainStore.userLoaded) return; // Function will be called again when the user is loaded
+  if (!user && !mainStore.userLoaded) return; // Function will be called again when the user is loaded
 
   // User status checks
   const requiresAuth = route.matched.some((route) => route.meta.requiresAuth);
